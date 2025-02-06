@@ -415,8 +415,19 @@ private void setupTableMouseListener() {
 
     private void btnUpdateEmployeeInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateEmployeeInformationActionPerformed
         // TODO add your handling code here:
-        EmployeeInformationFrame frame1 = new EmployeeInformationFrame();
-        frame1.setVisible(true);
+           // Get the selected row index from the table
+    int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+
+    // Check if a valid row is selected (rowIndex will be -1 if no row is selected)
+    if (rowIndex != -1) {
+        // Pass the row index to the showEmployeeInformation method
+        showEmployeeInformation(rowIndex);
+    } else {
+        // Optionally show an error message if no row is selected
+        JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+        
     }//GEN-LAST:event_btnUpdateEmployeeInformationActionPerformed
 private void showPopupMenu(MouseEvent e) {
     // If you already have a popup menu, just show it at the mouse location

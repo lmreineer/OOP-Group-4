@@ -62,11 +62,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         assignClickHandlersToTextFields();
     }
 
-    EmployeeInformationFrame() {
-        initComponents();
-        
-        assignClickHandlersToTextFields();
-    }
 
 
     /**
@@ -79,12 +74,12 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         setLayout(new BorderLayout());
 
         // Create components
-       // initializeTopPanel(employeeDetails);
+       initializeTopPanel(employeeDetails);
 
         // Set frame visibility
         pack();
         setLocationRelativeTo(null);
-       setVisible(true);
+        setVisible(true);
     }
 
     /**
