@@ -51,6 +51,10 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        PopUpAdminAction = new javax.swing.JPopupMenu();
+        btnUpdateEmployeeInformation = new javax.swing.JMenuItem();
+        btnComputeSalary = new javax.swing.JMenuItem();
+        btnChangeCredentials = new javax.swing.JMenuItem();
         scrollPaneMain = new javax.swing.JScrollPane();
         pnlMain = new javax.swing.JPanel();
         lblMotorPhHeader = new javax.swing.JLabel();
@@ -63,6 +67,20 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         tglOn = new javax.swing.JToggleButton();
         tglOff = new javax.swing.JToggleButton();
         lblEmployeeSelectionToggle = new javax.swing.JLabel();
+
+        btnUpdateEmployeeInformation.setText("Update Emplyee Information");
+        btnUpdateEmployeeInformation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateEmployeeInformationActionPerformed(evt);
+            }
+        });
+        PopUpAdminAction.add(btnUpdateEmployeeInformation);
+
+        btnComputeSalary.setText("Compute Salary");
+        PopUpAdminAction.add(btnComputeSalary);
+
+        btnChangeCredentials.setText("Change Credentials");
+        PopUpAdminAction.add(btnChangeCredentials);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Employee Search");
@@ -91,7 +109,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         lblBottomSeparator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBottomSeparator.setOpaque(true);
 
-        btnExit.setBackground(new java.awt.Color(255, 255, 255));
         btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnExit.setText("Exit");
         btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -111,7 +128,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             }
         });
 
-        btnBack.setBackground(new java.awt.Color(255, 255, 255));
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("Back");
         btnBack.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -168,7 +184,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             tblBasicEmployeeInformation.getColumnModel().getColumn(5).setResizable(false);
         }
 
-        tglOn.setBackground(new java.awt.Color(255, 255, 255));
         tglOn.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         tglOn.setText("On");
         tglOn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -190,7 +205,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             }
         });
 
-        tglOff.setBackground(new java.awt.Color(255, 255, 255));
         tglOff.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         tglOff.setText("Off");
         tglOff.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -287,20 +301,23 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void setupTableMouseListener() {
-        // Add mouse listener to handle table row clicks
-        tblBasicEmployeeInformation.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
-                // If a row is selected and toggle button is on
-                if (rowIndex != -1 && toggleOnButtonClicked) {
-                    // Show employee information
-                    showEmployeeInformation(rowIndex);
-                }
+private void setupTableMouseListener() {
+    // Add mouse listener to handle table row clicks
+    tblBasicEmployeeInformation.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+            // If a row is selected and toggle button is on
+            if (rowIndex != -1 && toggleOnButtonClicked) {
+                // Show employee information
+                showEmployeeInformation(rowIndex);
+
+                // Show the popup menu at the mouse location
+                showPopupMenu(e);
             }
-        });
-    }
+        }
+    });
+}
 
     /**
      * Handles the action event of the back button to close the current page.
@@ -396,6 +413,15 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         tglOff.setBackground(WHITE);
     }//GEN-LAST:event_tglOffMouseExited
 
+    private void btnUpdateEmployeeInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateEmployeeInformationActionPerformed
+        // TODO add your handling code here:
+        EmployeeInformationFrame frame1 = new EmployeeInformationFrame();
+        frame1.setVisible(true);
+    }//GEN-LAST:event_btnUpdateEmployeeInformationActionPerformed
+private void showPopupMenu(MouseEvent e) {
+    // If you already have a popup menu, just show it at the mouse location
+    PopUpAdminAction.show(tblBasicEmployeeInformation, e.getX(), e.getY());
+}
     /**
      * Displays an error dialog with the provided error message.
      *
@@ -413,30 +439,21 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
      */
     private void handleToggleOn() {
         // Increment the click count
-        clickCount++;
-        // Determine if toggle is on or off
-        toggleOnButtonClicked = (clickCount % 2 != 0);
-
-        // Enable or disable table and set toggle button states
+        toggleOnButtonClicked = true;
+        updateToggleState();
+    }
+    private void updateToggleState() {
         tblBasicEmployeeInformation.setEnabled(toggleOnButtonClicked);
         tglOn.setSelected(toggleOnButtonClicked);
         tglOff.setSelected(!toggleOnButtonClicked);
     }
-
     /**
      * Handles the action event of the toggle off button to disable selection of
      * employee and reset toggle state.
      */
     private void handleToggleOff() {
-        // Reset click count
-        clickCount = 0;
-        // Set toggle to off
-        toggleOnButtonClicked = false;
-
-        // Disable table and set intended toggle button states
-        tblBasicEmployeeInformation.setEnabled(false);
-        tglOn.setSelected(false);
-        tglOff.setSelected(true);
+           toggleOnButtonClicked = false;
+           updateToggleState();
     }
 
     /**
@@ -531,8 +548,12 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPopupMenu PopUpAdminAction;
     private javax.swing.JButton btnBack;
+    private javax.swing.JMenuItem btnChangeCredentials;
+    private javax.swing.JMenuItem btnComputeSalary;
     private javax.swing.JButton btnExit;
+    private javax.swing.JMenuItem btnUpdateEmployeeInformation;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBottomSeparator;
     private javax.swing.JLabel lblEmployeeSearchHeader;
