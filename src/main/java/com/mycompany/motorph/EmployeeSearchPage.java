@@ -310,7 +310,6 @@ private void setupTableMouseListener() {
             // If a row is selected and toggle button is on
             if (rowIndex != -1 && toggleOnButtonClicked) {
                 // Show employee information
-                showEmployeeInformation(rowIndex);
 
                 // Show the popup menu at the mouse location
                 showPopupMenu(e);
