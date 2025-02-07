@@ -45,10 +45,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
 
     private boolean deleteButtonClicked = false;
 
-    private JButton computeButton;
-    private JComboBox<String> monthComboBox;
-    private JLabel instructionLabel;
-    private JPanel topPanel;
+    private JButton btnCompute;
+    private JComboBox<String> cmbMonth;
+    private JLabel lblInstruction;
+    private JPanel pnlTop;
 
     /**
      * Creates new EmployeeInformationFrame.
@@ -72,7 +72,7 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         setLayout(new BorderLayout());
 
         // Create components
-        initializeTopPanel(employeeDetails);
+        initializePnlTop(employeeDetails);
 
         // Set frame visibility
         pack();
@@ -87,44 +87,44 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
      * @param employeeDetails List of strings that contains initial employee
      * information.
      */
-    private void initializeTopPanel(List<String> employeeDetails) {
+    private void initializePnlTop(List<String> employeeDetails) {
         // Create the label
-        instructionLabel = new JLabel("Select the month for wage information");
+        lblInstruction = new JLabel("Select the month for wage information");
 
         // Create the month combo box
         String[] months = {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         };
-        monthComboBox = new JComboBox<>(months);
+        cmbMonth = new JComboBox<>(months);
 
         // Create the compute button
-        computeButton = createButton("Compute", e -> {
-            String selectedMonth = String.format("%02d", monthComboBox.getSelectedIndex() + 1);
+        btnCompute = createButton("Compute", e -> {
+            String selectedMonth = String.format("%02d", cmbMonth.getSelectedIndex() + 1);
             showInformation(employeeDetails, selectedMonth);
         });
 
-        computeButton.addMouseListener(createButtonHoverAdapter(computeButton, LIGHT_BLUE, WHITE));
+        btnCompute.addMouseListener(createButtonHoverAdapter(btnCompute, LIGHT_BLUE, WHITE));
 
-        computeButton.setBackground(WHITE);
-        computeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnCompute.setBackground(WHITE);
+        btnCompute.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         scrollPaneMain.setVisible(false);  // Initially hide the information panel
 
         // Create a panel for the top components
-        topPanel = new JPanel();
+        pnlTop = new JPanel();
         // Add a 12-pixel margin
-        topPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
-        topPanel.setBackground(Color.WHITE);
-        topPanel.add(instructionLabel);
-        topPanel.add(monthComboBox);
+        pnlTop.setBorder(new EmptyBorder(12, 12, 12, 12));
+        pnlTop.setBackground(Color.WHITE);
+        pnlTop.add(lblInstruction);
+        pnlTop.add(cmbMonth);
 
-        monthComboBox.setFocusable(false);
-        computeButton.setFocusable(false);
+        cmbMonth.setFocusable(false);
+        btnCompute.setFocusable(false);
 
         // Add the top panel and the compute button to the frame
-        add(topPanel, BorderLayout.NORTH);
-        add(computeButton, BorderLayout.CENTER);
+        add(pnlTop, BorderLayout.NORTH);
+        add(btnCompute, BorderLayout.CENTER);
     }
 
     /**
@@ -170,8 +170,8 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
      * @param selectedMonth Selected month in "MM" format.
      */
     private void showInformation(List<String> employeeDetails, String selectedMonth) {
-        remove(topPanel);
-        remove(computeButton);
+        remove(pnlTop);
+        remove(btnCompute);
 
         populateEmployeeInformation(employeeDetails.get(0));
 
