@@ -46,8 +46,8 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
         txtUsername = new javax.swing.JTextField();
         chkShowPassword = new javax.swing.JCheckBox();
         txtPassword = new javax.swing.JPasswordField();
-        lblDivision = new javax.swing.JLabel();
-        cmbDivision = new javax.swing.JComboBox<>();
+        lblUserType = new javax.swing.JLabel();
+        cmbUserType = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -117,18 +117,18 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
 
         txtPassword.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
 
-        lblDivision.setBackground(new java.awt.Color(255, 255, 255));
-        lblDivision.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblDivision.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDivision.setText("Select Division:");
-        lblDivision.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblDivision.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblDivision.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblDivision.setOpaque(true);
+        lblUserType.setBackground(new java.awt.Color(255, 255, 255));
+        lblUserType.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
+        lblUserType.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblUserType.setText("Select User Type:");
+        lblUserType.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblUserType.setMaximumSize(new java.awt.Dimension(93, 25));
+        lblUserType.setMinimumSize(new java.awt.Dimension(93, 25));
+        lblUserType.setOpaque(true);
 
-        cmbDivision.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Employee", "Admin", "IT" }));
-        cmbDivision.setBorder(null);
-        cmbDivision.setFocusable(false);
+        cmbUserType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Employee", "Admin", "IT" }));
+        cmbUserType.setBorder(null);
+        cmbUserType.setFocusable(false);
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -137,19 +137,19 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
             .addComponent(lblLoginHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblWelcomeHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(58, 58, 58)
+                .addGap(88, 88, 88)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDivision, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblUserType, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtUsername)
                             .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                            .addComponent(cmbDivision, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cmbUserType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(chkShowPassword))
                 .addContainerGap(88, Short.MAX_VALUE))
         );
@@ -162,8 +162,8 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
                 .addComponent(lblLoginHeader)
                 .addGap(40, 40, 40)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDivision, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbDivision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblUserType, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbUserType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -251,14 +251,14 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
     }
 
     /**
-     * Logs in the user and validates the enter username, password, and
-     * user type
+     * Logs in the user and validates the enter username, password, and user
+     * type
      */
     private void performLogin() {
-        // Get the user input for username, password, and selected division
+        // Get the user input for username, password, and selected user type
         String enteredUsername = txtUsername.getText().trim();
         String enteredPassword = new String(txtPassword.getPassword()).trim();
-        String selectedDivision = cmbDivision.getSelectedItem().toString();
+        String selectedUserType = cmbUserType.getSelectedItem().toString();
 
         boolean loginSuccessful = false;
 
@@ -270,15 +270,15 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
 
             // Loop through each record in the CSV file.
             while ((record = reader.readNext()) != null) {
-                // The columns in CSV are: 0 - Username, 1 - Password, 2 - Division
+                // The columns in CSV are: 0 - Username, 1 - Password, 2 - User Type
                 String csvUsername = record[0].trim();
                 String csvPassword = record[1].trim();
-                String csvDivision = record[2].trim();
+                String csvUserType = record[2].trim();
 
-                // If the entered credentials and division match with the data from CSV file
+                // If the entered credentials and user type match with the data from CSV file
                 if (enteredUsername.equals(csvUsername)
                         && enteredPassword.equals(csvPassword)
-                        && selectedDivision.equalsIgnoreCase(csvDivision)) {
+                        && selectedUserType.equalsIgnoreCase(csvUserType)) {
                     loginSuccessful = true;
                     break;
                 }
@@ -292,14 +292,21 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
 
         // If login was successful
         if (loginSuccessful) {
-            // Show message indicating that login was successful
-            JOptionPane.showMessageDialog(this, "Login successful as " + selectedDivision);
-            // new MainMenuFrame(division).setVisible(true);
+            if (selectedUserType.equalsIgnoreCase("Employee")) {
+                JOptionPane.showMessageDialog(this, "Login successful as " + selectedUserType);
+                new MotorPHMainMenu().setVisible(true);
+            }
+//            } else if (selectedDivision.equalsIgnoreCase("IT")) {
+//                new ITMainMenuFrame().setVisible(true);
+//            } else if (selectedDivision.equalsIgnoreCase("Admin")) {
+//                new AdminDashboardFrame().setVisible(true);
+//            }
+
             // Close the window
             this.dispose();
         } else {
             // Else if login failed, show an error message to the user
-            JOptionPane.showMessageDialog(this, "Invalid credentials or division", "Login Failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid credentials or user type", "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -341,10 +348,10 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JCheckBox chkShowPassword;
-    private javax.swing.JComboBox<String> cmbDivision;
-    private javax.swing.JLabel lblDivision;
+    private javax.swing.JComboBox<String> cmbUserType;
     private javax.swing.JLabel lblLoginHeader;
     private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblUserType;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblWelcomeHeader;
     private javax.swing.JPanel pnlMain;
