@@ -33,13 +33,17 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     private boolean toggleOnButtonClicked = false;
     private int clickCount = 0;
 
+    private static int employeeNumber;
+
     /**
      * Creates new EmployeeSearchPage.
      */
-    public EmployeeSearchPage() {
+    public EmployeeSearchPage(int employeeNumber) {
+        this.employeeNumber = employeeNumber;
         initComponents();
-        populateEmployeeTable();
-        setupTableMouseListener();
+//        populateEmployeeTable();
+//        setupTableMouseListener();
+//        showEmployeeInformation(employeeNumber);
     }
 
     /**
@@ -525,7 +529,7 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EmployeeSearchPage().setVisible(true);
+                new EmployeeSearchPage(employeeNumber).setVisible(true);
             }
         });
     }
