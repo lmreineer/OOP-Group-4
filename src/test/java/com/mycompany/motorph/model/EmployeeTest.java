@@ -51,7 +51,7 @@ public class EmployeeTest {
         employee.setPhoneNumber("999-123-456");
         employee.setSssNumber("12-3456789-0");
         employee.setPhilHealthNumber("123456789012");
-        employee.setTinNumber("123-456-789-012");
+        employee.setTin("123-456-789-012");
         employee.setPagIbigNumber("123456789012");
         employee.setStatus("Status");
         employee.setPosition("Position");

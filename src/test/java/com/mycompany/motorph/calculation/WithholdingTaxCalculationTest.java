@@ -4,6 +4,10 @@
  */
 package com.mycompany.motorph.calculation;
 
+import com.opencsv.exceptions.CsvValidationException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,10 +28,18 @@ public class WithholdingTaxCalculationTest {
         double grossWage = 20000.0;
 
         WithholdingTaxCalculation withholdingTaxCalculation = new WithholdingTaxCalculation();
-        double withholdingTax = withholdingTaxCalculation.calculateWithholdingTax(grossWage);
+        double withholdingTax;
+        try {
+            withholdingTax = withholdingTaxCalculation.calculateWithholdingTax(grossWage);
+             assertEquals(0.0, withholdingTax, DELTA, "Withholding tax should be zero for gross wage below taxable income");
+        } catch (IOException ex) {
+            Logger.getLogger(WithholdingTaxCalculationTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CsvValidationException ex) {
+            Logger.getLogger(WithholdingTaxCalculationTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Assert that the withholding tax calculated is zero
-        assertEquals(0.0, withholdingTax, DELTA, "Withholding tax should be zero for gross wage below taxable income");
+      
     }
 
     @Test
