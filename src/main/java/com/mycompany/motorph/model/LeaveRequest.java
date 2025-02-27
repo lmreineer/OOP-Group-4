@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -187,5 +188,35 @@ public static List<LeaveRequest> getLeaveRequestList() {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
+    }
+        public static DefaultTableModel getLeaveRequestTableModel() {
+        String[] headers = {"ID", "Name", "Start_Date", "End_Date", "Purpose", "Status", "Remarks"};
+        DefaultTableModel model = new DefaultTableModel(headers, 0);
+
+        try {
+            // Get the leave request data
+            List<LeaveRequest> leaveRequestList = LeaveRequest.getLeaveRequestList();
+
+            if (leaveRequestList == null || leaveRequestList.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No leave requests found.");
+                return model;
+            }
+
+            for (LeaveRequest leave : leaveRequestList) {
+                int id = leave.getEmployeeNumber();
+                String name = leave.getName();
+                String startDate = leave.getStartDate();
+                String endDate = leave.getEndDate();
+                String leavePurpose = leave.getLeaveRequestPurpose();
+                String leaveStatus = leave.getLeaveStatus();
+                String leaveRemarks = leave.getLeaveRemarks();
+                Object[] rowData = {id, name, startDate, endDate, leavePurpose, leaveStatus, leaveRemarks};
+                model.addRow(rowData);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+        return model;
     }
 }

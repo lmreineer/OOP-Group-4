@@ -39,33 +39,8 @@ public class LeaveTablePage extends javax.swing.JFrame {
   
 
     private void populateLeaveRequestTable() {
-
-        try {
-            //get the leave request data
-            List<LeaveRequest> leaveRequestList = LeaveRequest.getLeaveRequestList();
-
-            String[] headers = {"ID", "Name", "Start_Date", "End_Date", "Purpose", "Status", "Remarks"};
-            DefaultTableModel model = new DefaultTableModel(headers, 0);
-
-            if (leaveRequestList == null) {
-                JOptionPane.showMessageDialog(null, "List is null");
-            }
-
-            for (LeaveRequest leave : leaveRequestList) {
-                int id = leave.getEmployeeNumber();
-                String name = leave.getName();
-                String startDate = leave.getStartDate();
-                String endDate = leave.getEndDate();
-                String leavePurpose = leave.getLeaveRequestPurpose();
-                String leaveStatus = leave.getLeaveStatus();
-                String leaveRemarks = leave.getLeaveRemarks();
-                Object[] rowData = {id, name, startDate, endDate, leavePurpose, leaveStatus, leaveRemarks};
-                model.addRow(rowData);
-            }
-            jTableLeaveRequest.setModel(model);
-        } catch (HeadlessException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
+        DefaultTableModel model = LeaveRequest.getLeaveRequestTableModel();
+        jTableLeaveRequest.setModel(model);
 
         
     }
@@ -100,35 +75,7 @@ public class LeaveTablePage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "An error occurred while updating the table.");
         }
     }
-    private void filter(String status){
-            TableRowSorter<DefaultTableModel> trs = new TableRowSorter<DefaultTableModel>(dm);
-            jTableLeaveRequest.setRowSorter(trs);
-     
-//1st
-//            //check filter query
-//            if(status != "All Requests"){
-//                trs.setRowFilter(RowFilter.regexFilter(status));
-//            }else{
-//                jTableLeaveRequest.setRowSorter(trs);
-//            }
 
-//2nd
-//            trs.setRowFilter(new RowFilter(){
-//                @Override
-//                public boolean include(Entry entry) {
-//                    String status = entry.getValue(5).toString();
-//                    return status.contentEquals("Approve");
-//                }
-//            
-//             });
-            
-//3rd          
-            if("All Requests".equals(status)){
-                trs.setRowFilter(null); //show all rows
-            }else{
-               trs.setRowFilter(RowFilter.regexFilter(status, 5)); // filter by status
-            }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.

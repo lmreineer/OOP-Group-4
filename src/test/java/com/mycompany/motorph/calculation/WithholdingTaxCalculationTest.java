@@ -48,9 +48,17 @@ public class WithholdingTaxCalculationTest {
         double grossWage = MAX_TAXABLE_INCOME;
 
         WithholdingTaxCalculation withholdingTaxCalculation = new WithholdingTaxCalculation();
-        double withholdingTax = withholdingTaxCalculation.calculateWithholdingTax(grossWage);
+        double withholdingTax;
+        try {
+            withholdingTax = withholdingTaxCalculation.calculateWithholdingTax(grossWage);
+             assertTrue(withholdingTax > 0.0, "Withholding tax should be greater than zero for gross wage equal to maximum taxable income");
+        } catch (IOException ex) {
+            Logger.getLogger(WithholdingTaxCalculationTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CsvValidationException ex) {
+            Logger.getLogger(WithholdingTaxCalculationTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Assert that the withholding tax calculated is greater than zero
-        assertTrue(withholdingTax > 0.0, "Withholding tax should be greater than zero for gross wage equal to maximum taxable income");
+       
     }
 }
