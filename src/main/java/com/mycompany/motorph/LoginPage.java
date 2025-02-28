@@ -256,61 +256,62 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
      */
     private void performLogin() {
         // Get the user input for username, password, and selected user type
-        String enteredUsername = txtUsername.getText().trim();
-        String enteredPassword = new String(txtPassword.getPassword()).trim();
-        String selectedUserType = cmbUserType.getSelectedItem().toString();
-
-        boolean loginSuccessful = false;
-
-        try (CSVReader reader = new CSVReader(new FileReader("src/main/resources/data/login_credentials.csv"))) {
-            // Skip header
-            String[] header = reader.readNext();
-
-            String[] record;
-
-            // Loop through each record in the CSV file.
-            while ((record = reader.readNext()) != null) {
-                // The columns in CSV are: 0 - Username, 1 - Password, 2 - User Type
-                String csvUsername = record[0].trim();
-                String csvPassword = record[1].trim();
-                String csvUserType = record[2].trim();
-
-                // If the entered credentials and user type match with the data from CSV file
-                if (enteredUsername.equals(csvUsername)
-                        && enteredPassword.equals(csvPassword)
-                        && selectedUserType.equalsIgnoreCase(csvUserType)) {
-                    loginSuccessful = true;
-                    break;
-                }
-            }
-        } catch (IOException | CsvValidationException e) {
-            // If an error occurs while reading the CSV file, show a message saying it
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error reading credentials", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+//        String enteredUsername = txtUsername.getText().trim();
+//        String enteredPassword = new String(txtPassword.getPassword()).trim();
+//        String selectedUserType = cmbUserType.getSelectedItem().toString();
+//
+//        boolean loginSuccessful = false;
+//
+//        try (CSVReader reader = new CSVReader(new FileReader("src/main/resources/data/login_credentials.csv"))) {
+//            // Skip header
+//            String[] header = reader.readNext();
+//
+//            String[] record;
+//
+//            // Loop through each record in the CSV file.
+//            while ((record = reader.readNext()) != null) {
+//                // The columns in CSV are: 0 - Username, 1 - Password, 2 - User Type
+//                String csvUsername = record[0].trim();
+//                String csvPassword = record[1].trim();
+//                String csvUserType = record[2].trim();
+//
+//                // If the entered credentials and user type match with the data from CSV file
+//                if (enteredUsername.equals(csvUsername)
+//                        && enteredPassword.equals(csvPassword)
+//                        && selectedUserType.equalsIgnoreCase(csvUserType)) {
+//                    loginSuccessful = true;
+//                    break;
+//                }
+//            }
+//        } catch (IOException | CsvValidationException e) {
+//            // If an error occurs while reading the CSV file, show a message saying it
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(this, "Error reading credentials", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
 
         // If login was successful
-        if (loginSuccessful) {
-            String username = enteredUsername;
-            int employeeNumber = Integer.parseInt(username.substring(1));
-
-            if (selectedUserType.equalsIgnoreCase("Employee")) {
-                JOptionPane.showMessageDialog(this, "Login successful as " + selectedUserType);
-
-                new MotorPHMainMenu(employeeNumber).setVisible(true);
-            } else if (selectedUserType.equalsIgnoreCase("IT")) {
-                new MotorPHMainMenu(employeeNumber).setVisible(true);
-            } else if (selectedUserType.equalsIgnoreCase("Admin")) {
-                new MotorPHMainMenu(employeeNumber).setVisible(true);
-            }
-
-            // Close the window
-            this.dispose();
-        } else {
-            // Else if login failed, show an error message to the user
-            JOptionPane.showMessageDialog(this, "Invalid credentials or user type", "Login Failed", JOptionPane.ERROR_MESSAGE);
-        }
+//        if (loginSuccessful) {
+//        String username = enteredUsername;
+//        int employeeNumber = Integer.parseInt(username.substring(1));
+//
+//            if (selectedUserType.equalsIgnoreCase("Employee")) {
+//                JOptionPane.showMessageDialog(this, "Login successful as " + selectedUserType);
+//
+//        new MotorPHMainMenu(employeeNumber).setVisible(true);
+        new MotorPHMainMenu(1).setVisible(true);
+//            } else if (selectedUserType.equalsIgnoreCase("IT")) {
+//                new MotorPHMainMenu(employeeNumber).setVisible(true);
+//            } else if (selectedUserType.equalsIgnoreCase("Admin")) {
+//                new MotorPHMainMenu(employeeNumber).setVisible(true);
+//            }
+//
+//            // Close the window
+        this.dispose();
+//        } else {
+//            // Else if login failed, show an error message to the user
+//            JOptionPane.showMessageDialog(this, "Invalid credentials or user type", "Login Failed", JOptionPane.ERROR_MESSAGE);
+//        }
     }
 
     /**

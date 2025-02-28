@@ -8,8 +8,8 @@ import com.mycompany.motorph.employee.EmployeeInformation;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
 import javax.swing.JOptionPane;
+import java.util.List;
 
 /**
  * Main Menu for the MotorPH application.
@@ -52,6 +52,7 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         btnExit = new javax.swing.JButton();
         btnManageLeave = new javax.swing.JButton();
         btnGoBackToLogin = new javax.swing.JButton();
+        btnComputeSalary = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Payroll System Main Menu");
@@ -139,6 +140,7 @@ class MotorPHMainMenu extends javax.swing.JFrame {
 
         btnGoBackToLogin.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnGoBackToLogin.setText("Go back to login");
+        btnGoBackToLogin.setToolTipText("");
         btnGoBackToLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         btnGoBackToLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnGoBackToLogin.setFocusable(false);
@@ -156,23 +158,49 @@ class MotorPHMainMenu extends javax.swing.JFrame {
             }
         });
 
+        btnComputeSalary.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnComputeSalary.setText("Compute salary");
+        btnComputeSalary.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnComputeSalary.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnComputeSalary.setFocusable(false);
+        btnComputeSalary.setMaximumSize(new java.awt.Dimension(62, 16));
+        btnComputeSalary.setMinimumSize(new java.awt.Dimension(62, 16));
+        btnComputeSalary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnComputeSalaryMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnComputeSalaryMouseExited(evt);
+            }
+        });
+        btnComputeSalary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComputeSalaryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblMainMenuHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+            .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblIwantTo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnViewProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                    .addComponent(btnManageLeave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(btnGoBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblIwantTo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnViewProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                            .addComponent(btnManageLeave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(btnGoBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnComputeSalary, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                .addGap(12, 12, 12))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,6 +213,8 @@ class MotorPHMainMenu extends javax.swing.JFrame {
                 .addComponent(lblIwantTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addComponent(btnViewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(btnComputeSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addComponent(btnManageLeave, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
@@ -225,7 +255,7 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         try {
             // This method reads the CSV file and returns employee information as a list of strings
             List<String> employeeDetails = employeeInformation.showEmployeeInformation(employeeNumber);
-            // Display the employee's information (for example, open a new frame with the details)
+            // Display the employee's information
             new EmployeeInformationFrame(employeeDetails).setVisible(true);
         } catch (IOException | CsvValidationException | ParseException ex) {
             ex.printStackTrace();
@@ -326,7 +356,21 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         btnGoBackToLogin.setBackground(WHITE);
     }//GEN-LAST:event_btnGoBackToLoginMouseExited
 
+    private void btnComputeSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputeSalaryActionPerformed
+        // TODO add your handling code here:
+        new PayrollComputationFrame(24).setVisible(true);
+    }//GEN-LAST:event_btnComputeSalaryActionPerformed
+
+    private void btnComputeSalaryMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComputeSalaryMouseEntered
+        btnComputeSalary.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnComputeSalaryMouseEntered
+
+    private void btnComputeSalaryMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComputeSalaryMouseExited
+        btnComputeSalary.setBackground(WHITE);
+    }//GEN-LAST:event_btnComputeSalaryMouseExited
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnComputeSalary;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnGoBackToLogin;
     private javax.swing.JButton btnManageLeave;
