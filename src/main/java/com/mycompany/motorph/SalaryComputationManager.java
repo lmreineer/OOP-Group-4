@@ -4,11 +4,17 @@
  */
 package com.mycompany.motorph;
 
-import com.mycompany.motorph.calculation.TimeCalculation;
 import com.mycompany.motorph.calculation.WageCalculation;
 import com.mycompany.motorph.employee.EmployeeInformation;
 import com.mycompany.motorph.model.DateRange;
+import com.opencsv.exceptions.CsvValidationException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * * This class is responsible for computing an employee's salary.
@@ -17,12 +23,14 @@ import java.util.List;
  */
 public class SalaryComputationManager {
 
-    private final int employeeNumber; // The logged-in employee's unique identifier
+    private final int employeeNumber;
+    // The date format for the attendance records
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd");
 
     /**
-     * Constructs a SalaryComputationManager for the given employee.
+     * Constructs a new constructor for the specified employee.
      *
-     * @param employeeNumber The employee's ID used for retrieving payroll data
+     * @param employeeNumber The unique employee number
      */
     public SalaryComputationManager(int employeeNumber) {
         this.employeeNumber = employeeNumber;
@@ -31,10 +39,9 @@ public class SalaryComputationManager {
     /**
      * Computes the salary details for the given month.
      *
-     * @param selectedMonth The selected month (formatted as "MM") for payroll
-     * computation
-     * @return A list of salary details
-     * @throws Exception If an error occurs while retrieving salary information
+     * @param selectedMonth The month for which the salary is calculated
+     * @return A list of salary components
+     * @throws Exception If an error occurs during salary computation
      */
     public List<String> computeSalary(String selectedMonth) throws Exception {
         WageCalculation wageCalculation = new WageCalculation();
@@ -43,38 +50,71 @@ public class SalaryComputationManager {
     }
 
     /**
-     * Retrieves the employee's hourly wage rate.
+     * Retrieves the hourly rate for the employee.
      *
-     * <p>
-     * This method gets the hourly rate from the employee's record
-     *
-     * @return The hourly rate as a double or 0.0 if retrieval fails
+     * @return The hourly wage of the employee. Returns 0 if an error occurs
      */
     public double getHourlyRate() {
         try {
             EmployeeInformation employeeInfo = new EmployeeInformation();
             List<String> details = employeeInfo.showEmployeeInformation(employeeNumber);
 
-            // Index 18 is assumed to store the hourly rate in the employee information list
+            // Extract hourly rate from employee info
             return Double.parseDouble(details.get(18).replace(",", ""));
-        } catch (Exception e) {
-            return 0.0;
+        } catch (CsvValidationException | IOException | NumberFormatException | ParseException e) {
+            // Return 0 if retrieval fails
+            return 0;
         }
     }
 
     /**
-     * Computes the number of days worked within a given month.
+     * Computes the number of days worked by the employee for the selected
+     * month.
      *
-     * This method calculates the number of working days using the
-     * TimeCalculation module.
+     * This method reads attendance records from a CSV file and counts the
+     * workdays where the employee clocked in.
      *
-     * @return The total number of days worked or 0 if an error occurs
+     * @param selectedMonth The selected month in MM format
+     * @return The number of workdays the employee attended
+     * @throws CsvValidationException If an error occurs while reading the CSV
+     * file
      */
-    public long getDaysWorked() {
+    public long getDaysWorked(String selectedMonth) throws CsvValidationException {
         try {
-            TimeCalculation timeCalc = new TimeCalculation();
-            return timeCalc.calculateNumberOfDays(DateRange.createMonthRange("01")); // Using a sample month
-        } catch (Exception e) {
+            WageCalculation wageCalculation = new WageCalculation();
+            DateRange dateRange = DateRange.createMonthRange(selectedMonth);
+            List<String[]> attendanceData = wageCalculation.readAttendanceData();
+
+            Set<String> uniqueWorkDays = new HashSet<>();
+
+            for (String[] record : attendanceData) {
+                if (record.length < 6) {
+                    // Ensure that the record has enough columns
+                    continue;
+                }
+
+                // Extract employee number
+                int empNum = Integer.parseInt(record[0]);
+
+                if (empNum == employeeNumber) {
+                    // Column index 3 stores the date
+                    String dateString = record[3];
+
+                    // Convert String to Date object
+                    Date attendanceDate = DATE_FORMAT.parse(dateString);
+
+                    // Check if the attendance date falls within the selected month
+                    if (dateRange.isWithinDateRange(attendanceDate)) {
+                        // Store as a String to count unique workdays
+                        uniqueWorkDays.add(dateString);
+                    }
+                }
+            }
+
+            // Return the number of distinct days worked
+            return uniqueWorkDays.size();
+        } catch (IOException | ParseException e) {
+            // Return 0 if an error occurs
             return 0;
         }
     }

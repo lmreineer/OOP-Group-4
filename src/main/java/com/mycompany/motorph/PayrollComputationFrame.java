@@ -114,46 +114,33 @@ public class PayrollComputationFrame extends JFrame {
      * values.
      */
     private void computeSalary() {
-        // Convert selected month index to a two-digit format
-        String selectedMonth = String.format("%02d", monthComboBox.getSelectedIndex() + 1);
+        String selectedMonth = String.format("%02d", monthComboBox.getSelectedIndex() + 1); // Convert month index to two-digit format
 
         try {
-            // Initialize computation manager
+            // Create a SalaryComputationManager instance for processing salary details
             SalaryComputationManager computationManager = new SalaryComputationManager(employeeNumber);
             List<String> wageInfo = computationManager.computeSalary(selectedMonth);
 
-            // Update UI with computed values
-            updateLabels(wageInfo, computationManager);
+            // Update the UI with computed values
+            valueLabels.get("Rate Per Hour").setText(String.format("%.2f", computationManager.getHourlyRate()));
+            valueLabels.get("Days Worked").setText(String.valueOf(computationManager.getDaysWorked(selectedMonth)));
 
-            // Refresh the panel to reflect changes
+            // This is a list of fields related to wages to update in the UI
+            String[] wageKeys = {"Gross Wage", "SSS Deduction", "PhilHealth Deduction", "Pag-IBIG Deduction",
+                "Withholding Tax", "Late Arrival Deduction", "Total Deductions", "Net Wage"};
+
+            // Loop through wageKeys and update their corresponding UI labels
+            for (int i = 0; i < wageKeys.length; i++) {
+                valueLabels.get(wageKeys[i]).setText(wageInfo.get(i));
+            }
+
+            // Refresh UI to reflect the updated values
             wagePanel.revalidate();
             wagePanel.repaint();
 
         } catch (Exception ex) {
+            // Show error message if computation fails
             JOptionPane.showMessageDialog(this, "Error computing salary: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }
-
-    /**
-     * Updates salary detail labels with computed values.
-     *
-     * @param wageInfo The list of computed salary values.
-     * @param computationManager The SalaryComputationManager instance handling
-     * calculations.
-     */
-    private void updateLabels(List<String> wageInfo, SalaryComputationManager computationManager) {
-        // Update "Rate Per Hour" and "Days Worked" labels
-        valueLabels.get("Rate Per Hour").setText(String.format("%.2f", computationManager.getHourlyRate()));
-        valueLabels.get("Days Worked").setText(String.valueOf(computationManager.getDaysWorked()));
-
-        // Labels corresponding to computed wage details
-        String[] wageKeys = {"Gross Wage", "SSS Deduction", "PhilHealth Deduction", "Pag-IBIG Deduction",
-            "Withholding Tax", "Late Arrival Deduction", "Total Deductions", "Net Wage"};
-
-        // Update displayed values
-        for (int i = 0; i < wageKeys.length; i++) {
-            valueLabels.get(wageKeys[i]).setText(wageInfo.get(i));
-        }
-    }
-}
