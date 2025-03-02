@@ -299,7 +299,7 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
 //                JOptionPane.showMessageDialog(this, "Login successful as " + selectedUserType);
 //
 //        new MotorPHMainMenu(employeeNumber).setVisible(true);
-        new MotorPHMainMenu(1).setVisible(true);
+        new MotorPHMainMenu(26).setVisible(true);
 //            } else if (selectedUserType.equalsIgnoreCase("IT")) {
 //                new MotorPHMainMenu(employeeNumber).setVisible(true);
 //            } else if (selectedUserType.equalsIgnoreCase("Admin")) {

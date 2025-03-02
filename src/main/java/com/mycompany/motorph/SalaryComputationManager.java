@@ -69,17 +69,16 @@ public class SalaryComputationManager {
 
     /**
      * Computes the number of days worked by the employee for the selected
-     * month.
-     *
-     * This method reads attendance records from a CSV file and counts the
+     * month.This method reads attendance records from a CSV file and counts the
      * workdays where the employee clocked in.
+     *
      *
      * @param selectedMonth The selected month in MM format
      * @return The number of workdays the employee attended
      * @throws CsvValidationException If an error occurs while reading the CSV
      * file
      */
-    public long getDaysWorked(String selectedMonth) throws CsvValidationException {
+    public String getDaysWorked(String selectedMonth) throws CsvValidationException {
         try {
             WageCalculation wageCalculation = new WageCalculation();
             DateRange dateRange = DateRange.createMonthRange(selectedMonth);
@@ -92,30 +91,29 @@ public class SalaryComputationManager {
                     // Ensure that the record has enough columns
                     continue;
                 }
-
-                // Extract employee number
                 int empNum = Integer.parseInt(record[0]);
 
                 if (empNum == employeeNumber) {
                     // Column index 3 stores the date
                     String dateString = record[3];
 
-                    // Convert String to Date object
+                    // Convert String to Date
                     Date attendanceDate = DATE_FORMAT.parse(dateString);
 
-                    // Check if the attendance date falls within the selected month
+                    // Check if the date falls within the selected month
                     if (dateRange.isWithinDateRange(attendanceDate)) {
-                        // Store as a String to count unique workdays
+                        // Store as String to count unique days
                         uniqueWorkDays.add(dateString);
                     }
                 }
             }
 
-            // Return the number of distinct days worked
-            return uniqueWorkDays.size();
+            return uniqueWorkDays.isEmpty() ? "Not Recorded" : String.valueOf(uniqueWorkDays.size());
+
         } catch (IOException | ParseException e) {
-            // Return 0 if an error occurs
-            return 0;
+            // Return "N/A" if an error occurs
+            return "Not Recorded";
         }
     }
+
 }

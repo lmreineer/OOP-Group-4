@@ -358,7 +358,7 @@ class MotorPHMainMenu extends javax.swing.JFrame {
 
     private void btnComputeSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputeSalaryActionPerformed
         // TODO add your handling code here:
-        new PayrollComputationFrame(24).setVisible(true);
+        new PayrollComputationFrame(26).setVisible(true);
     }//GEN-LAST:event_btnComputeSalaryActionPerformed
 
     private void btnComputeSalaryMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComputeSalaryMouseEntered

@@ -141,6 +141,6 @@ public class PayrollComputationFrame extends JFrame {
         } catch (Exception ex) {
             // Show error message if computation fails
             JOptionPane.showMessageDialog(this, "Error computing salary: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
         }
     }
+}
