@@ -51,7 +51,7 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         lblIwantTo = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
         btnManageLeave = new javax.swing.JButton();
-        btnGoBackToLogin = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
         btnComputeSalary = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -138,23 +138,23 @@ class MotorPHMainMenu extends javax.swing.JFrame {
             }
         });
 
-        btnGoBackToLogin.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnGoBackToLogin.setText("Go back to login");
-        btnGoBackToLogin.setToolTipText("");
-        btnGoBackToLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnGoBackToLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnGoBackToLogin.setFocusable(false);
-        btnGoBackToLogin.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnLogout.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnLogout.setText("Logout");
+        btnLogout.setToolTipText("");
+        btnLogout.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogout.setFocusable(false);
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnGoBackToLoginMouseEntered(evt);
+                btnLogoutMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnGoBackToLoginMouseExited(evt);
+                btnLogoutMouseExited(evt);
             }
         });
-        btnGoBackToLogin.addActionListener(new java.awt.event.ActionListener() {
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGoBackToLoginActionPerformed(evt);
+                btnLogoutActionPerformed(evt);
             }
         });
 
@@ -195,7 +195,7 @@ class MotorPHMainMenu extends javax.swing.JFrame {
                             .addComponent(btnViewProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                             .addComponent(btnManageLeave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addComponent(btnGoBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -220,7 +220,7 @@ class MotorPHMainMenu extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGoBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -335,26 +335,25 @@ class MotorPHMainMenu extends javax.swing.JFrame {
      * Handles the action event of the "Go back to login" button. Opens the
      * login page and closes the current main menu.
      */
-    private void btnGoBackToLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoBackToLoginActionPerformed
-        new LoginPage().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnGoBackToLoginActionPerformed
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        logout();
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * Handles mouse hover event on the "Go back to login" button by changing
      * its background color.
      */
-    private void btnGoBackToLoginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGoBackToLoginMouseEntered
-        btnGoBackToLogin.setBackground(LIGHT_BLUE);
-    }//GEN-LAST:event_btnGoBackToLoginMouseEntered
+    private void btnLogoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseEntered
+        btnLogout.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnLogoutMouseEntered
 
     /**
      * Handles mouse exit event on the "Go back to login" button by resetting
      * its background color.
      */
-    private void btnGoBackToLoginMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGoBackToLoginMouseExited
-        btnGoBackToLogin.setBackground(WHITE);
-    }//GEN-LAST:event_btnGoBackToLoginMouseExited
+    private void btnLogoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseExited
+        btnLogout.setBackground(WHITE);
+    }//GEN-LAST:event_btnLogoutMouseExited
 
     private void btnComputeSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputeSalaryActionPerformed
         // TODO add your handling code here:
@@ -369,10 +368,18 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         btnComputeSalary.setBackground(WHITE);
     }//GEN-LAST:event_btnComputeSalaryMouseExited
 
+    private void logout() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+            new LoginPage().setVisible(true);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnComputeSalary;
     private javax.swing.JButton btnExit;
-    private javax.swing.JButton btnGoBackToLogin;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManageLeave;
     private javax.swing.JButton btnViewProfile;
     private javax.swing.JLabel lblIwantTo;
