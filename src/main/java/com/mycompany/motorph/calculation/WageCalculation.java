@@ -136,7 +136,7 @@ public class WageCalculation {
      * @throws IOException If an I/O error occurs while reading the file
      * @throws CsvValidationException If data from a row is invalid
      */
-    private List<String[]> readAttendanceData() throws IOException, CsvValidationException {
+    public List<String[]> readAttendanceData() throws IOException, CsvValidationException {
         List<String[]> attendanceDataList = new ArrayList<>();
         try (CSVReader reader = new CSVReader(new FileReader(ATTENDANCE_DATA_PATH))) {
             String[] data;

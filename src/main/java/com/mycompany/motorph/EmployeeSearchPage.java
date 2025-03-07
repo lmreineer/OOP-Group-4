@@ -15,14 +15,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- * A class that represents the Employee Search Page of the application.
- * <p>
- * It allows users to select a specific employee based on their employee number.
- * Implements the EmployeeInformationManager interface.
- *
- * @author Lance
- */
 class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformationManager {
 
     // Constants for button coloring changes
@@ -77,6 +69,11 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         PopUpAdminAction.add(btnUpdateEmployeeInformation);
 
         btnComputeSalary.setText("Compute Salary");
+        btnComputeSalary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComputeSalaryActionPerformed(evt);
+            }
+        });
         PopUpAdminAction.add(btnComputeSalary);
 
         btnChangeCredentials.setText("Change Credentials");
@@ -428,6 +425,22 @@ private void setupTableMouseListener() {
 
         
     }//GEN-LAST:event_btnUpdateEmployeeInformationActionPerformed
+
+    private void btnComputeSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputeSalaryActionPerformed
+        // TODO add your handling code here:
+     int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+
+    if (rowIndex != -1) {
+        // Assuming the first column (index 0) contains the employee number
+        int employeeNumber = (int) tblBasicEmployeeInformation.getValueAt(rowIndex, 0); 
+
+        // Open Payroll Computation Frame with the correct employee number
+        new PayrollComputationFrame(employeeNumber);
+    } else {
+        // Show an error message if no row is selected
+        JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnComputeSalaryActionPerformed
 private void showPopupMenu(MouseEvent e) {
     // If you already have a popup menu, just show it at the mouse location
     PopUpAdminAction.show(tblBasicEmployeeInformation, e.getX(), e.getY());

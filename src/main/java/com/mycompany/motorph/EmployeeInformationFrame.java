@@ -27,7 +27,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 /**
  * A class that displays the specific employee's pay information based on the
@@ -45,10 +44,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
 
     private boolean deleteButtonClicked = false;
 
-    private JButton computeButton;
-    private JComboBox<String> monthComboBox;
-    private JLabel instructionLabel;
-    private JPanel topPanel;
+    private JButton btnCompute;
+    private JComboBox<String> cmbMonth;
+    private JLabel lblInstruction;
+    private JPanel pnlTop;
 
     /**
      * Creates new EmployeeInformationFrame.
@@ -62,8 +61,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         assignClickHandlersToTextFields();
     }
 
-
-
     /**
      * Sets up the frame with initial components and layout.
      *
@@ -74,7 +71,7 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         setLayout(new BorderLayout());
 
         // Create components
-       initializeTopPanel(employeeDetails);
+        showInformation(employeeDetails);
 
         // Set frame visibility
         pack();
@@ -89,46 +86,45 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
      * @param employeeDetails List of strings that contains initial employee
      * information.
      */
-    private void initializeTopPanel(List<String> employeeDetails) {
-        // Create the label
-        instructionLabel = new JLabel("Select the month for wage information");
-
-        // Create the month combo box
-        String[] months = {
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        };
-        monthComboBox = new JComboBox<>(months);
-
-        // Create the compute button
-        computeButton = createButton("Compute", e -> {
-            String selectedMonth = String.format("%02d", monthComboBox.getSelectedIndex() + 1);
-            showInformation(employeeDetails, selectedMonth);
-        });
-
-        computeButton.addMouseListener(createButtonHoverAdapter(computeButton, LIGHT_BLUE, WHITE));
-
-        computeButton.setBackground(WHITE);
-        computeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        scrollPaneMain.setVisible(false);  // Initially hide the information panel
-
-        // Create a panel for the top components
-        topPanel = new JPanel();
-        // Add a 12-pixel margin
-        topPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
-        topPanel.setBackground(Color.WHITE);
-        topPanel.add(instructionLabel);
-        topPanel.add(monthComboBox);
-
-        monthComboBox.setFocusable(false);
-        computeButton.setFocusable(false);
-
-        // Add the top panel and the compute button to the frame
-        add(topPanel, BorderLayout.NORTH);
-        add(computeButton, BorderLayout.CENTER);
-    }
-
+//    private void initializeTopPanel(List<String> employeeDetails) {
+//        // Create the label
+//        lblInstruction = new JLabel("Select the month for wage information");
+//
+//        // Create the month combo box
+//        String[] months = {
+//            "January", "February", "March", "April", "May", "June",
+//            "July", "August", "September", "October", "November", "December"
+//        };
+//        cmbMonth = new JComboBox<>(months);
+//
+//        // Create the compute button
+//        btnCompute = createButton("Compute", e -> {
+//            String selectedMonth = String.format("%02d", cmbMonth.getSelectedIndex() + 1);
+//            showInformation(employeeDetails, selectedMonth);
+//        });
+//
+//        btnCompute.addMouseListener(createButtonHoverAdapter(btnCompute, LIGHT_BLUE, WHITE));
+//
+//        btnCompute.setBackground(WHITE);
+//        btnCompute.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//
+//        scrollPaneMain.setVisible(false);  // Initially hide the information panel
+//
+//        // Create a panel for the top components
+//        pnlTop = new JPanel();
+//        // Add a 12-pixel margin
+//        pnlTop.setBorder(new EmptyBorder(12, 12, 12, 12));
+//        pnlTop.setBackground(Color.WHITE);
+//        pnlTop.add(lblInstruction);
+//        pnlTop.add(cmbMonth);
+//
+//        cmbMonth.setFocusable(false);
+//        btnCompute.setFocusable(false);
+//
+//        // Add the top panel and the compute button to the frame
+//        add(pnlTop, BorderLayout.NORTH);
+//        add(btnCompute, BorderLayout.CENTER);
+//    }
     /**
      * Creates a JButton with specified text and action listener.
      *
@@ -171,9 +167,9 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
      * information.
      * @param selectedMonth Selected month in "MM" format.
      */
-    private void showInformation(List<String> employeeDetails, String selectedMonth) {
-        remove(topPanel);
-        remove(computeButton);
+    public void showInformation(List<String> employeeDetails) {
+//        remove(pnlTop);
+//        remove(btnCompute);
 
         populateEmployeeInformation(employeeDetails.get(0));
 
@@ -187,7 +183,7 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         revalidate();
         repaint();
 
-        populateWageInformation(selectedMonth);
+//        populateWageInformation(selectedMonth);
     }
 
     /**
@@ -241,31 +237,9 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         txtFirstName = new javax.swing.JTextField();
         lblBottomSeparator = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
-        btnDeleteInfo = new javax.swing.JButton();
-        btnUpdateInfo = new javax.swing.JButton();
         lblEmployeeNumber = new javax.swing.JLabel();
         txtEmployeeNumber = new javax.swing.JTextField();
-        lblEmployeeInformationHeader1 = new javax.swing.JLabel();
-        lblGrossWage = new javax.swing.JLabel();
-        txtGrossWage = new javax.swing.JTextField();
-        txtSssDeduction = new javax.swing.JTextField();
-        lblSssDeduction = new javax.swing.JLabel();
-        lblPhilHealthDeduction = new javax.swing.JLabel();
-        txtPhilHealthDeduction = new javax.swing.JTextField();
-        txtPagIbigDeduction = new javax.swing.JTextField();
-        lblPagIbigDeduction = new javax.swing.JLabel();
-        lblWithholdingTax = new javax.swing.JLabel();
-        txtWithholdingTax = new javax.swing.JTextField();
-        txtLateArrivalDeduction = new javax.swing.JTextField();
-        lblLateArrivalDeduction = new javax.swing.JLabel();
-        lblTotalDeductions = new javax.swing.JLabel();
-        txtTotalDeductions = new javax.swing.JTextField();
-        txtNetWage = new javax.swing.JTextField();
-        lblNetWage = new javax.swing.JLabel();
-        lblMonth = new javax.swing.JLabel();
-        txtMonth = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Employee and Wage Information");
@@ -289,13 +263,11 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblEmployeeInformationHeader.setOpaque(true);
 
         txtLastName.setEditable(false);
-        txtLastName.setBackground(new java.awt.Color(242, 242, 242));
         txtLastName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtLastName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtLastName.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txtLastName.setFocusable(false);
 
-        lblLastName.setBackground(new java.awt.Color(242, 242, 242));
         lblLastName.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblLastName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblLastName.setText("Last Name:");
@@ -305,7 +277,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblLastName.setMinimumSize(new java.awt.Dimension(93, 25));
         lblLastName.setOpaque(true);
 
-        lblBirthdate.setBackground(new java.awt.Color(242, 242, 242));
         lblBirthdate.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblBirthdate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBirthdate.setText("Birthdate:");
@@ -316,18 +287,15 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblBirthdate.setOpaque(true);
 
         txtBirthdate.setEditable(false);
-        txtBirthdate.setBackground(new java.awt.Color(242, 242, 242));
         txtBirthdate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtBirthdate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtBirthdate.setFocusable(false);
 
         txtPhoneNumber.setEditable(false);
-        txtPhoneNumber.setBackground(new java.awt.Color(242, 242, 242));
         txtPhoneNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPhoneNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtPhoneNumber.setFocusable(false);
 
-        lblPhoneNumber.setBackground(new java.awt.Color(242, 242, 242));
         lblPhoneNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPhoneNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPhoneNumber.setText("Phone #:");
@@ -338,12 +306,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblPhoneNumber.setOpaque(true);
 
         txtAddress.setEditable(false);
-        txtAddress.setBackground(new java.awt.Color(242, 242, 242));
         txtAddress.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtAddress.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtAddress.setFocusable(false);
 
-        lblAddress.setBackground(new java.awt.Color(242, 242, 242));
         lblAddress.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblAddress.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblAddress.setText("Address:");
@@ -354,12 +320,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblAddress.setOpaque(true);
 
         txtSssNumber.setEditable(false);
-        txtSssNumber.setBackground(new java.awt.Color(242, 242, 242));
         txtSssNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtSssNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtSssNumber.setFocusable(false);
 
-        lblSssNumber.setBackground(new java.awt.Color(242, 242, 242));
         lblSssNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblSssNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSssNumber.setText("SSS #:");
@@ -370,12 +334,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblSssNumber.setOpaque(true);
 
         txtPhilHealthNumber.setEditable(false);
-        txtPhilHealthNumber.setBackground(new java.awt.Color(242, 242, 242));
         txtPhilHealthNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPhilHealthNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtPhilHealthNumber.setFocusable(false);
 
-        lblPhilHealthNumber.setBackground(new java.awt.Color(242, 242, 242));
         lblPhilHealthNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPhilHealthNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPhilHealthNumber.setText("PhilHealth #:");
@@ -386,12 +348,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblPhilHealthNumber.setOpaque(true);
 
         txtTinNumber.setEditable(false);
-        txtTinNumber.setBackground(new java.awt.Color(242, 242, 242));
         txtTinNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTinNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtTinNumber.setFocusable(false);
 
-        lblTinNumber.setBackground(new java.awt.Color(242, 242, 242));
         lblTinNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblTinNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTinNumber.setText("TIN:");
@@ -402,12 +362,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblTinNumber.setOpaque(true);
 
         txtStatus.setEditable(false);
-        txtStatus.setBackground(new java.awt.Color(242, 242, 242));
         txtStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtStatus.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtStatus.setFocusable(false);
 
-        lblStatus.setBackground(new java.awt.Color(242, 242, 242));
         lblStatus.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblStatus.setText("Status:");
@@ -418,12 +376,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblStatus.setOpaque(true);
 
         txtPagIbigNumber.setEditable(false);
-        txtPagIbigNumber.setBackground(new java.awt.Color(242, 242, 242));
         txtPagIbigNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPagIbigNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtPagIbigNumber.setFocusable(false);
 
-        lblPagIbigNumber.setBackground(new java.awt.Color(242, 242, 242));
         lblPagIbigNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPagIbigNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPagIbigNumber.setText("Pag-IBIG #:");
@@ -434,12 +390,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblPagIbigNumber.setOpaque(true);
 
         txtPosition.setEditable(false);
-        txtPosition.setBackground(new java.awt.Color(242, 242, 242));
         txtPosition.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPosition.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtPosition.setFocusable(false);
 
-        lblPosition.setBackground(new java.awt.Color(242, 242, 242));
         lblPosition.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPosition.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPosition.setText("Position:");
@@ -450,12 +404,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblPosition.setOpaque(true);
 
         txtBasicSalary.setEditable(false);
-        txtBasicSalary.setBackground(new java.awt.Color(242, 242, 242));
         txtBasicSalary.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtBasicSalary.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtBasicSalary.setFocusable(false);
 
-        lblBasicSalary.setBackground(new java.awt.Color(242, 242, 242));
         lblBasicSalary.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblBasicSalary.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBasicSalary.setText("Basic Salary:");
@@ -466,12 +418,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblBasicSalary.setOpaque(true);
 
         txtPhoneAllowance.setEditable(false);
-        txtPhoneAllowance.setBackground(new java.awt.Color(242, 242, 242));
         txtPhoneAllowance.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPhoneAllowance.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtPhoneAllowance.setFocusable(false);
 
-        lblPhoneAllowance.setBackground(new java.awt.Color(242, 242, 242));
         lblPhoneAllowance.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPhoneAllowance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPhoneAllowance.setText("Phone Allowance:");
@@ -482,12 +432,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblPhoneAllowance.setOpaque(true);
 
         txtGrossSemimonthlyRate.setEditable(false);
-        txtGrossSemimonthlyRate.setBackground(new java.awt.Color(242, 242, 242));
         txtGrossSemimonthlyRate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtGrossSemimonthlyRate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtGrossSemimonthlyRate.setFocusable(false);
 
-        lblGrossSemimonthlyRate.setBackground(new java.awt.Color(242, 242, 242));
         lblGrossSemimonthlyRate.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblGrossSemimonthlyRate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblGrossSemimonthlyRate.setText("Gross Semi-monthly Rate:");
@@ -498,12 +446,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblGrossSemimonthlyRate.setOpaque(true);
 
         txtImmediateSupervisor.setEditable(false);
-        txtImmediateSupervisor.setBackground(new java.awt.Color(242, 242, 242));
         txtImmediateSupervisor.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtImmediateSupervisor.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtImmediateSupervisor.setFocusable(false);
 
-        lblImmediateSupervisor.setBackground(new java.awt.Color(242, 242, 242));
         lblImmediateSupervisor.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblImmediateSupervisor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblImmediateSupervisor.setText("Immediate Supervisor:");
@@ -514,12 +460,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblImmediateSupervisor.setOpaque(true);
 
         txtRiceSubsidy.setEditable(false);
-        txtRiceSubsidy.setBackground(new java.awt.Color(242, 242, 242));
         txtRiceSubsidy.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtRiceSubsidy.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtRiceSubsidy.setFocusable(false);
 
-        lblRiceSubsidy.setBackground(new java.awt.Color(242, 242, 242));
         lblRiceSubsidy.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblRiceSubsidy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblRiceSubsidy.setText("Rice Subsidy:");
@@ -530,12 +474,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblRiceSubsidy.setOpaque(true);
 
         txtClothingAllowance.setEditable(false);
-        txtClothingAllowance.setBackground(new java.awt.Color(242, 242, 242));
         txtClothingAllowance.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtClothingAllowance.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtClothingAllowance.setFocusable(false);
 
-        lblClothingAllowance.setBackground(new java.awt.Color(242, 242, 242));
         lblClothingAllowance.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblClothingAllowance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblClothingAllowance.setText("Clothing Allowance:");
@@ -546,12 +488,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblClothingAllowance.setOpaque(true);
 
         txtHourlyRate.setEditable(false);
-        txtHourlyRate.setBackground(new java.awt.Color(242, 242, 242));
         txtHourlyRate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtHourlyRate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtHourlyRate.setFocusable(false);
 
-        lblHourlyRate.setBackground(new java.awt.Color(242, 242, 242));
         lblHourlyRate.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblHourlyRate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblHourlyRate.setText("Hourly Rate:");
@@ -561,7 +501,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblHourlyRate.setMinimumSize(new java.awt.Dimension(93, 25));
         lblHourlyRate.setOpaque(true);
 
-        lblFirstName.setBackground(new java.awt.Color(242, 242, 242));
         lblFirstName.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblFirstName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblFirstName.setText("First Name:");
@@ -572,7 +511,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblFirstName.setOpaque(true);
 
         txtFirstName.setEditable(false);
-        txtFirstName.setBackground(new java.awt.Color(242, 242, 242));
         txtFirstName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtFirstName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtFirstName.setFocusable(false);
@@ -583,7 +521,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblBottomSeparator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBottomSeparator.setOpaque(true);
 
-        btnExit.setBackground(new java.awt.Color(255, 255, 255));
         btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnExit.setText("Exit");
         btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -603,28 +540,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
             }
         });
 
-        btnSave.setBackground(new java.awt.Color(255, 255, 255));
-        btnSave.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnSave.setText("Save");
-        btnSave.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSave.setEnabled(false);
-        btnSave.setFocusable(false);
-        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnSaveMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnSaveMouseExited(evt);
-            }
-        });
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-
-        btnBack.setBackground(new java.awt.Color(255, 255, 255));
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("Back");
         btnBack.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -644,33 +559,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
             }
         });
 
-        btnDeleteInfo.setBackground(new java.awt.Color(199, 73, 73));
-        btnDeleteInfo.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnDeleteInfo.setText("Delete Information");
-        btnDeleteInfo.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnDeleteInfo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnDeleteInfo.setEnabled(false);
-        btnDeleteInfo.setFocusable(false);
-        btnDeleteInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteInfoActionPerformed(evt);
-            }
-        });
-
-        btnUpdateInfo.setBackground(new java.awt.Color(73, 199, 73));
-        btnUpdateInfo.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnUpdateInfo.setText("Update Information");
-        btnUpdateInfo.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnUpdateInfo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnUpdateInfo.setEnabled(false);
-        btnUpdateInfo.setFocusable(false);
-        btnUpdateInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateInfoActionPerformed(evt);
-            }
-        });
-
-        lblEmployeeNumber.setBackground(new java.awt.Color(242, 242, 242));
         lblEmployeeNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblEmployeeNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblEmployeeNumber.setText("Employee #");
@@ -681,153 +569,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblEmployeeNumber.setOpaque(true);
 
         txtEmployeeNumber.setEditable(false);
-        txtEmployeeNumber.setBackground(new java.awt.Color(242, 242, 242));
         txtEmployeeNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtEmployeeNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtEmployeeNumber.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txtEmployeeNumber.setFocusable(false);
-
-        lblEmployeeInformationHeader1.setBackground(new java.awt.Color(223, 54, 54));
-        lblEmployeeInformationHeader1.setFont(new java.awt.Font("Leelawadee", 1, 16)); // NOI18N
-        lblEmployeeInformationHeader1.setForeground(new java.awt.Color(255, 255, 255));
-        lblEmployeeInformationHeader1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblEmployeeInformationHeader1.setText("Wage Information");
-        lblEmployeeInformationHeader1.setOpaque(true);
-
-        lblGrossWage.setBackground(new java.awt.Color(242, 242, 242));
-        lblGrossWage.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblGrossWage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblGrossWage.setText("Gross Wage:");
-        lblGrossWage.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblGrossWage.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblGrossWage.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblGrossWage.setOpaque(true);
-
-        txtGrossWage.setEditable(false);
-        txtGrossWage.setBackground(new java.awt.Color(242, 242, 242));
-        txtGrossWage.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtGrossWage.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtGrossWage.setFocusable(false);
-
-        txtSssDeduction.setEditable(false);
-        txtSssDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        txtSssDeduction.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtSssDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtSssDeduction.setFocusable(false);
-
-        lblSssDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        lblSssDeduction.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblSssDeduction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSssDeduction.setText("SSS Deduction:");
-        lblSssDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblSssDeduction.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblSssDeduction.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblSssDeduction.setOpaque(true);
-
-        lblPhilHealthDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        lblPhilHealthDeduction.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblPhilHealthDeduction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPhilHealthDeduction.setText("PhilHealth Deduction:");
-        lblPhilHealthDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblPhilHealthDeduction.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblPhilHealthDeduction.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblPhilHealthDeduction.setOpaque(true);
-
-        txtPhilHealthDeduction.setEditable(false);
-        txtPhilHealthDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        txtPhilHealthDeduction.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtPhilHealthDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtPhilHealthDeduction.setFocusable(false);
-
-        txtPagIbigDeduction.setEditable(false);
-        txtPagIbigDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        txtPagIbigDeduction.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtPagIbigDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtPagIbigDeduction.setFocusable(false);
-
-        lblPagIbigDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        lblPagIbigDeduction.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblPagIbigDeduction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPagIbigDeduction.setText("Pag-IBIG Deduction:");
-        lblPagIbigDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblPagIbigDeduction.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblPagIbigDeduction.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblPagIbigDeduction.setOpaque(true);
-
-        lblWithholdingTax.setBackground(new java.awt.Color(242, 242, 242));
-        lblWithholdingTax.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblWithholdingTax.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWithholdingTax.setText("Withholding Tax:");
-        lblWithholdingTax.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblWithholdingTax.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblWithholdingTax.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblWithholdingTax.setOpaque(true);
-
-        txtWithholdingTax.setEditable(false);
-        txtWithholdingTax.setBackground(new java.awt.Color(242, 242, 242));
-        txtWithholdingTax.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtWithholdingTax.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtWithholdingTax.setFocusable(false);
-
-        txtLateArrivalDeduction.setEditable(false);
-        txtLateArrivalDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        txtLateArrivalDeduction.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtLateArrivalDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtLateArrivalDeduction.setFocusable(false);
-
-        lblLateArrivalDeduction.setBackground(new java.awt.Color(242, 242, 242));
-        lblLateArrivalDeduction.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblLateArrivalDeduction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblLateArrivalDeduction.setText("Late Arrival Deduction:");
-        lblLateArrivalDeduction.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblLateArrivalDeduction.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblLateArrivalDeduction.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblLateArrivalDeduction.setOpaque(true);
-
-        lblTotalDeductions.setBackground(new java.awt.Color(242, 242, 242));
-        lblTotalDeductions.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblTotalDeductions.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotalDeductions.setText("Total Deductions:");
-        lblTotalDeductions.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblTotalDeductions.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblTotalDeductions.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblTotalDeductions.setOpaque(true);
-
-        txtTotalDeductions.setEditable(false);
-        txtTotalDeductions.setBackground(new java.awt.Color(242, 242, 242));
-        txtTotalDeductions.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtTotalDeductions.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtTotalDeductions.setFocusable(false);
-
-        txtNetWage.setEditable(false);
-        txtNetWage.setBackground(new java.awt.Color(242, 242, 242));
-        txtNetWage.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtNetWage.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtNetWage.setFocusable(false);
-
-        lblNetWage.setBackground(new java.awt.Color(242, 242, 242));
-        lblNetWage.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblNetWage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblNetWage.setText("Net Wage:");
-        lblNetWage.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblNetWage.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblNetWage.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblNetWage.setOpaque(true);
-
-        lblMonth.setBackground(new java.awt.Color(242, 242, 242));
-        lblMonth.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblMonth.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblMonth.setText("Month:");
-        lblMonth.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblMonth.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblMonth.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblMonth.setOpaque(true);
-
-        txtMonth.setEditable(false);
-        txtMonth.setBackground(new java.awt.Color(242, 242, 242));
-        txtMonth.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtMonth.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtMonth.setFocusable(false);
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -921,47 +666,14 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
                         .addComponent(lblHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(12, 12, 12))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(btnDeleteInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(btnUpdateInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
-            .addComponent(lblEmployeeInformationHeader1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(pnlMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lblMonth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblNetWage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTotalDeductions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblLateArrivalDeduction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblWithholdingTax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPagIbigDeduction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPhilHealthDeduction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblSssDeduction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblGrossWage, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtGrossWage, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtSssDeduction, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtPhilHealthDeduction, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtPagIbigDeduction, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtWithholdingTax, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtLateArrivalDeduction, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtTotalDeductions, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtNetWage, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtMonth))
-                .addContainerGap())
+                .addGap(6, 6, 6))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(13, 13, 13)
                 .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(13, 13, 13)
                 .addComponent(lblEmployeeInformationHeader)
                 .addGap(15, 15, 15)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -987,11 +699,11 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(7, 7, 7)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSssNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSssNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(7, 7, 7)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPhilHealthNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPhilHealthNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1040,55 +752,12 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
                     .addComponent(lblHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDeleteInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUpdateInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addComponent(lblEmployeeInformationHeader1)
-                .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtGrossWage, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblGrossWage, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSssDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSssDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPhilHealthDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPhilHealthDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPagIbigDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPagIbigDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtWithholdingTax, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblWithholdingTax, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtLateArrivalDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblLateArrivalDeduction, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTotalDeductions, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTotalDeductions, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNetWage, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNetWage, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
                 .addComponent(lblBottomSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
 
         scrollPaneMain.setViewportView(pnlMain);
@@ -1097,11 +766,11 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
+            .addComponent(scrollPaneMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+            .addComponent(scrollPaneMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -1156,47 +825,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
     }//GEN-LAST:event_btnExitMouseEntered
 
     /**
-     * Updates the employee information and sets fields non-editable.
-     */
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        updateEmployeeInformation();
-    }//GEN-LAST:event_btnSaveActionPerformed
-
-    /**
-     * Handles mouse hover event on the save button by resetting its background
-     * color.
-     */
-    private void btnSaveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseExited
-        btnSave.setBackground(WHITE);
-    }//GEN-LAST:event_btnSaveMouseExited
-
-    /**
-     * Handles mouse hover event on the save button by changing its background
-     * color.
-     */
-    private void btnSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseEntered
-        btnSave.setBackground(LIGHT_BLUE);
-    }//GEN-LAST:event_btnSaveMouseEntered
-
-    /**
-     * Sets the fields editable for updating employee information.
-     */
-    private void btnUpdateInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInfoActionPerformed
-        deleteButtonClicked = false;
-        // Set fields editable for updating
-        setFieldsEditable(true);
-    }//GEN-LAST:event_btnUpdateInfoActionPerformed
-
-    /**
-     * Sets the fields editable for deleting employee information.
-     */
-    private void btnDeleteInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteInfoActionPerformed
-        deleteButtonClicked = true;
-        // Set fields editable for deleting
-        setFieldsEditable(true);
-    }//GEN-LAST:event_btnDeleteInfoActionPerformed
-
-    /**
      * Displays an error dialog with the provided error message.
      *
      * @param errorMessage The error message to display in the dialog.
@@ -1240,10 +868,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
 
             // Populate text fields with employee information
             updateEmployeeInformationFields(employeeInfo);
-
-            // Enable the delete and update buttons
-            btnDeleteInfo.setEnabled(true);
-            btnUpdateInfo.setEnabled(true);
+//
+//            // Enable the delete and update buttons
+//            btnDeleteInfo.setEnabled(true);
+//            btnUpdateInfo.setEnabled(true);
         } catch (IOException | ParseException | CsvValidationException | IllegalArgumentException e) {
             // Show error dialog with the exception message
             showErrorDialog(e.getMessage());
@@ -1291,15 +919,15 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
     private void updateWageInformationFields(List<String> wageInfo, String selectedMonth) {
         String monthName = getMonthName(selectedMonth);
 
-        txtMonth.setText(monthName);
-        txtGrossWage.setText(wageInfo.get(0));
-        txtSssDeduction.setText(wageInfo.get(1));
-        txtPhilHealthDeduction.setText(wageInfo.get(2));
-        txtPagIbigDeduction.setText(wageInfo.get(3));
-        txtWithholdingTax.setText(wageInfo.get(4));
-        txtLateArrivalDeduction.setText(wageInfo.get(5));
-        txtTotalDeductions.setText(wageInfo.get(6));
-        txtNetWage.setText(wageInfo.get(7));
+//        txtMonth.setText(monthName);
+//        txtGrossWage.setText(wageInfo.get(0));
+//        txtSssDeduction.setText(wageInfo.get(1));
+//        txtPhilHealthDeduction.setText(wageInfo.get(2));
+//        txtPagIbigDeduction.setText(wageInfo.get(3));
+//        txtWithholdingTax.setText(wageInfo.get(4));
+//        txtLateArrivalDeduction.setText(wageInfo.get(5));
+//        txtTotalDeductions.setText(wageInfo.get(6));
+//        txtNetWage.setText(wageInfo.get(7));
     }
 
     /**
@@ -1407,7 +1035,7 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         }
 
         // Enable the save button
-        btnSave.setEnabled(true);
+//        btnSave.setEnabled(true);
     }
 
     /**
@@ -1468,42 +1096,29 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnDeleteInfo;
     private javax.swing.JButton btnExit;
-    private javax.swing.JButton btnSave;
-    private javax.swing.JButton btnUpdateInfo;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblBasicSalary;
     private javax.swing.JLabel lblBirthdate;
     private javax.swing.JLabel lblBottomSeparator;
     private javax.swing.JLabel lblClothingAllowance;
     private javax.swing.JLabel lblEmployeeInformationHeader;
-    private javax.swing.JLabel lblEmployeeInformationHeader1;
     private javax.swing.JLabel lblEmployeeNumber;
     private javax.swing.JLabel lblFirstName;
     private javax.swing.JLabel lblGrossSemimonthlyRate;
-    private javax.swing.JLabel lblGrossWage;
     private javax.swing.JLabel lblHourlyRate;
     private javax.swing.JLabel lblImmediateSupervisor;
     private javax.swing.JLabel lblLastName;
-    private javax.swing.JLabel lblLateArrivalDeduction;
-    private javax.swing.JLabel lblMonth;
     private javax.swing.JLabel lblMotorPhHeader;
-    private javax.swing.JLabel lblNetWage;
-    private javax.swing.JLabel lblPagIbigDeduction;
     private javax.swing.JLabel lblPagIbigNumber;
-    private javax.swing.JLabel lblPhilHealthDeduction;
     private javax.swing.JLabel lblPhilHealthNumber;
     private javax.swing.JLabel lblPhoneAllowance;
     private javax.swing.JLabel lblPhoneNumber;
     private javax.swing.JLabel lblPosition;
     private javax.swing.JLabel lblRiceSubsidy;
-    private javax.swing.JLabel lblSssDeduction;
     private javax.swing.JLabel lblSssNumber;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblTinNumber;
-    private javax.swing.JLabel lblTotalDeductions;
-    private javax.swing.JLabel lblWithholdingTax;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JScrollPane scrollPaneMain;
     private javax.swing.JTextField txtAddress;
@@ -1513,26 +1128,17 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
     private javax.swing.JTextField txtEmployeeNumber;
     private javax.swing.JTextField txtFirstName;
     private javax.swing.JTextField txtGrossSemimonthlyRate;
-    private javax.swing.JTextField txtGrossWage;
     private javax.swing.JTextField txtHourlyRate;
     private javax.swing.JTextField txtImmediateSupervisor;
     private javax.swing.JTextField txtLastName;
-    private javax.swing.JTextField txtLateArrivalDeduction;
-    private javax.swing.JTextField txtMonth;
-    private javax.swing.JTextField txtNetWage;
-    private javax.swing.JTextField txtPagIbigDeduction;
     private javax.swing.JTextField txtPagIbigNumber;
-    private javax.swing.JTextField txtPhilHealthDeduction;
     private javax.swing.JTextField txtPhilHealthNumber;
     private javax.swing.JTextField txtPhoneAllowance;
     private javax.swing.JTextField txtPhoneNumber;
     private javax.swing.JTextField txtPosition;
     private javax.swing.JTextField txtRiceSubsidy;
-    private javax.swing.JTextField txtSssDeduction;
     private javax.swing.JTextField txtSssNumber;
     private javax.swing.JTextField txtStatus;
     private javax.swing.JTextField txtTinNumber;
-    private javax.swing.JTextField txtTotalDeductions;
-    private javax.swing.JTextField txtWithholdingTax;
     // End of variables declaration//GEN-END:variables
 }
