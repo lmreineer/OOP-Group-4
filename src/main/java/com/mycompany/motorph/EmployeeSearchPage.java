@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Lance
  */
-//test
+
 class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformationManager {
 
     // Constants for button coloring changes
