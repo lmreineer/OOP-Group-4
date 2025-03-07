@@ -421,9 +421,7 @@ private void setupTableMouseListener() {
     } else {
         // Optionally show an error message if no row is selected
         JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-        
+    }  
     }//GEN-LAST:event_btnUpdateEmployeeInformationActionPerformed
 
     private void btnComputeSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputeSalaryActionPerformed
@@ -515,21 +513,23 @@ private void showPopupMenu(MouseEvent e) {
      */
     private void showEmployeeInformation(int rowIndex) {
         try {
-            // Get selected employee's information
-            DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
-
-            int employeeNumber = (int) model.getValueAt(rowIndex, 0);
-
-            EmployeeInformation employeeInformation = new EmployeeInformation();
-
-            List<String> employeeDetails = employeeInformation.showEmployeeInformation(employeeNumber);
-
-            // Display information in a new frame
-            new EmployeeInformationFrame(employeeDetails).setVisible(true);
-        } catch (IOException | ParseException | CsvValidationException e) {
-            // Show error dialog with the exception message
-            showErrorDialog(e.getMessage());
+        // Ensure a valid row is selected
+        if (rowIndex == -1) {
+            JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        // Get the employee number from the selected row (assuming it's in column 0)
+        DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
+        int employeeNumber = Integer.parseInt(model.getValueAt(rowIndex, 0).toString().trim());
+
+        // Open EmployeeInformationFrame and pass the employee number
+        EmployeeInformationFrame empInfoFrame = new EmployeeInformationFrame(employeeNumber);
+        empInfoFrame.setVisible(true);
+        this.dispose(); // Optional: Close the SearchEmployeeFrame
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Invalid employee number format.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }
 
     /**

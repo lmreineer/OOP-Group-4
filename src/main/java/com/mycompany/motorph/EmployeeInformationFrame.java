@@ -4,29 +4,18 @@
  */
 package com.mycompany.motorph;
 
-import com.mycompany.motorph.calculation.WageCalculation;
 import com.mycompany.motorph.employee.EmployeeInformation;
-import com.mycompany.motorph.model.DateRange;
-import static com.mycompany.motorph.model.DateRange.createMonthRange;
 import com.opencsv.exceptions.CsvValidationException;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.Month;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+
 
 /**
  * A class that displays the specific employee's pay information based on the
@@ -41,13 +30,9 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
     private static final java.awt.Color WHITE = new java.awt.Color(255, 255, 255);
     private static final java.awt.Color RED = new java.awt.Color(191, 47, 47);
     private static final java.awt.Color GRAY = new java.awt.Color(242, 242, 242);
-
-    private boolean deleteButtonClicked = false;
-
-    private JButton btnCompute;
-    private JComboBox<String> cmbMonth;
-    private JLabel lblInstruction;
-    private JPanel pnlTop;
+    
+    private int employeeNumber;
+    private boolean isEditing = false;
 
     /**
      * Creates new EmployeeInformationFrame.
@@ -55,89 +40,128 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
      * @param employeeInformation List of strings that contains initial employee
      * information.
      */
-    public EmployeeInformationFrame(List<String> employeeInformation) {
+    public EmployeeInformationFrame(int employeeNumber) {
+        this.employeeNumber = employeeNumber;
         initComponents();
-        setupFrame(employeeInformation);
-        assignClickHandlersToTextFields();
+        loadEmployeeData();
+        
     }
 
-    /**
-     * Sets up the frame with initial components and layout.
-     *
-     * @param employeeDetails List of strings that contains initial employee
-     * information.
-     */
-    private void setupFrame(List<String> employeeDetails) {
-        setLayout(new BorderLayout());
+    private void loadEmployeeData() {
+         try {
+            EmployeeInformation employeeInfoManager = new EmployeeInformation();
+            List<String> employeeInfo = employeeInfoManager.showEmployeeInformation(employeeNumber);
 
-        // Create components
-        showInformation(employeeDetails);
+            // Populate text fields with retrieved data
+            updateEmployeeInformationFields(employeeInfo);
+        } catch (IOException | ParseException | CsvValidationException e) {
+            JOptionPane.showMessageDialog(this, "Error loading employee information: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+}
+    
 
-        // Set frame visibility
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+    private void setFieldsEditable(boolean editable) {
+        System.out.println("Making fields editable: " + editable);
+        txtLastName.setFocusable(true);
+        txtFirstName.setFocusable(true);
+        txtBirthdate.setFocusable(true);
+        txtAddress.setFocusable(true);
+        txtPhoneNumber.setFocusable(true);
+        txtSssNumber.setFocusable(true);
+        txtPhilHealthNumber.setFocusable(true);
+        txtTinNumber.setFocusable(true);
+        txtPagIbigNumber.setFocusable(true);
+        txtStatus.setFocusable(true);
+        txtPosition.setFocusable(true);
+        txtImmediateSupervisor.setFocusable(true);
+        txtBasicSalary.setFocusable(true);
+        txtRiceSubsidy.setFocusable(true);
+        txtPhoneAllowance.setFocusable(true);
+        txtClothingAllowance.setFocusable(true);
+        txtGrossSemimonthlyRate.setFocusable(true);
+        txtHourlyRate.setFocusable(true);
+
+        txtLastName.setEnabled(true);
+        txtLastName.setEditable(editable);
+        txtFirstName.setEnabled(true);
+        txtFirstName.setEditable(editable);
+        txtBirthdate.setEditable(editable);
+        txtAddress.setEditable(editable);
+        txtPhoneNumber.setEditable(editable);
+        txtSssNumber.setEditable(editable);
+        txtPhilHealthNumber.setEditable(editable);
+        txtTinNumber.setEditable(editable);
+        txtPagIbigNumber.setEditable(editable);
+        txtStatus.setEditable(editable);
+        txtPosition.setEditable(editable);
+        txtImmediateSupervisor.setEditable(editable);
+        txtBasicSalary.setEditable(editable);
+        txtRiceSubsidy.setEditable(editable);
+        txtPhoneAllowance.setEditable(editable);
+        txtClothingAllowance.setEditable(editable);
+        txtGrossSemimonthlyRate.setEditable(editable);
+        txtHourlyRate.setEditable(editable);
+}
+private void saveEmployeeDetails() {
+    try {
+            int employeeNumber = Integer.parseInt(txtEmployeeNumber.getText());
+
+            // Collect updated employee information from text fields
+            List<String> updatedInfo = Arrays.asList(
+                txtLastName.getText(),
+                txtFirstName.getText(),
+                txtBirthdate.getText(),
+                txtAddress.getText(),
+                txtPhoneNumber.getText(),
+                txtSssNumber.getText(),
+                txtPhilHealthNumber.getText(),
+                txtTinNumber.getText(),
+                txtPagIbigNumber.getText(),
+                txtStatus.getText(),
+                txtPosition.getText(),
+                txtImmediateSupervisor.getText(),
+                txtBasicSalary.getText(),
+                txtRiceSubsidy.getText(),
+                txtPhoneAllowance.getText(),
+                txtClothingAllowance.getText(),
+                txtGrossSemimonthlyRate.getText(),
+                txtHourlyRate.getText()
+            );
+
+            // Call the method in EmployeeInformation.java to save updates
+            EmployeeInformation employeeInfoManager = new EmployeeInformation();
+            employeeInfoManager.updateEmployeeInformationInCsv(employeeNumber, updatedInfo);
+
+            JOptionPane.showMessageDialog(this, "Employee information updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException | ParseException | CsvValidationException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error updating employee information: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+}
+    private void updateEmployeeInformationFields(List<String> employeeInfo) {
+        if (employeeInfo.size() >= 18) {
+            txtEmployeeNumber.setText(employeeInfo.get(0));
+            txtLastName.setText(employeeInfo.get(1));
+            txtFirstName.setText(employeeInfo.get(2));
+            txtBirthdate.setText(employeeInfo.get(3));
+            txtAddress.setText(employeeInfo.get(4));
+            txtPhoneNumber.setText(employeeInfo.get(5));
+            txtSssNumber.setText(employeeInfo.get(6));
+            txtPhilHealthNumber.setText(employeeInfo.get(7));
+            txtTinNumber.setText(employeeInfo.get(8));
+            txtPagIbigNumber.setText(employeeInfo.get(9));
+            txtStatus.setText(employeeInfo.get(10));
+            txtPosition.setText(employeeInfo.get(11));
+            txtImmediateSupervisor.setText(employeeInfo.get(12));
+            txtBasicSalary.setText(employeeInfo.get(13));
+            txtRiceSubsidy.setText(employeeInfo.get(14));
+            txtPhoneAllowance.setText(employeeInfo.get(15));
+            txtClothingAllowance.setText(employeeInfo.get(16));
+            txtGrossSemimonthlyRate.setText(employeeInfo.get(17));
+            txtHourlyRate.setText(employeeInfo.get(18));
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid employee data format.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-
-    /**
-     * Creates the top panel with a label, combo box for months, and compute
-     * button.
-     *
-     * @param employeeDetails List of strings that contains initial employee
-     * information.
-     */
-//    private void initializeTopPanel(List<String> employeeDetails) {
-//        // Create the label
-//        lblInstruction = new JLabel("Select the month for wage information");
-//
-//        // Create the month combo box
-//        String[] months = {
-//            "January", "February", "March", "April", "May", "June",
-//            "July", "August", "September", "October", "November", "December"
-//        };
-//        cmbMonth = new JComboBox<>(months);
-//
-//        // Create the compute button
-//        btnCompute = createButton("Compute", e -> {
-//            String selectedMonth = String.format("%02d", cmbMonth.getSelectedIndex() + 1);
-//            showInformation(employeeDetails, selectedMonth);
-//        });
-//
-//        btnCompute.addMouseListener(createButtonHoverAdapter(btnCompute, LIGHT_BLUE, WHITE));
-//
-//        btnCompute.setBackground(WHITE);
-//        btnCompute.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//
-//        scrollPaneMain.setVisible(false);  // Initially hide the information panel
-//
-//        // Create a panel for the top components
-//        pnlTop = new JPanel();
-//        // Add a 12-pixel margin
-//        pnlTop.setBorder(new EmptyBorder(12, 12, 12, 12));
-//        pnlTop.setBackground(Color.WHITE);
-//        pnlTop.add(lblInstruction);
-//        pnlTop.add(cmbMonth);
-//
-//        cmbMonth.setFocusable(false);
-//        btnCompute.setFocusable(false);
-//
-//        // Add the top panel and the compute button to the frame
-//        add(pnlTop, BorderLayout.NORTH);
-//        add(btnCompute, BorderLayout.CENTER);
-//    }
-    /**
-     * Creates a JButton with specified text and action listener.
-     *
-     * @param text Text to display on the button
-     * @param actionListener ActionListener for button click event
-     * @return JButton created button
-     */
-    private JButton createButton(String text, ActionListener actionListener) {
-        JButton button = new JButton(text);
-        button.addActionListener(actionListener);
-        return button;
-    }
-
     /**
      * Creates a MouseAdapter for handling button hover effects.
      *
@@ -160,31 +184,8 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         };
     }
 
-    /**
-     * Displays employee and wage information for the selected month.
-     *
-     * @param employeeDetails List of strings that contains employee
-     * information.
-     * @param selectedMonth Selected month in "MM" format.
-     */
-    public void showInformation(List<String> employeeDetails) {
-//        remove(pnlTop);
-//        remove(btnCompute);
-
-        populateEmployeeInformation(employeeDetails.get(0));
-
-        // Set the intended size
-        scrollPaneMain.setPreferredSize(new Dimension(603, 627));
-        scrollPaneMain.setVisible(true);
-        add(scrollPaneMain, BorderLayout.CENTER);
-
-        pack();
-        setLocationRelativeTo(null);
-        revalidate();
-        repaint();
-
-//        populateWageInformation(selectedMonth);
-    }
+  
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -237,9 +238,11 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         txtFirstName = new javax.swing.JTextField();
         lblBottomSeparator = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
-        btnBack = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
         lblEmployeeNumber = new javax.swing.JLabel();
         txtEmployeeNumber = new javax.swing.JTextField();
+        btnDelete = new javax.swing.JButton();
+        btnBack2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Employee and Wage Information");
@@ -262,11 +265,17 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblEmployeeInformationHeader.setText("Employee Information");
         lblEmployeeInformationHeader.setOpaque(true);
 
-        txtLastName.setEditable(false);
         txtLastName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtLastName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtLastName.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txtLastName.setFocusable(false);
+        txtLastName.setRequestFocusEnabled(false);
+        txtLastName.setVerifyInputWhenFocusTarget(false);
+        txtLastName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLastNameActionPerformed(evt);
+            }
+        });
 
         lblLastName.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblLastName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -286,7 +295,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblBirthdate.setMinimumSize(new java.awt.Dimension(93, 25));
         lblBirthdate.setOpaque(true);
 
-        txtBirthdate.setEditable(false);
         txtBirthdate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtBirthdate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtBirthdate.setFocusable(false);
@@ -305,7 +313,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblPhoneNumber.setMinimumSize(new java.awt.Dimension(93, 25));
         lblPhoneNumber.setOpaque(true);
 
-        txtAddress.setEditable(false);
         txtAddress.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtAddress.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtAddress.setFocusable(false);
@@ -365,6 +372,11 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         txtStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtStatus.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtStatus.setFocusable(false);
+        txtStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtStatusActionPerformed(evt);
+            }
+        });
 
         lblStatus.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -510,7 +522,6 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         lblFirstName.setMinimumSize(new java.awt.Dimension(93, 25));
         lblFirstName.setOpaque(true);
 
-        txtFirstName.setEditable(false);
         txtFirstName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtFirstName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtFirstName.setFocusable(false);
@@ -540,22 +551,23 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
             }
         });
 
-        btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnBack.setText("Back");
-        btnBack.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnBack.setFocusable(false);
-        btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnUpdate.setBackground(new java.awt.Color(40, 167, 69));
+        btnUpdate.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnUpdate.setText("Update");
+        btnUpdate.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdate.setFocusable(false);
+        btnUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnBackMouseEntered(evt);
+                btnUpdateMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnBackMouseExited(evt);
+                btnUpdateMouseExited(evt);
             }
         });
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
+                btnUpdateActionPerformed(evt);
             }
         });
 
@@ -574,6 +586,45 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         txtEmployeeNumber.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txtEmployeeNumber.setFocusable(false);
 
+        btnDelete.setBackground(new java.awt.Color(220, 53, 69));
+        btnDelete.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnDelete.setText("Delete");
+        btnDelete.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDelete.setFocusable(false);
+        btnDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnDeleteMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnDeleteMouseExited(evt);
+            }
+        });
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnBack2.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnBack2.setText("Back");
+        btnBack2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnBack2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBack2.setFocusable(false);
+        btnBack2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnBack2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnBack2MouseExited(evt);
+            }
+        });
+        btnBack2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBack2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -582,11 +633,15 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
             .addComponent(lblEmployeeInformationHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(129, 129, 129)
-                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(74, 74, 74)
+                .addComponent(btnBack2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(129, 129, 129))
+                .addGap(25, 25, 25))
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -666,7 +721,7 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
                         .addComponent(lblHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -756,8 +811,10 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
                 .addGap(15, 15, 15)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15))
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBack2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9))
         );
 
         scrollPaneMain.setViewportView(pnlMain);
@@ -779,26 +836,35 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
     /**
      * Handles the action event of the back button to close the current page.
      */
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // Close the current page
-        dispose();
-    }//GEN-LAST:event_btnBackActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    if (!isEditing) {
+        // Enable text fields for editing
+        setFieldsEditable(true);
+        btnUpdate.setText("Save"); // Change button text
+    } else {
+        // Save changes and disable editing
+        saveEmployeeDetails();
+        setFieldsEditable(false);
+        btnUpdate.setText("Update"); // Reset button text
+    }
+    isEditing = !isEditing; // Toggle state
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
     /**
      * Handles mouse exit event on the back button by resetting its background
      * color.
      */
-    private void btnBackMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseExited
-        btnBack.setBackground(WHITE);
-    }//GEN-LAST:event_btnBackMouseExited
+    private void btnUpdateMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseExited
+        btnUpdate.setBackground(WHITE);
+    }//GEN-LAST:event_btnUpdateMouseExited
 
     /**
      * Handles mouse hover event on the back button by changing its background
      * color.
      */
-    private void btnBackMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseEntered
-        btnBack.setBackground(LIGHT_BLUE);
-    }//GEN-LAST:event_btnBackMouseEntered
+    private void btnUpdateMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseEntered
+        btnUpdate.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnUpdateMouseEntered
 
     /**
      * Handles the action event of the exit button to exit the application.
@@ -824,6 +890,66 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         btnExit.setBackground(RED);
     }//GEN-LAST:event_btnExitMouseEntered
 
+    private void btnDeleteMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDeleteMouseEntered
+
+    private void btnDeleteMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDeleteMouseExited
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+       int confirm = JOptionPane.showConfirmDialog(this, 
+        "Are you sure you want to delete this employee?", 
+        "Confirm Deletion", 
+        JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                // Get the employee number from the text field
+                int employeeNum = Integer.parseInt(txtEmployeeNumber.getText());
+
+                // Call the method to delete from CSV
+                EmployeeInformation employeeInfoManager = new EmployeeInformation();
+                employeeInfoManager.deleteEmployeeFromCsv(employeeNum);
+
+                // Show success message
+                JOptionPane.showMessageDialog(this, 
+                    "Employee successfully deleted.", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+
+                // Close the EmployeeInformationFrame after deletion
+                this.dispose();
+            } catch (IOException | CsvValidationException e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Error deleting employee: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnBack2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBack2MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBack2MouseEntered
+
+    private void btnBack2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBack2MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBack2MouseExited
+
+    private void btnBack2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBack2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBack2ActionPerformed
+
+    private void txtStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStatusActionPerformed
+
+    private void txtLastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLastNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLastNameActionPerformed
+
     /**
      * Displays an error dialog with the provided error message.
      *
@@ -835,268 +961,12 @@ class EmployeeInformationFrame extends javax.swing.JFrame implements EmployeeInf
         JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    /**
-     * Updates the employee information text fields for the chosen employee.
-     *
-     * @param employeeInfo The information of the employee
-     */
-    private void updateEmployeeInformationFields(List<String> employeeInfo) {
-        JTextField[] textFields = {txtEmployeeNumber, txtLastName, txtFirstName, txtBirthdate, txtAddress, txtPhoneNumber,
-            txtSssNumber, txtPhilHealthNumber, txtTinNumber, txtPagIbigNumber, txtStatus, txtPosition,
-            txtImmediateSupervisor, txtBasicSalary, txtRiceSubsidy, txtPhoneAllowance, txtClothingAllowance,
-            txtGrossSemimonthlyRate, txtHourlyRate};
-
-        // Set the text of each field with the employee information
-        for (int i = 0; i < textFields.length; i++) {
-            textFields[i].setText(employeeInfo.get(i));
-        }
-    }
-
-    /**
-     * Populates employee information fields based on the provided employee
-     * number.
-     *
-     * @param employeeNumberString The employee number as a string.
-     */
-    private void populateEmployeeInformation(String employeeNumberString) {
-        try {
-            // Parse the employee number from the text field
-            int employeeNumber = Integer.parseInt(employeeNumberString);
-
-            // Get employee information
-            List<String> employeeInfo = new EmployeeInformation().showEmployeeInformation(employeeNumber);
-
-            // Populate text fields with employee information
-            updateEmployeeInformationFields(employeeInfo);
-//
-//            // Enable the delete and update buttons
-//            btnDeleteInfo.setEnabled(true);
-//            btnUpdateInfo.setEnabled(true);
-        } catch (IOException | ParseException | CsvValidationException | IllegalArgumentException e) {
-            // Show error dialog with the exception message
-            showErrorDialog(e.getMessage());
-        }
-    }
-
-    /**
-     * Populates wage information fields based on the provided employee number
-     * and selected month.
-     *
-     * @param selectedMonth The selected month for which the wage information is
-     * displayed
-     */
-    private void populateWageInformation(String selectedMonth) {
-        try {
-            int employeeNumber = Integer.parseInt(txtEmployeeNumber.getText());
-
-            // Get employee information
-            new EmployeeInformation().showEmployeeInformation(employeeNumber);
-
-            // Create a DateRange object based on the selected month
-            DateRange dateRange = createMonthRange(selectedMonth);
-
-            // Create an instance of NetWageCalculation
-            WageCalculation wageCalculation = new WageCalculation();
-
-            // Get wage information for the given employee number and date range
-            List<String> wageInfo = wageCalculation.calculateWage(employeeNumber, dateRange);
-
-            // Display the net wage in the appropriate text fields
-            updateWageInformationFields(wageInfo, selectedMonth);
-        } catch (IOException | ParseException | CsvValidationException | IllegalArgumentException e) {
-            // Show error dialog with the exception message
-            showErrorDialog(e.getMessage());
-        }
-    }
-
-    /**
-     * Updates the wage information text fields for the chosen employee.
-     *
-     * @param wageInfo The wage information of the employee to display
-     * @param selectedMonth The selected month for which the wage information is
-     * displayed
-     */
-    private void updateWageInformationFields(List<String> wageInfo, String selectedMonth) {
-        String monthName = getMonthName(selectedMonth);
-
-//        txtMonth.setText(monthName);
-//        txtGrossWage.setText(wageInfo.get(0));
-//        txtSssDeduction.setText(wageInfo.get(1));
-//        txtPhilHealthDeduction.setText(wageInfo.get(2));
-//        txtPagIbigDeduction.setText(wageInfo.get(3));
-//        txtWithholdingTax.setText(wageInfo.get(4));
-//        txtLateArrivalDeduction.setText(wageInfo.get(5));
-//        txtTotalDeductions.setText(wageInfo.get(6));
-//        txtNetWage.setText(wageInfo.get(7));
-    }
-
-    /**
-     * Gets the name of the month based on the provided month number.
-     *
-     * @param monthNumber The month number as a string
-     * @return The name of the month.
-     * @throws IllegalArgumentException If the month number is invalid (not
-     * between 1 and 12).
-     */
-    private String getMonthName(String monthNumber) throws IllegalArgumentException {
-        int monthInt = Integer.parseInt(monthNumber);
-        if (monthInt < 1 || monthInt > 12) {
-            showErrorDialog("Invalid month number: " + monthNumber);
-        }
-
-        Month month = Month.of(monthInt);
-        // Convert to lowercase
-        String monthName = month.toString().toLowerCase();
-        // Capitalize first letter
-        monthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1);
-
-        return monthName;
-    }
-
-    /**
-     * Assigns a mouse click event handler to a text field.
-     *
-     * @param textField JTextField to assign the click handler
-     */
-    private void assignClickHandlerToTextField(JTextField textField) {
-        textField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // When the mouse is clicked on the text field, call handleTextFieldClick method
-                handleTextFieldClick(textField);
-            }
-        });
-    }
-
-    /**
-     * Assigns mouse click event handlers to all text fields.
-     */
-    private void assignClickHandlersToTextFields() {
-        JTextField[] textFields = {
-            txtLastName, txtFirstName, txtBirthdate, txtAddress, txtPhoneNumber,
-            txtSssNumber, txtPhilHealthNumber, txtTinNumber, txtPagIbigNumber,
-            txtStatus, txtPosition, txtImmediateSupervisor, txtBasicSalary,
-            txtRiceSubsidy, txtPhoneAllowance, txtClothingAllowance,
-            txtGrossSemimonthlyRate, txtHourlyRate
-        };
-
-        // Assign click event handler to each text field
-        for (JTextField field : textFields) {
-            assignClickHandlerToTextField(field);
-        }
-    }
-
-    /**
-     * Handles mouse click event on a text field.
-     *
-     * @param textField JTextField that was clicked
-     */
-    private void handleTextFieldClick(JTextField textField) {
-        // If deleteButtonClicked is true
-        if (deleteButtonClicked) {
-            // Clear the text field
-            textField.setText("");
-        }
-    }
-
-    /**
-     * Sets the editability of the fields.
-     *
-     * @param allowed A boolean for indicating whether the fields should be
-     * editable.
-     */
-    private void setFieldsEditable(boolean allowed) {
-        // Define an array of text fields
-        JTextField[] textFields = {
-            txtLastName, txtFirstName, txtBirthdate, txtAddress, txtPhoneNumber,
-            txtSssNumber, txtPhilHealthNumber, txtTinNumber, txtPagIbigNumber,
-            txtStatus, txtPosition, txtImmediateSupervisor, txtBasicSalary,
-            txtRiceSubsidy, txtPhoneAllowance, txtClothingAllowance,
-            txtGrossSemimonthlyRate, txtHourlyRate
-        };
-
-        // Loop through each text field
-        for (JTextField field : textFields) {
-            // Change text fields' background color
-            field.setBackground(allowed ? WHITE : GRAY);
-
-            if (deleteButtonClicked) {
-                field.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                // Set text fields to non-editable
-                field.setEditable(false);
-                field.setFocusable(false);
-            } else {
-                deleteButtonClicked = false;
-                field.setCursor(new Cursor(Cursor.TEXT_CURSOR));
-                // Set text fields to editable
-                field.setEditable(allowed);
-                field.setFocusable(allowed);
-            }
-        }
-
-        // Enable the save button
-//        btnSave.setEnabled(true);
-    }
-
-    /**
-     * Gathers employee information from the fields.
-     *
-     * @return A list of strings that contains the employee information.
-     */
-    private List<String> gatherEmployeeInformationFromFields() {
-        List<String> employeeInfo = new ArrayList<>();
-
-        // Add the text of each field to the list
-        employeeInfo.add(txtLastName.getText());
-        employeeInfo.add(txtFirstName.getText());
-        employeeInfo.add(txtBirthdate.getText());
-        employeeInfo.add(txtAddress.getText());
-        employeeInfo.add(txtPhoneNumber.getText());
-        employeeInfo.add(txtSssNumber.getText());
-        employeeInfo.add(txtPhilHealthNumber.getText());
-        employeeInfo.add(txtTinNumber.getText());
-        employeeInfo.add(txtPagIbigNumber.getText());
-        employeeInfo.add(txtStatus.getText());
-        employeeInfo.add(txtPosition.getText());
-        employeeInfo.add(txtImmediateSupervisor.getText());
-        employeeInfo.add(txtBasicSalary.getText());
-        employeeInfo.add(txtRiceSubsidy.getText());
-        employeeInfo.add(txtPhoneAllowance.getText());
-        employeeInfo.add(txtClothingAllowance.getText());
-        employeeInfo.add(txtGrossSemimonthlyRate.getText());
-        employeeInfo.add(txtHourlyRate.getText());
-
-        return employeeInfo;
-    }
-
-    /**
-     * Updates the employee information based on input from fields. Gets data
-     * and updates CSV files.
-     */
-    private void updateEmployeeInformation() {
-        try {
-            // Parse the employee number from the text field
-            int employeeNumber = Integer.parseInt(txtEmployeeNumber.getText());
-
-            // Gather the updated employee information from the fields
-            List<String> updatedEmployeeInfo = gatherEmployeeInformationFromFields();
-
-            // Update the employee information in the CSV file
-            new EmployeeInformation().updateEmployeeInformationInCsv(employeeNumber, updatedEmployeeInfo);
-
-            // Set fields non-editable after saving
-            setFieldsEditable(false);
-            // Set deleteButtonClicked value to false
-            deleteButtonClicked = false;
-        } catch (IOException | ParseException | CsvValidationException | IllegalArgumentException e) {
-            // Show error dialog with the exception message
-            showErrorDialog(e.getMessage());
-        }
-    }
-
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnBack2;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblBasicSalary;
     private javax.swing.JLabel lblBirthdate;
