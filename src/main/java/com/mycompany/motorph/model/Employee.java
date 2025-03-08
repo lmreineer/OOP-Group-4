@@ -5,6 +5,7 @@
 package com.mycompany.motorph.model;
 
 import com.mycompany.motorph.util.CurrencyUtil;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,25 +14,19 @@ import java.util.List;
 /**
  * Represents an employee.
  * <p>
- * Contains employee information and methods to access. This
- * class also provides methods for formatting and displaying employee
- * information.
+ * Contains employee information and methods to access. This class also provides
+ * methods for formatting and displaying employee information.
  *
  * @author Lance
  */
-public class Employee {
+public class Employee extends User {
 
     private int employeeNumber;
-    private String lastName;
-    private String firstName;
     private Date birthdate;
-    private String address;
-    private String phoneNumber;
     private String sssNumber;
     private String philHealthNumber;
     private String tin;
     private String pagIbigNumber;
-    private String status;
     private String position;
     private String immediateSupervisor;
     private double basicSalary;
@@ -40,6 +35,29 @@ public class Employee {
     private double clothingAllowance;
     private double grossSemimonthlyRate;
     private double hourlyRate;
+
+    public Employee(int userID, String firstName, String lastName, Date birthdate, String address,
+            String phoneNumber, String status, String division, int employeeNumber,
+            String sssNumber, String philHealthNumber, String tin, String pagIbigNumber,
+            String position, String immediateSupervisor, double basicSalary, double riceSubsidy,
+            double phoneAllowance, double clothingAllowance, double grossSemimonthlyRate, double hourlyRate) {
+
+        super(userID, firstName, lastName, phoneNumber, address, status, division);
+        this.employeeNumber = employeeNumber;
+        this.birthdate = birthdate;
+        this.sssNumber = sssNumber;
+        this.philHealthNumber = philHealthNumber;
+        this.tin = tin;
+        this.pagIbigNumber = pagIbigNumber;
+        this.position = position;
+        this.immediateSupervisor = immediateSupervisor;
+        this.basicSalary = basicSalary;
+        this.riceSubsidy = riceSubsidy;
+        this.phoneAllowance = phoneAllowance;
+        this.clothingAllowance = clothingAllowance;
+        this.grossSemimonthlyRate = grossSemimonthlyRate;
+        this.hourlyRate = hourlyRate;
+    }
 
     // Getters and setters
     public int getEmployeeNumber() {

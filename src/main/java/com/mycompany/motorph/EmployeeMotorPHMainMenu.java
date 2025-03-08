@@ -4,6 +4,14 @@
  */
 package com.mycompany.motorph;
 
+import com.mycompany.motorph.employee.EmployeeInformation;
+import com.mycompany.motorph.model.Employee;
+import com.opencsv.exceptions.CsvValidationException;
+import java.io.IOException;
+import java.text.ParseException;
+import javax.swing.JOptionPane;
+import java.util.List;
+
 /**
  * Main Menu for the MotorPH application.
  * <p>
@@ -11,17 +19,20 @@ package com.mycompany.motorph;
  *
  * @author Lance
  */
-class MotorPHMainMenu extends javax.swing.JFrame {
+class EmployeeMotorPHMainMenu extends javax.swing.JFrame {
 
     // Constants for button coloring changes
     private static final java.awt.Color LIGHT_BLUE = new java.awt.Color(203, 203, 239);
     private static final java.awt.Color WHITE = new java.awt.Color(255, 255, 255);
     private static final java.awt.Color RED = new java.awt.Color(191, 47, 47);
 
+    private int employeeNumber;
+
     /**
      * Creates new form MotorPHMainMenu
      */
-    public MotorPHMainMenu() {
+    public EmployeeMotorPHMainMenu(int employeeNumber) {
+        this.employeeNumber = employeeNumber;
         initComponents();
     }
 
@@ -37,11 +48,12 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         pnlMain = new javax.swing.JPanel();
         lblMotorPhHeader = new javax.swing.JLabel();
         lblMainMenuHeader = new javax.swing.JLabel();
-        btnSearchEmployee = new javax.swing.JButton();
+        btnViewProfile = new javax.swing.JButton();
         lblIwantTo = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
         btnManageLeave = new javax.swing.JButton();
-        btnGoBackToLogin = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
+        btnComputeSalary = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Payroll System Main Menu");
@@ -62,23 +74,22 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         lblMainMenuHeader.setText("Main Menu");
         lblMainMenuHeader.setOpaque(true);
 
-        btnSearchEmployee.setBackground(new java.awt.Color(255, 255, 255));
-        btnSearchEmployee.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnSearchEmployee.setText("Search an employee");
-        btnSearchEmployee.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnSearchEmployee.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSearchEmployee.setFocusable(false);
-        btnSearchEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnViewProfile.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnViewProfile.setText("View profile");
+        btnViewProfile.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnViewProfile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnViewProfile.setFocusable(false);
+        btnViewProfile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnSearchEmployeeMouseEntered(evt);
+                btnViewProfileMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnSearchEmployeeMouseExited(evt);
+                btnViewProfileMouseExited(evt);
             }
         });
-        btnSearchEmployee.addActionListener(new java.awt.event.ActionListener() {
+        btnViewProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchEmployeeActionPerformed(evt);
+                btnViewProfileActionPerformed(evt);
             }
         });
 
@@ -90,7 +101,6 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         lblIwantTo.setMinimumSize(new java.awt.Dimension(93, 25));
         lblIwantTo.setOpaque(true);
 
-        btnExit.setBackground(new java.awt.Color(255, 255, 255));
         btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnExit.setText("Exit");
         btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -110,7 +120,6 @@ class MotorPHMainMenu extends javax.swing.JFrame {
             }
         });
 
-        btnManageLeave.setBackground(new java.awt.Color(255, 255, 255));
         btnManageLeave.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnManageLeave.setText("Manage leave");
         btnManageLeave.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -130,23 +139,44 @@ class MotorPHMainMenu extends javax.swing.JFrame {
             }
         });
 
-        btnGoBackToLogin.setBackground(new java.awt.Color(255, 255, 255));
-        btnGoBackToLogin.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnGoBackToLogin.setText("Go back to login");
-        btnGoBackToLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnGoBackToLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnGoBackToLogin.setFocusable(false);
-        btnGoBackToLogin.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnLogout.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnLogout.setText("Logout");
+        btnLogout.setToolTipText("");
+        btnLogout.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogout.setFocusable(false);
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnGoBackToLoginMouseEntered(evt);
+                btnLogoutMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnGoBackToLoginMouseExited(evt);
+                btnLogoutMouseExited(evt);
             }
         });
-        btnGoBackToLogin.addActionListener(new java.awt.event.ActionListener() {
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGoBackToLoginActionPerformed(evt);
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        btnComputeSalary.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnComputeSalary.setText("Compute salary");
+        btnComputeSalary.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnComputeSalary.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnComputeSalary.setFocusable(false);
+        btnComputeSalary.setMaximumSize(new java.awt.Dimension(62, 16));
+        btnComputeSalary.setMinimumSize(new java.awt.Dimension(62, 16));
+        btnComputeSalary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnComputeSalaryMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnComputeSalaryMouseExited(evt);
+            }
+        });
+        btnComputeSalary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComputeSalaryActionPerformed(evt);
             }
         });
 
@@ -155,18 +185,23 @@ class MotorPHMainMenu extends javax.swing.JFrame {
         pnlMainLayout.setHorizontalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblMainMenuHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+            .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblIwantTo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearchEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                    .addComponent(btnManageLeave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(btnGoBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblIwantTo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnViewProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                            .addComponent(btnManageLeave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnComputeSalary, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                .addGap(12, 12, 12))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,13 +213,15 @@ class MotorPHMainMenu extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(lblIwantTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
-                .addComponent(btnSearchEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnViewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(btnComputeSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addComponent(btnManageLeave, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGoBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -206,13 +243,32 @@ class MotorPHMainMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Handles the action event of the search employee button to open the
-     * employee search page.
+     * Opens the employee profile view page.
      */
-    private void btnSearchEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchEmployeeActionPerformed
-        // Open EmployeeSearchPage
-        new EmployeeSearchPage().setVisible(true);
-    }//GEN-LAST:event_btnSearchEmployeeActionPerformed
+    private void btnViewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewProfileActionPerformed
+        EmployeeInformation employeeInformation = new EmployeeInformation();
+
+        try {
+            // Load all employees first
+            List<Employee> employees = employeeInformation.getAllEmployees();
+            Employee employee = employeeInformation.findEmployeeByNumber(employees, employeeNumber);
+
+            if (employee != null) {
+                // Open the Employee Information Frame with the Employee object
+                new EmployeeViewProfileFrame(employee).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Employee not found. Please check the Employee Number.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IOException | CsvValidationException | ParseException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error retrieving employee information: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnViewProfileActionPerformed
 
     /**
      * Handles the action event of the manage leave button to open the manage
@@ -227,17 +283,17 @@ class MotorPHMainMenu extends javax.swing.JFrame {
      * Handles mouse hover event on the search employee button by changing its
      * background color.
      */
-    private void btnSearchEmployeeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchEmployeeMouseEntered
-        btnSearchEmployee.setBackground(LIGHT_BLUE);
-    }//GEN-LAST:event_btnSearchEmployeeMouseEntered
+    private void btnViewProfileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewProfileMouseEntered
+        btnViewProfile.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnViewProfileMouseEntered
 
     /**
      * Handles mouse exit event on the search employee button by resetting its
      * background color.
      */
-    private void btnSearchEmployeeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchEmployeeMouseExited
-        btnSearchEmployee.setBackground(WHITE);
-    }//GEN-LAST:event_btnSearchEmployeeMouseExited
+    private void btnViewProfileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewProfileMouseExited
+        btnViewProfile.setBackground(WHITE);
+    }//GEN-LAST:event_btnViewProfileMouseExited
 
     /**
      * Handles mouse hover event on the manage leave button by changing its
@@ -280,35 +336,70 @@ class MotorPHMainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     /**
-     * Handles the action event of the "Go back to login" button. Opens the
-     * login page and closes the current main menu.
+     * Handles the action event of the "Logout" button. Opens the login page and
+     * closes the current main menu.
      */
-    private void btnGoBackToLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoBackToLoginActionPerformed
-        new LoginPage().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnGoBackToLoginActionPerformed
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        logout();
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
-     * Handles mouse hover event on the "Go back to login" button by changing
-     * its background color.
+     * Handles mouse hover event on the "Logout" button by changing its
+     * background color.
      */
-    private void btnGoBackToLoginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGoBackToLoginMouseEntered
-        btnGoBackToLogin.setBackground(LIGHT_BLUE);
-    }//GEN-LAST:event_btnGoBackToLoginMouseEntered
+    private void btnLogoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseEntered
+        btnLogout.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnLogoutMouseEntered
 
     /**
-     * Handles mouse exit event on the "Go back to login" button by resetting
-     * its background color.
+     * Handles mouse exit event on the "Logout" button by resetting its
+     * background color.
      */
-    private void btnGoBackToLoginMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGoBackToLoginMouseExited
-        btnGoBackToLogin.setBackground(WHITE);
-    }//GEN-LAST:event_btnGoBackToLoginMouseExited
+    private void btnLogoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseExited
+        btnLogout.setBackground(WHITE);
+    }//GEN-LAST:event_btnLogoutMouseExited
+
+    /**
+     * Opens the payroll computation page.
+     */
+    private void btnComputeSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputeSalaryActionPerformed
+        new PayrollComputationFrame(employeeNumber).setVisible(true);
+    }//GEN-LAST:event_btnComputeSalaryActionPerformed
+
+    /**
+     * Handles mouse hover event on the "Compute" button by changing its
+     * background color.
+     */
+    private void btnComputeSalaryMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComputeSalaryMouseEntered
+        btnComputeSalary.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnComputeSalaryMouseEntered
+
+    /**
+     * Handles mouse exit event on the "Compute" button by resetting its
+     * background color.
+     */
+    private void btnComputeSalaryMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComputeSalaryMouseExited
+        btnComputeSalary.setBackground(WHITE);
+    }//GEN-LAST:event_btnComputeSalaryMouseExited
+
+    /**
+     * Displays a confirmation dialog before logging out and returning to the
+     * login page.
+     */
+    private void logout() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+            new LoginPage().setVisible(true);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnComputeSalary;
     private javax.swing.JButton btnExit;
-    private javax.swing.JButton btnGoBackToLogin;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManageLeave;
-    private javax.swing.JButton btnSearchEmployee;
+    private javax.swing.JButton btnViewProfile;
     private javax.swing.JLabel lblIwantTo;
     private javax.swing.JLabel lblMainMenuHeader;
     private javax.swing.JLabel lblMotorPhHeader;

@@ -4,9 +4,7 @@
  */
 package com.mycompany.motorph;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.FileReader;
+import com.mycompany.motorph.security.SecurityManager;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
@@ -252,60 +250,57 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
 
     /**
      * Logs in the user and validates the enter username, password, and user
-     * type
+     * type and redirects to the appropriate dashboard upon successful login
      */
-    private void performLogin() {
-        // Get the user input for username, password, and selected user type
+    private void performLogin() throws IOException {
         String enteredUsername = txtUsername.getText().trim();
         String enteredPassword = new String(txtPassword.getPassword()).trim();
-        String selectedUserType = cmbUserType.getSelectedItem().toString();
+        String selectedDivision = cmbUserType.getSelectedItem().toString();
 
-        boolean loginSuccessful = false;
+        // Create SecurityManager instance for authentication
+        SecurityManager securityManager = new SecurityManager();
+        boolean loginSuccessful = securityManager.login(enteredUsername, enteredPassword, selectedDivision);
 
-        try (CSVReader reader = new CSVReader(new FileReader("src/main/resources/data/login_credentials.csv"))) {
-            // Skip header
-            String[] header = reader.readNext();
-
-            String[] record;
-
-            // Loop through each record in the CSV file.
-            while ((record = reader.readNext()) != null) {
-                // The columns in CSV are: 0 - Username, 1 - Password, 2 - User Type
-                String csvUsername = record[0].trim();
-                String csvPassword = record[1].trim();
-                String csvUserType = record[2].trim();
-
-                // If the entered credentials and user type match with the data from CSV file
-                if (enteredUsername.equals(csvUsername)
-                        && enteredPassword.equals(csvPassword)
-                        && selectedUserType.equalsIgnoreCase(csvUserType)) {
-                    loginSuccessful = true;
-                    break;
-                }
-            }
-        } catch (IOException | CsvValidationException e) {
-            // If an error occurs while reading the CSV file, show a message saying it
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error reading credentials", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // If login was successful
         if (loginSuccessful) {
-            if (selectedUserType.equalsIgnoreCase("Employee")) {
-                JOptionPane.showMessageDialog(this, "Login successful as " + selectedUserType);
-                new MotorPHMainMenu().setVisible(true);
-            } else if (selectedUserType.equalsIgnoreCase("IT")) {
-                new MotorPHMainMenu().setVisible(true);
-            } else if (selectedUserType.equalsIgnoreCase("Admin")) {
-                new MotorPHMainMenu().setVisible(true);
-            }
+            JOptionPane.showMessageDialog(this, "Login successful as " + selectedDivision + "!");
 
-            // Close the window
+            // Open the dashboard
+            openUserDashboard(selectedDivision, enteredUsername);
+
+            // Close the login window
             this.dispose();
         } else {
-            // Else if login failed, show an error message to the user
-            JOptionPane.showMessageDialog(this, "Invalid credentials or user type", "Login Failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid credentials.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Opens the user dashboard based on the division or user type
+     *
+     * @param division The user type (Employee, IT, Admin)
+     * @param username The username of the logged-in user
+     */
+    private void openUserDashboard(String division, String username) {
+        // Default value for non-employees
+        int employeeNumber = -1;
+
+        // Extract employee number only if the user is an Employee or IT
+        if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
+            try {
+                // Only extract if necessary
+                employeeNumber = Integer.parseInt(username.substring(1));
+            } catch (NumberFormatException e) {
+                System.err.println("ERROR: Invalid employee number format for username: " + username);
+            }
+        }
+
+        // Open the dashboard based on user type
+        if (division.equalsIgnoreCase("Employee")) {
+            new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
+        } else if (division.equalsIgnoreCase("IT")) {
+            new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
+        } else if (division.equalsIgnoreCase("Admin")) {
+            new AdminMotorPHMainMenu().setVisible(true);
         }
     }
 

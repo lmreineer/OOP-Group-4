@@ -6,6 +6,7 @@ package com.mycompany.motorph;
 
 import com.mycompany.motorph.data.LeaveDataManager;
 import com.mycompany.motorph.employee.EmployeeInformation;
+import com.mycompany.motorph.model.Employee;
 import com.mycompany.motorph.model.Leave;
 import com.mycompany.motorph.util.CurrencyUtil;
 import com.opencsv.exceptions.CsvValidationException;
@@ -506,7 +507,8 @@ class LeaveBalancePage extends javax.swing.JFrame implements EmployeeInformation
             int employeeNumber = Integer.parseInt(txtEmployeeNumber.getText().trim());
 
             // Get employee information
-            List<String> employeeInfo = new EmployeeInformation().showEmployeeInformation(employeeNumber);
+            EmployeeInformation employeeInformation = new EmployeeInformation();
+            List<String> employee = employeeInformation.showEmployeeInformation(employeeNumber);
 
             // Get leave information including leave amounts
             List<Leave> leaves = new LeaveDataManager().getLeavesByEmployeeNumber(employeeNumber);
@@ -515,7 +517,7 @@ class LeaveBalancePage extends javax.swing.JFrame implements EmployeeInformation
             Leave leaveInfo = leaves.get(0); // Modify this based on your actual logic
 
             // Update fields with retrieved information
-            updateEmployeeInformationFields(employeeInfo, leaveInfo);
+            updateEmployeeInformationFields((List<String>) employee, leaveInfo);
         } catch (ParseException | IOException | CsvValidationException | IllegalArgumentException e) {
             showErrorDialog(e.getMessage());
         }

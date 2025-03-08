@@ -108,7 +108,7 @@ public class EmployeeInformation {
      * @param employeeNumber The employee number to search for
      * @return The found employee, or null if not found
      */
-    private Employee findEmployeeByNumber(List<Employee> employees, int employeeNumber) {
+    public Employee findEmployeeByNumber(List<Employee> employees, int employeeNumber) {
         return employees.stream()
                 .filter(employee -> employee.getEmployeeNumber() == employeeNumber)
                 .findFirst()

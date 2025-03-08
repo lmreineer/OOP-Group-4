@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Lance
  */
-class TimeCalculation {
+public class TimeCalculation {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd");
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
@@ -33,7 +33,7 @@ class TimeCalculation {
      * @param dateRange The date range
      * @throws ParseException If there is an error parsing dates
      */
-    double calculateTotalHoursWorked(List<String[]> attendanceDataList, int employeeNumber, DateRange dateRange) throws ParseException {
+    public double calculateTotalHoursWorked(List<String[]> attendanceDataList, int employeeNumber, DateRange dateRange) throws ParseException {
         double totalHoursWorked = 0.0;
 
         // Iterate through each row of attendance data

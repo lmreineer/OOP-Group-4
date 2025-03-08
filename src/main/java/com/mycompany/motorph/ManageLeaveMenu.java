@@ -198,7 +198,7 @@ class ManageLeaveMenu extends javax.swing.JFrame {
      */
     private void btnLeaveApplicationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeaveApplicationActionPerformed
         // Open LeaveApplicationPage
-        new LeaveApplicationPage().setVisible(true);
+        new LeaveApplicationPage(26).setVisible(true);
     }//GEN-LAST:event_btnLeaveApplicationActionPerformed
 
     /**

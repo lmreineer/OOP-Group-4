@@ -51,6 +51,10 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pmnAdminFunctions = new javax.swing.JPopupMenu();
+        btnUpdateInformation = new javax.swing.JMenuItem();
+        btnComputePayroll = new javax.swing.JMenuItem();
+        btnUpdateCredentials = new javax.swing.JMenuItem();
         scrollPaneMain = new javax.swing.JScrollPane();
         pnlMain = new javax.swing.JPanel();
         lblMotorPhHeader = new javax.swing.JLabel();
@@ -63,6 +67,25 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         tglOn = new javax.swing.JToggleButton();
         tglOff = new javax.swing.JToggleButton();
         lblEmployeeSelectionToggle = new javax.swing.JLabel();
+
+        btnUpdateInformation.setText("Update Information");
+        btnUpdateInformation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateInformationActionPerformed(evt);
+            }
+        });
+        pmnAdminFunctions.add(btnUpdateInformation);
+
+        btnComputePayroll.setText("Compute Payroll");
+        btnComputePayroll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComputePayrollActionPerformed(evt);
+            }
+        });
+        pmnAdminFunctions.add(btnComputePayroll);
+
+        btnUpdateCredentials.setText("Update Credentials");
+        pmnAdminFunctions.add(btnUpdateCredentials);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Employee Search");
@@ -91,7 +114,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         lblBottomSeparator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBottomSeparator.setOpaque(true);
 
-        btnExit.setBackground(new java.awt.Color(255, 255, 255));
         btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnExit.setText("Exit");
         btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -111,7 +133,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             }
         });
 
-        btnBack.setBackground(new java.awt.Color(255, 255, 255));
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("Back");
         btnBack.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -168,7 +189,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             tblBasicEmployeeInformation.getColumnModel().getColumn(5).setResizable(false);
         }
 
-        tglOn.setBackground(new java.awt.Color(255, 255, 255));
         tglOn.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         tglOn.setText("On");
         tglOn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -190,7 +210,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             }
         });
 
-        tglOff.setBackground(new java.awt.Color(255, 255, 255));
         tglOff.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         tglOff.setText("Off");
         tglOff.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -280,23 +299,24 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 720, Short.MAX_VALUE)
+            .addComponent(scrollPaneMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Adds a mouse listener to handle table row clicks.
+     */
     private void setupTableMouseListener() {
-        // Add mouse listener to handle table row clicks
         tblBasicEmployeeInformation.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
                 // If a row is selected and toggle button is on
                 if (rowIndex != -1 && toggleOnButtonClicked) {
-                    // Show employee information
-                    showEmployeeInformation(rowIndex);
+                    showPopupMenu(e);
                 }
             }
         });
@@ -397,14 +417,45 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }//GEN-LAST:event_tglOffMouseExited
 
     /**
-     * Displays an error dialog with the provided error message.
-     *
-     * @param errorMessage The error message to display in the dialog.
+     * Handles the action event of updating employee information when a row is
+     * selected.
      */
-    @Override
-    public void showErrorDialog(String errorMessage) {
-        // Show a dialog with the error message
-        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    private void btnUpdateInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInformationActionPerformed
+        int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+        // If a row is selected and toggle button is on
+        if (rowIndex != -1 && toggleOnButtonClicked) {
+            showEmployeeInformation(rowIndex);
+        }
+    }//GEN-LAST:event_btnUpdateInformationActionPerformed
+
+    /**
+     * Handles the action event of computing payroll for a selected employee.
+     */
+    private void btnComputePayrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputePayrollActionPerformed
+        int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+
+        if (rowIndex != -1) {
+            // Assuming the first column (index 0) contains the employee number
+            int employeeNumber = (int) tblBasicEmployeeInformation.getValueAt(rowIndex, 0);
+
+            // Open Payroll Computation Frame with the correct employee number
+            new PayrollComputationFrame(employeeNumber).setVisible(true);
+        } else {
+            // Show an error message if no row is selected
+            JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnComputePayrollActionPerformed
+
+    /**
+     * Refreshes the employee table by clearing and repopulating it.
+     */
+    public void refreshEmployeeTable() {
+        DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
+        // Clear existing rows
+        model.setRowCount(0);
+
+        // Reload data from CSV
+        populateEmployeeTable();
     }
 
     /**
@@ -440,11 +491,10 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }
 
     /**
-     * Populates the employee table with all employees' basic information.
-     * Populates employee table based on the provided employee number. Gets data
-     * from the EmployeeInformation class and fills the appropriate rows.
+     * Populates the employee table with data retrieved from
+     * EmployeeInformation.
      */
-    private void populateEmployeeTable() {
+    void populateEmployeeTable() {
         try {
             // Get employee data
             EmployeeInformation employeeInformation = new EmployeeInformation();
@@ -475,21 +525,36 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
      */
     private void showEmployeeInformation(int rowIndex) {
         try {
-            // Get selected employee's information
             DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
-
             int employeeNumber = (int) model.getValueAt(rowIndex, 0);
 
             EmployeeInformation employeeInformation = new EmployeeInformation();
-
             List<String> employeeDetails = employeeInformation.showEmployeeInformation(employeeNumber);
 
-            // Display information in a new frame
-            new EmployeeInformationFrame(employeeDetails).setVisible(true);
+            // Pass reference of EmployeeSearchPage
+            new AdminViewProfileFrame(employeeDetails, this).setVisible(true);
         } catch (IOException | ParseException | CsvValidationException e) {
-            // Show error dialog with the exception message
             showErrorDialog(e.getMessage());
         }
+    }
+
+    /**
+     * Displays a popup menu for admin functions at the mouse location.
+     */
+    private void showPopupMenu(MouseEvent e) {
+        // If you already have a popup menu, just show it at the mouse location
+        pmnAdminFunctions.show(tblBasicEmployeeInformation, e.getX(), e.getY());
+    }
+
+    /**
+     * Displays an error dialog with the provided error message.
+     *
+     * @param errorMessage The error message to display in the dialog.
+     */
+    @Override
+    public void showErrorDialog(String errorMessage) {
+        // Show a dialog with the error message
+        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -521,6 +586,10 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -532,12 +601,16 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
+    private javax.swing.JMenuItem btnComputePayroll;
     private javax.swing.JButton btnExit;
+    private javax.swing.JMenuItem btnUpdateCredentials;
+    private javax.swing.JMenuItem btnUpdateInformation;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBottomSeparator;
     private javax.swing.JLabel lblEmployeeSearchHeader;
     private javax.swing.JLabel lblEmployeeSelectionToggle;
     private javax.swing.JLabel lblMotorPhHeader;
+    private javax.swing.JPopupMenu pmnAdminFunctions;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JScrollPane scrollPaneMain;
     private javax.swing.JTable tblBasicEmployeeInformation;

@@ -41,26 +41,20 @@ public class EmployeeDataReader {
     public List<Employee> readEmployees(String filePath) throws IOException, CsvValidationException, ParseException {
         List<Employee> employees = new ArrayList<>();
 
-        // Open the file for reading
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
             String[] data;
-            // Skip header
-            reader.readNext();
+            reader.readNext(); // Skip header
 
-            // Read data per row from the data file
             while ((data = reader.readNext()) != null) {
-                // If the data has the expected length per column
-                if (data.length == EMPLOYEE_EXPECTED_COL_LENGTH) {
-                    // Create an employee object from the data and add it to the list
-                    employees.add(createEmployeeFromData(data));
-                } else {
-                    // Throw IllegalArgumentException with the exception message
-                    throw new IllegalArgumentException("Invalid data length: " + data.length + " in row: " + data[0] + ".");
+                if (data.length != EMPLOYEE_EXPECTED_COL_LENGTH) {
+                    System.err.println("Skipping invalid row (expected " + EMPLOYEE_EXPECTED_COL_LENGTH + " columns, found " + data.length + "): " + String.join(",", data));
+                    continue; // Skip this row and move to the next
                 }
+
+                employees.add(createEmployeeFromData(data));
             }
         }
 
-        // Return the list of employees
         return employees;
     }
 
@@ -133,7 +127,27 @@ public class EmployeeDataReader {
      * @throws ParseException If a parsing error occurs
      */
     private Employee createEmployeeFromData(String[] employeeData) throws ParseException {
-        Employee employee = new Employee();
+        Employee employee = new Employee(Integer.parseInt(employeeData[0]),
+                employeeData[1],
+                employeeData[2],
+                new SimpleDateFormat("MM/dd/yyyy").parse(employeeData[3]),
+                employeeData[4],
+                employeeData[5],
+                employeeData[10],
+                employeeData[11],
+                Integer.parseInt(employeeData[0]),
+                employeeData[6],
+                employeeData[7],
+                employeeData[8],
+                employeeData[9],
+                employeeData[11],
+                employeeData[12],
+                parseDouble(employeeData[13]),
+                parseDouble(employeeData[14]),
+                parseDouble(employeeData[15]),
+                parseDouble(employeeData[16]),
+                parseDouble(employeeData[17]),
+                parseDouble(employeeData[18]));
 
         employee.setEmployeeNumber(Integer.parseInt(employeeData[0]));
         employee.setLastName(employeeData[1]);

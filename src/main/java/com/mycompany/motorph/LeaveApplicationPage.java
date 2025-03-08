@@ -36,8 +36,9 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
     /**
      * Constructor for LeaveApplicationPage.
      */
-    public LeaveApplicationPage() {
+    public LeaveApplicationPage(int employeeId) {
         initComponents();
+        txtEmployeeNumber.setText(String.valueOf(employeeId));
         // Setup date choosers with configurations
         setupDateChoosers();
     }
@@ -98,9 +99,11 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
         lblEmployeeNumber.setMinimumSize(new java.awt.Dimension(93, 25));
         lblEmployeeNumber.setOpaque(true);
 
+        txtEmployeeNumber.setEditable(false);
         txtEmployeeNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtEmployeeNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true));
-        txtEmployeeNumber.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtEmployeeNumber.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        txtEmployeeNumber.setFocusable(false);
 
         lblStartDate.setBackground(new java.awt.Color(255, 255, 255));
         lblStartDate.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
@@ -120,7 +123,6 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
         lblEndDate.setMinimumSize(new java.awt.Dimension(93, 25));
         lblEndDate.setOpaque(true);
 
-        btnApply.setBackground(new java.awt.Color(255, 255, 255));
         btnApply.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnApply.setText("Apply");
         btnApply.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -146,7 +148,6 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
         lblBottomSeparator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBottomSeparator.setOpaque(true);
 
-        btnExit.setBackground(new java.awt.Color(255, 255, 255));
         btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnExit.setText("Exit");
         btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -166,7 +167,6 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
             }
         });
 
-        btnBack.setBackground(new java.awt.Color(255, 255, 255));
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("Back");
         btnBack.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
