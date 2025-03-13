@@ -36,7 +36,7 @@ public class EmployeeInformation {
      * @throws CsvValidationException If data from a row is invalid
      * @throws ParseException If parsing error occurs
      */
-    public List<String> showEmployeeInformation(int employeeNumber) throws IOException, CsvValidationException, ParseException {
+    public Employee showEmployeeInformation(int employeeNumber) throws IOException, CsvValidationException, ParseException {
         // Read the list of employees from the data file
         List<Employee> employees = getAllEmployees();
 
@@ -46,7 +46,7 @@ public class EmployeeInformation {
         // If an employee is found with the inputted employee number
         if (foundEmployee != null) {
             // Return the information of the employee
-            return foundEmployee.getEmployeeInformation();
+            return foundEmployee;
         } else {
             // Throw IllegalArgumentException with the exception message
             throw new IllegalArgumentException("Employee is not found.");

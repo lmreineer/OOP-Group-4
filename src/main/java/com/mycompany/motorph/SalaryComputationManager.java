@@ -7,6 +7,7 @@ package com.mycompany.motorph;
 import com.mycompany.motorph.calculation.WageCalculation;
 import com.mycompany.motorph.employee.EmployeeInformation;
 import com.mycompany.motorph.model.DateRange;
+import com.mycompany.motorph.model.Employee;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -58,10 +59,10 @@ public class SalaryComputationManager {
     public double getHourlyRate() {
         try {
             EmployeeInformation employeeInfo = new EmployeeInformation();
-            List<String> details = employeeInfo.showEmployeeInformation(employeeNumber);
+            Employee details = employeeInfo.showEmployeeInformation(employeeNumber);
 
             // Extract hourly rate from employee info
-            return Double.parseDouble(details.get(18).replace(",", ""));
+            return details.getHourlyRate();
         } catch (CsvValidationException | IOException | NumberFormatException | ParseException e) {
             // Return 0 if retrieval fails
             return 0;

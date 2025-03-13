@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class LeaveDataManager {
 
     // Path to leave data file
-    private static final String LEAVE_DATA_PATH = "src/main/resources/data/leave_balances.csv";
+    private static final String LEAVE_REQUESTS_PATH = "src/main/resources/data/Employee_leave_requests.csv";
 
     // Header for the CSV data file
     private static final String[] HEADER = {"Employee Number", "Leave Type", "Start Date", "End Date", "Reason", "Sick Leave", "Vacation Leave", "Emergency Leave"};
@@ -60,7 +60,7 @@ public class LeaveDataManager {
         leaves.add(leave);
 
         // Write the updated list of leaves back to the CSV file
-        try (CSVWriter writer = new CSVWriter(new FileWriter(LEAVE_DATA_PATH))) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(LEAVE_REQUESTS_PATH))) {
             // Write header first
             writer.writeNext(HEADER);
 
@@ -112,9 +112,9 @@ public class LeaveDataManager {
      * @throws IOException If an I/O error occurs
      * @throws CsvValidationException If a CSV validation error occurs
      */
-    private List<Leave> loadLeaveApplications() throws IOException, CsvValidationException {
+    public List<Leave> loadLeaveApplications() throws IOException, CsvValidationException {
         List<Leave> leaves = new ArrayList<>();
-        File file = new File(LEAVE_DATA_PATH);
+        File file = new File(LEAVE_REQUESTS_PATH);
 
         // If the file exists before attempting to read
         if (file.exists()) {

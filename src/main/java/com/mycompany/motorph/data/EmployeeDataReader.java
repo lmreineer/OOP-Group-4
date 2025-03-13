@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class EmployeeDataReader {
 
-    private static final SimpleDateFormat BIRTHDATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
+    private final SimpleDateFormat BIRTHDATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
     // Expected total number of data per column from the data
     private static final int EMPLOYEE_EXPECTED_COL_LENGTH = 19;
@@ -102,7 +102,7 @@ public class EmployeeDataReader {
             employee.getFirstName(),
             BIRTHDATE_FORMAT.format(employee.getBirthdate()),
             employee.getAddress(),
-            employee.getPhoneNumber(),
+            String.valueOf(employee.getPhoneNumber()),
             employee.getSssNumber(),
             employee.getPhilHealthNumber(),
             employee.getTin(),

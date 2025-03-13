@@ -4,8 +4,6 @@
  */
 package com.mycompany.motorph.model;
 
-import java.util.List;
-
 /**
  *
  * @author User

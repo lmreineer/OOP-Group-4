@@ -4,6 +4,9 @@
  */
 package com.mycompany.motorph;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -42,7 +45,7 @@ class AdminMotorPHMainMenu extends javax.swing.JFrame {
         btnSearchEmployee = new javax.swing.JButton();
         lblIwantTo = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
-        btnManageLeave = new javax.swing.JButton();
+        btnManageLeaveRequests = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -110,22 +113,22 @@ class AdminMotorPHMainMenu extends javax.swing.JFrame {
             }
         });
 
-        btnManageLeave.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnManageLeave.setText("Manage leave");
-        btnManageLeave.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnManageLeave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnManageLeave.setFocusable(false);
-        btnManageLeave.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnManageLeaveRequests.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnManageLeaveRequests.setText("Manage leave requests");
+        btnManageLeaveRequests.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnManageLeaveRequests.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnManageLeaveRequests.setFocusable(false);
+        btnManageLeaveRequests.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnManageLeaveMouseEntered(evt);
+                btnManageLeaveRequestsMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnManageLeaveMouseExited(evt);
+                btnManageLeaveRequestsMouseExited(evt);
             }
         });
-        btnManageLeave.addActionListener(new java.awt.event.ActionListener() {
+        btnManageLeaveRequests.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageLeaveActionPerformed(evt);
+                btnManageLeaveRequestsActionPerformed(evt);
             }
         });
 
@@ -159,7 +162,7 @@ class AdminMotorPHMainMenu extends javax.swing.JFrame {
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblIwantTo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearchEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                    .addComponent(btnManageLeave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnManageLeaveRequests, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -178,7 +181,7 @@ class AdminMotorPHMainMenu extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(btnSearchEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
-                .addComponent(btnManageLeave, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnManageLeaveRequests, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -216,10 +219,14 @@ class AdminMotorPHMainMenu extends javax.swing.JFrame {
      * Handles the action event of the manage leave button to open the manage
      * leave page.
      */
-    private void btnManageLeaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageLeaveActionPerformed
-        // Open ManageLeaveMenu
-        new ManageLeaveMenu().setVisible(true);
-    }//GEN-LAST:event_btnManageLeaveActionPerformed
+    private void btnManageLeaveRequestsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageLeaveRequestsActionPerformed
+        try {
+            // Open ManageLeaveMenu
+            new LeaveTablePage().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(AdminMotorPHMainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnManageLeaveRequestsActionPerformed
 
     /**
      * Handles mouse hover event on the search employee button by changing its
@@ -241,17 +248,17 @@ class AdminMotorPHMainMenu extends javax.swing.JFrame {
      * Handles mouse hover event on the manage leave button by changing its
      * background color.
      */
-    private void btnManageLeaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManageLeaveMouseEntered
-        btnManageLeave.setBackground(LIGHT_BLUE);
-    }//GEN-LAST:event_btnManageLeaveMouseEntered
+    private void btnManageLeaveRequestsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManageLeaveRequestsMouseEntered
+        btnManageLeaveRequests.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnManageLeaveRequestsMouseEntered
 
     /**
      * Handles mouse exit event on the manage leave button by resetting its
      * background color.
      */
-    private void btnManageLeaveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManageLeaveMouseExited
-        btnManageLeave.setBackground(WHITE);
-    }//GEN-LAST:event_btnManageLeaveMouseExited
+    private void btnManageLeaveRequestsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManageLeaveRequestsMouseExited
+        btnManageLeaveRequests.setBackground(WHITE);
+    }//GEN-LAST:event_btnManageLeaveRequestsMouseExited
 
     /**
      * Handles mouse exit event on the exit button by resetting its background
@@ -315,7 +322,7 @@ class AdminMotorPHMainMenu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnLogout;
-    private javax.swing.JButton btnManageLeave;
+    private javax.swing.JButton btnManageLeaveRequests;
     private javax.swing.JButton btnSearchEmployee;
     private javax.swing.JLabel lblIwantTo;
     private javax.swing.JLabel lblMainMenuHeader;

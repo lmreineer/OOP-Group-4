@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  *
  * @author Lance
  */
-class EmployeeViewProfileFrame extends javax.swing.JFrame implements EmployeeInformationManager {
+class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformationManager {
 
     // Constants for button coloring changes
     private static final java.awt.Color LIGHT_BLUE = new java.awt.Color(203, 203, 239);
@@ -28,7 +28,7 @@ class EmployeeViewProfileFrame extends javax.swing.JFrame implements EmployeeInf
      * @param employeeInformation List of strings that contains initial employee
      * information.
      */
-    public EmployeeViewProfileFrame(Employee employeeInformation) {
+    public ViewProfileFrame(Employee employeeInformation) {
         initComponents();
         setupFrame(employeeInformation);
     }
@@ -791,24 +791,24 @@ class EmployeeViewProfileFrame extends javax.swing.JFrame implements EmployeeInf
     private javax.swing.JLabel lblTinNumber;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JScrollPane scrollPaneMain;
-    private javax.swing.JTextField txtAddress;
-    private javax.swing.JTextField txtBasicSalary;
-    private javax.swing.JTextField txtBirthdate;
-    private javax.swing.JTextField txtClothingAllowance;
-    private javax.swing.JTextField txtEmployeeNumber;
-    private javax.swing.JTextField txtFirstName;
-    private javax.swing.JTextField txtGrossSemimonthlyRate;
-    private javax.swing.JTextField txtHourlyRate;
-    private javax.swing.JTextField txtImmediateSupervisor;
-    private javax.swing.JTextField txtLastName;
-    private javax.swing.JTextField txtPagIbigNumber;
-    private javax.swing.JTextField txtPhilHealthNumber;
-    private javax.swing.JTextField txtPhoneAllowance;
-    private javax.swing.JTextField txtPhoneNumber;
-    private javax.swing.JTextField txtPosition;
-    private javax.swing.JTextField txtRiceSubsidy;
-    private javax.swing.JTextField txtSssNumber;
-    private javax.swing.JTextField txtStatus;
-    private javax.swing.JTextField txtTinNumber;
+    protected javax.swing.JTextField txtAddress;
+    protected javax.swing.JTextField txtBasicSalary;
+    protected javax.swing.JTextField txtBirthdate;
+    protected javax.swing.JTextField txtClothingAllowance;
+    protected javax.swing.JTextField txtEmployeeNumber;
+    protected javax.swing.JTextField txtFirstName;
+    protected javax.swing.JTextField txtGrossSemimonthlyRate;
+    protected javax.swing.JTextField txtHourlyRate;
+    protected javax.swing.JTextField txtImmediateSupervisor;
+    protected javax.swing.JTextField txtLastName;
+    protected javax.swing.JTextField txtPagIbigNumber;
+    protected javax.swing.JTextField txtPhilHealthNumber;
+    protected javax.swing.JTextField txtPhoneAllowance;
+    protected javax.swing.JTextField txtPhoneNumber;
+    protected javax.swing.JTextField txtPosition;
+    protected javax.swing.JTextField txtRiceSubsidy;
+    protected javax.swing.JTextField txtSssNumber;
+    protected javax.swing.JTextField txtStatus;
+    protected javax.swing.JTextField txtTinNumber;
     // End of variables declaration//GEN-END:variables
 }

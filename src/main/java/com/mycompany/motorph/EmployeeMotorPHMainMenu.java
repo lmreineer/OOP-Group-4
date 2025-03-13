@@ -121,7 +121,7 @@ class EmployeeMotorPHMainMenu extends javax.swing.JFrame {
         });
 
         btnManageLeave.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnManageLeave.setText("Manage leave");
+        btnManageLeave.setText("Apply for leave");
         btnManageLeave.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         btnManageLeave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnManageLeave.setFocusable(false);
@@ -276,7 +276,7 @@ class EmployeeMotorPHMainMenu extends javax.swing.JFrame {
      */
     private void btnManageLeaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageLeaveActionPerformed
         // Open ManageLeaveMenu
-        new ManageLeaveMenu().setVisible(true);
+        new LeaveApplicationPage(employeeNumber).setVisible(true);
     }//GEN-LAST:event_btnManageLeaveActionPerformed
 
     /**

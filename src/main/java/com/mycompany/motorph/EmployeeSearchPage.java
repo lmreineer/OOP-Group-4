@@ -529,10 +529,10 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             int employeeNumber = (int) model.getValueAt(rowIndex, 0);
 
             EmployeeInformation employeeInformation = new EmployeeInformation();
-            List<String> employeeDetails = employeeInformation.showEmployeeInformation(employeeNumber);
+            Employee employeeDetails = employeeInformation.showEmployeeInformation(employeeNumber);
 
             // Pass reference of EmployeeSearchPage
-            new AdminViewProfileFrame(employeeDetails, this).setVisible(true);
+            new AdminViewProfileFrame(employeeDetails, "ADMIN", this).setVisible(true);
         } catch (IOException | ParseException | CsvValidationException e) {
             showErrorDialog(e.getMessage());
         }

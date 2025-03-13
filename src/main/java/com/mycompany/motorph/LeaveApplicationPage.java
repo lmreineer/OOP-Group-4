@@ -404,8 +404,14 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
      * Handles the action event of the apply button to apply for leave.
      */
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
-        // Apply for leave
         applyLeave();
+
+        try {
+            LeaveTablePage leaveTablePage = new LeaveTablePage();
+            leaveTablePage.refreshTable();  // Refresh data
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error refreshing leave table: " + ex.getMessage());
+        }
     }//GEN-LAST:event_btnApplyActionPerformed
 
     /**

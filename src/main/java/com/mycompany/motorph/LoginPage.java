@@ -4,8 +4,14 @@
  */
 package com.mycompany.motorph;
 
+import com.mycompany.motorph.employee.EmployeeInformation;
+import com.mycompany.motorph.model.Employee;
 import com.mycompany.motorph.security.SecurityManager;
+import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -275,32 +281,46 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
     }
 
     /**
-     * Opens the user dashboard based on the division or user type
+     * Opens the user dashboard based on the division or user type.
      *
-     * @param division The user type (Employee, IT, Admin)
-     * @param username The username of the logged-in user
+     * @param division The user type (Employee, IT, Admin).
+     * @param username The username of the logged-in user.
      */
     private void openUserDashboard(String division, String username) {
-        // Default value for non-employees
-        int employeeNumber = -1;
+        try {
+            int employeeNumber = -1;
+            Employee employee = null;
 
-        // Extract employee number only if the user is an Employee or IT
-        if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
-            try {
-                // Only extract if necessary
-                employeeNumber = Integer.parseInt(username.substring(1));
-            } catch (NumberFormatException e) {
-                System.err.println("ERROR: Invalid employee number format for username: " + username);
+            // ✅ Extract employee number **ONLY** for Employees & IT
+            if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
+                try {
+                    employeeNumber = Integer.parseInt(username.substring(1)); // Extract numeric part
+                    EmployeeInformation employeeInformation = new EmployeeInformation();
+                    employee = employeeInformation.showEmployeeInformation(employeeNumber);
+                } catch (NumberFormatException e) {
+                    System.err.println("ERROR: Invalid employee number format for username: " + username);
+                }
             }
-        }
 
-        // Open the dashboard based on user type
-        if (division.equalsIgnoreCase("Employee")) {
-            new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
-        } else if (division.equalsIgnoreCase("IT")) {
-            new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
-        } else if (division.equalsIgnoreCase("Admin")) {
-            new AdminMotorPHMainMenu().setVisible(true);
+            // ✅ Admins go directly to their dashboard
+            if (division.equalsIgnoreCase("Admin")) {
+                new AdminMotorPHMainMenu().setVisible(true);
+                return;
+            }
+
+            // ✅ Employees & IT go directly to their dashboard, NOT the profile view
+            if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
+                if (employee == null) {
+                    JOptionPane.showMessageDialog(null, "Employee not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // ✅ Open the employee dashboard **without opening profile view**
+                new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
+                return;
+            }
+        } catch (IOException | CsvValidationException | ParseException ex) {
+            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
