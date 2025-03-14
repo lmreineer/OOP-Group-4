@@ -28,6 +28,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Update Credentials"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="btnUpdateCredentials.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        btnUpdateCredentialsActionPerformed(evt);&#xa;    }&#xa;});"/>
+          </AuxValues>
         </MenuItem>
       </SubComponents>
     </Container>

@@ -85,6 +85,11 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         pmnAdminFunctions.add(btnComputePayroll);
 
         btnUpdateCredentials.setText("Update Credentials");
+        btnUpdateCredentials.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateCredentialsActionPerformed(evt);
+            }
+        });
         pmnAdminFunctions.add(btnUpdateCredentials);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -446,6 +451,29 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         }
     }//GEN-LAST:event_btnComputePayrollActionPerformed
 
+    private void btnUpdateCredentialsActionPerformed(java.awt.event.ActionEvent evt) {
+        int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+        if (rowIndex != -1) {
+            try {
+                DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
+                int employeeNumber = (int) model.getValueAt(rowIndex, 0);
+
+                EmployeeInformation employeeInformation = new EmployeeInformation();
+                List<String> employeeDetails = employeeInformation.showEmployeeInformation(employeeNumber);
+
+                // Open ITViewProfileFrame instead of AdminViewProfileFrame
+                new ITViewProfileFrame(employeeDetails, this).setVisible(true);
+            } catch (IOException | ParseException | CsvValidationException e) {
+                showErrorDialog(e.getMessage());
+            }
+        } else {
+            // Show an error message if no row is selected
+            JOptionPane.showMessageDialog(this, 
+                "Please select an employee row first.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
     /**
      * Refreshes the employee table by clearing and repopulating it.
      */

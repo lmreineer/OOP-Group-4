@@ -39,7 +39,7 @@ class AdminViewProfileFrame extends javax.swing.JFrame implements EmployeeInform
     private static final java.awt.Color GRAY = new java.awt.Color(242, 242, 242);
 
     private boolean deleteButtonClicked = false;
-    private EmployeeSearchPage employeeSearchPage;
+    private final EmployeeSearchPage employeeSearchPage;
 
     /**
      * Constructs the AdminViewProfileFrame and initializes the employee
@@ -965,36 +965,115 @@ class AdminViewProfileFrame extends javax.swing.JFrame implements EmployeeInform
     }
 
     private void deleteEmployeeRecord(int employeeNumber) throws IOException {
+        // Create deleted_employee.csv if it doesn't exist
+        File deletedEmployeesFile = new File("src/main/resources/data/deleted_employee.csv");
+        if (!deletedEmployeesFile.exists()) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletedEmployeesFile))) {
+                // Write header in first row
+                writer.write("\"Employee #\",\"Last Name\",\"First Name\",\"Birthday\",\"Address\",\"Phone Number\",\"SSS #\",\"Philhealth #\",\"TIN #\",\"Pag-ibig #\",\"Status\",\"Position\",\"Immediate Supervisor\",\"Basic Salary\",\"Rice Subsidy\",\"Phone Allowance\",\"Clothing Allowance\",\"Gross Semi-monthly Rate\",\"Hourly Rate\",Username,Password,Division");
+                writer.newLine(); // Add a single newline to move to next row
+            }
+        }
+
+        // Read and store the employee info and login credentials before deletion
         File inputFile = new File("src/main/resources/data/employee_information.csv");
+        File loginFile = new File("src/main/resources/data/login_credentials.csv");
         File tempFile = new File("src/main/resources/data/temp_employee_information.csv");
+        String deletedEmployeeInfo = null;
+        String username = "";
+        String password = "";
+        String division = "";
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile)); BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
-            String header = reader.readLine();
-            writer.write(header + "\n"); // Keep header row
-
-            String currentLine;
-            while ((currentLine = reader.readLine()) != null) {
-                String[] data = currentLine.split(",");
-
-                // Trim whitespace and remove quotes from the employee number
-                String employeeNumString = data[0].replaceAll("\"", "").trim();
-
-                if (!employeeNumString.equals(String.valueOf(employeeNumber))) {
-                    writer.write(currentLine + "\n"); // Write only non-matching rows
+        // First, get the login credentials and create temp login file
+        File tempLoginFile = new File("src/main/resources/data/temp_login_credentials.csv");
+        
+        try (BufferedReader loginReader = new BufferedReader(new FileReader(loginFile));
+             BufferedWriter loginWriter = new BufferedWriter(new FileWriter(tempLoginFile))) {
+            
+            // Write header to temp login file
+            String loginHeader = loginReader.readLine();
+            loginWriter.write(loginHeader + "\n");
+            
+            String loginLine;
+            while ((loginLine = loginReader.readLine()) != null) {
+                String[] loginData = loginLine.split(",");
+                // Remove any quotes from the username
+                String loginUsername = loginData[0].replaceAll("\"", "").trim(); // U001, U002, etc.
+                
+                // Convert employee number to login credential format (1 -> U001)
+                String expectedUsername = String.format("U%03d", employeeNumber);
+                
+                if (loginUsername.equals(expectedUsername)) {
+                    username = loginUsername;
+                    // Remove quotes from password and division
+                    password = loginData[1].replaceAll("\"", "").trim();
+                    division = loginData[2].replaceAll("\"", "").trim();
+                    // Don't write this line to temp file (effectively deleting it)
+                    System.out.println("Found and removing credentials for: " + loginUsername); // Debug line
+                } else {
+                    // Write all other lines to temp file as they are
+                    loginWriter.write(loginLine + "\n");
                 }
             }
         }
 
-        // Replace old file with updated file
+        // Now handle the employee information
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String header = reader.readLine();
+            writer.write(header + "\n");
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // Split by comma but not within quotes
+                String empNum = data[0].replaceAll("\"", "").trim();
+
+                if (empNum.equals(String.valueOf(employeeNumber))) {
+                    // Build the deleted employee record with proper formatting
+                    StringBuilder record = new StringBuilder();
+                    for (int i = 0; i < data.length; i++) {
+                        String field = data[i].replaceAll("^\"|\"$", "").trim(); // Remove surrounding quotes
+                        record.append("\"").append(field).append("\"");
+                        if (i < data.length - 1) {
+                            record.append(",");
+                        }
+                    }
+                    // Add login credentials without quotes
+                    record.append(",").append(username);
+                    record.append(",").append(password);
+                    record.append(",").append(division);
+                    
+                    deletedEmployeeInfo = record.toString();
+                } else {
+                    writer.write(line + "\n");
+                }
+            }
+        }
+
+        // Save to deleted_employee.csv
+        if (deletedEmployeeInfo != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(deletedEmployeesFile, true))) {
+                writer.write(deletedEmployeeInfo);
+                writer.newLine(); // Add newline for next record
+            }
+        }
+
+        // Replace original files with temp files
         if (!inputFile.delete()) {
-            throw new IOException("Could not delete the original file.");
+            throw new IOException("Could not delete the original employee file.");
         }
         if (!tempFile.renameTo(inputFile)) {
-            throw new IOException("Could not rename the temporary file.");
+            throw new IOException("Could not rename the temporary employee file.");
+        }
+
+        if (!loginFile.delete()) {
+            throw new IOException("Could not delete the original login credentials file.");
+        }
+        if (!tempLoginFile.renameTo(loginFile)) {
+            throw new IOException("Could not rename the temporary login credentials file.");
         }
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnDeleteInfo;
