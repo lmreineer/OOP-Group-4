@@ -27,15 +27,10 @@ class ITCreateEmployeeFrame extends javax.swing.JFrame implements EmployeeInform
     private static final java.awt.Color RED = new java.awt.Color(191, 47, 47);
     private static final java.awt.Color GRAY = new java.awt.Color(242, 242, 242);
 
-    private boolean deleteButtonClicked = false;
-    private EmployeeSearchPage employeeSearchPage;
 
     /**
-     * Constructs the AdminViewProfileFrame and initializes the employee
-     * profile.
-     *
-     * @param employeeInformation List containing the employee's details.
-     * @param searchPage Reference to the EmployeeSearchPage for navigation.
+     * Constructs the ITCreateEmployeeFrame and initializes the Add
+     * Employee.
      */
     public ITCreateEmployeeFrame() {
         initComponents();
@@ -923,6 +918,7 @@ class ITCreateEmployeeFrame extends javax.swing.JFrame implements EmployeeInform
     }
     
     private boolean validateRequiredFields() {
+        // First check if fields are empty
         JTextField[] requiredFields = {
             txtLastName, txtFirstName, txtBirthdate, txtAddress, txtPhoneNumber,
             txtStatus, txtPosition, txtBasicSalary, txtUsername, txtPassword, txtDivision
@@ -930,9 +926,87 @@ class ITCreateEmployeeFrame extends javax.swing.JFrame implements EmployeeInform
         
         for (JTextField field : requiredFields) {
             if (field.getText().trim().isEmpty()) {
+                showErrorDialog("All required fields must be filled out");
                 return false;
             }
         }
+
+        // Validate name format (letters and spaces only)
+        if (!txtLastName.getText().matches("[a-zA-Z\\s]+")) {
+            showErrorDialog("Last Name should contain only letters and spaces");
+            return false;
+        }
+        if (!txtFirstName.getText().matches("[a-zA-Z\\s]+")) {
+            showErrorDialog("First Name should contain only letters and spaces");
+            return false;
+        }
+
+        // Validate birthdate format (MM/DD/YYYY)
+        if (!txtBirthdate.getText().matches("\\d{2}/\\d{2}/\\d{4}")) {
+            showErrorDialog("Birthday should be in format MM/DD/YYYY");
+            return false;
+        }
+
+        // Validate phone number format (XXX-XXX-XXX)
+        if (!txtPhoneNumber.getText().matches("\\d{3}-\\d{3}-\\d{3}")) {
+            showErrorDialog("Phone Number should be in format XXX-XXX-XXX");
+            return false;
+        }
+
+        // Validate SSS number format (XX-XXXXXXX-X)
+        if (!txtSssNumber.getText().isEmpty() && !txtSssNumber.getText().matches("\\d{2}-\\d{7}-\\d{1}")) {
+            showErrorDialog("SSS Number should be in format XX-XXXXXXX-X");
+            return false;
+        }
+
+        // Validate PhilHealth number format (12 digits)
+        if (!txtPhilHealthNumber.getText().isEmpty() && !txtPhilHealthNumber.getText().matches("\\d{12}")) {
+            showErrorDialog("PhilHealth Number should be 12 digits");
+            return false;
+        }
+
+        // Validate TIN format (XXX-XXX-XXX-XXX)
+        if (!txtTinNumber.getText().isEmpty() && !txtTinNumber.getText().matches("\\d{3}-\\d{3}-\\d{3}-\\d{3}")) {
+            showErrorDialog("TIN Number should be in format XXX-XXX-XXX-XXX");
+            return false;
+        }
+
+        // Validate Pag-IBIG format (12 digits)
+        if (!txtPagIbigNumber.getText().isEmpty() && !txtPagIbigNumber.getText().matches("\\d{12}")) {
+            showErrorDialog("Pag-IBIG Number should be 12 digits");
+            return false;
+        }
+
+        // Validate salary and allowance fields (numeric with optional decimals)
+        try {
+            if (!txtBasicSalary.getText().isEmpty()) {
+                double basicSalary = Double.parseDouble(txtBasicSalary.getText().replaceAll("[^\\d.]", ""));
+                if (basicSalary <= 0) {
+                    showErrorDialog("Basic Salary must be greater than 0");
+                    return false;
+                }
+            }
+
+            if (!txtRiceSubsidy.getText().isEmpty()) {
+                Double.parseDouble(txtRiceSubsidy.getText().replaceAll("[^\\d.]", ""));
+            }
+            if (!txtPhoneAllowance.getText().isEmpty()) {
+                Double.parseDouble(txtPhoneAllowance.getText().replaceAll("[^\\d.]", ""));
+            }
+            if (!txtClothingAllowance.getText().isEmpty()) {
+                Double.parseDouble(txtClothingAllowance.getText().replaceAll("[^\\d.]", ""));
+            }
+            if (!txtGrossSemimonthlyRate.getText().isEmpty()) {
+                Double.parseDouble(txtGrossSemimonthlyRate.getText().replaceAll("[^\\d.]", ""));
+            }
+            if (!txtHourlyRate.getText().isEmpty()) {
+                Double.parseDouble(txtHourlyRate.getText().replaceAll("[^\\d.]", ""));
+            }
+        } catch (NumberFormatException e) {
+            showErrorDialog("All salary and allowance fields must be valid numbers");
+            return false;
+        }
+
         return true;
     }
 
