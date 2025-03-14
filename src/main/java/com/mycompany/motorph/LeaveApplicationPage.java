@@ -4,7 +4,7 @@
  */
 package com.mycompany.motorph;
 
-import com.mycompany.motorph.data.LeaveDataManager;
+import repository.LeaveDataManager;
 import static com.mycompany.motorph.model.DateRange.createDateRange;
 import com.mycompany.motorph.model.Leave;
 import com.opencsv.exceptions.CsvValidationException;

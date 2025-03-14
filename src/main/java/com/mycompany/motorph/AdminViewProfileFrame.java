@@ -4,6 +4,7 @@
  */
 package com.mycompany.motorph;
 
+import manager.RBACManager;
 import com.mycompany.motorph.employee.EmployeeInformation;
 import com.mycompany.motorph.model.Employee;
 import com.opencsv.exceptions.CsvValidationException;

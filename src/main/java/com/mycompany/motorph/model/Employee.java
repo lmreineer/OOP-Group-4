@@ -234,11 +234,11 @@ public class Employee extends User {
         employeeInfo.add(getFirstName());
         employeeInfo.add(getBirthdateAsString());
         employeeInfo.add(getAddress());
-        employeeInfo.add(getPhoneNumber());
-        employeeInfo.add(getSssNumber());
-        employeeInfo.add(getPhilHealthNumber());
-        employeeInfo.add(getTin());
-        employeeInfo.add(getPagIbigNumber());
+        employeeInfo.add(String.valueOf(getPhoneNumber()));
+        employeeInfo.add(String.valueOf(getSssNumber()));
+        employeeInfo.add(String.valueOf(getPhilHealthNumber()));
+        employeeInfo.add(String.valueOf(getTin()));
+        employeeInfo.add(String.valueOf(getPagIbigNumber()));
         employeeInfo.add(getStatus());
         employeeInfo.add(getPosition());
         employeeInfo.add(getImmediateSupervisor());

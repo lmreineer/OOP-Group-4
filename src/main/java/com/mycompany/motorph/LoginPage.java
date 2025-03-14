@@ -291,7 +291,6 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
             int employeeNumber = -1;
             Employee employee = null;
 
-            // ✅ Extract employee number **ONLY** for Employees & IT
             if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
                 try {
                     employeeNumber = Integer.parseInt(username.substring(1)); // Extract numeric part
@@ -302,20 +301,17 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
                 }
             }
 
-            // ✅ Admins go directly to their dashboard
             if (division.equalsIgnoreCase("Admin")) {
                 new AdminMotorPHMainMenu().setVisible(true);
                 return;
             }
 
-            // ✅ Employees & IT go directly to their dashboard, NOT the profile view
             if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
                 if (employee == null) {
                     JOptionPane.showMessageDialog(null, "Employee not found.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // ✅ Open the employee dashboard **without opening profile view**
                 new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
                 return;
             }

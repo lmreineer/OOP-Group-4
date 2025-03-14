@@ -4,6 +4,7 @@
  */
 package com.mycompany.motorph;
 
+import manager.RBACManager;
 import com.mycompany.motorph.model.Employee;
 
 /**

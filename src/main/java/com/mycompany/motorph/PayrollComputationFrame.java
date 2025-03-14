@@ -4,6 +4,7 @@
  */
 package com.mycompany.motorph;
 
+import manager.SalaryComputationManager;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;

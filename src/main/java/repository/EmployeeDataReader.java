@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.motorph.data;
+package repository;
 
 import com.mycompany.motorph.model.Employee;
 import com.mycompany.motorph.util.CurrencyUtil;
@@ -102,7 +102,7 @@ public class EmployeeDataReader {
             employee.getFirstName(),
             BIRTHDATE_FORMAT.format(employee.getBirthdate()),
             employee.getAddress(),
-            String.valueOf(employee.getPhoneNumber()),
+            employee.getPhoneNumber(),
             employee.getSssNumber(),
             employee.getPhilHealthNumber(),
             employee.getTin(),

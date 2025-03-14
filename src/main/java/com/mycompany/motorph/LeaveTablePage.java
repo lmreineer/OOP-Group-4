@@ -4,7 +4,7 @@
  */
 package com.mycompany.motorph;
 
-import com.mycompany.motorph.data.LeaveDataManager;
+import repository.LeaveDataManager;
 import com.mycompany.motorph.model.Leave;
 import com.mycompany.motorph.model.LeaveRequest;
 import com.opencsv.exceptions.CsvValidationException;
