@@ -298,7 +298,7 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
         if (division.equalsIgnoreCase("Employee")) {
             new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
         } else if (division.equalsIgnoreCase("IT")) {
-            new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
+            new ITMotorPHMainMenu().setVisible(true);
         } else if (division.equalsIgnoreCase("Admin")) {
             new AdminMotorPHMainMenu().setVisible(true);
         }
