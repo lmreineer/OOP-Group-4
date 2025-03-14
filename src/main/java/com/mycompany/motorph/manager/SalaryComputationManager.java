@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package manager;
+package com.mycompany.motorph.manager;
 
 import com.mycompany.motorph.calculation.WageCalculation;
 import com.mycompany.motorph.employee.EmployeeInformation;

@@ -5,7 +5,7 @@
 package com.mycompany.motorph.employee;
 
 import com.mycompany.motorph.model.Employee;
-import repository.EmployeeDataReader;
+import com.mycompany.motorph.repository.EmployeeDataReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 import java.text.ParseException;

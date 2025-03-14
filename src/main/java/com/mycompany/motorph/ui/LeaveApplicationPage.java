@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.motorph;
+package com.mycompany.motorph.ui;
 
-import repository.LeaveDataManager;
+import com.mycompany.motorph.repository.LeaveDataManager;
 import static com.mycompany.motorph.model.DateRange.createDateRange;
 import com.mycompany.motorph.model.Leave;
 import com.opencsv.exceptions.CsvValidationException;
