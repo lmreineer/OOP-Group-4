@@ -130,7 +130,7 @@ public class EmployeeDataReader {
         Employee employee = new Employee(Integer.parseInt(employeeData[0]),
                 employeeData[1],
                 employeeData[2],
-                new SimpleDateFormat("MM/dd/yyyy").parse(employeeData[3]),
+                BIRTHDATE_FORMAT.parse(employeeData[3].trim()),
                 employeeData[4],
                 employeeData[5],
                 employeeData[10],

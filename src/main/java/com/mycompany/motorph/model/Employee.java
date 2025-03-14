@@ -220,35 +220,4 @@ public class Employee extends User {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         return dateFormat.format(getBirthdate());
     }
-
-    /**
-     * Returns employee information.
-     *
-     * @return The list containing employee information
-     */
-    public List<String> getEmployeeInformation() {
-        List<String> employeeInfo = new ArrayList<>();
-
-        employeeInfo.add(String.valueOf(getEmployeeNumber()));
-        employeeInfo.add(getLastName());
-        employeeInfo.add(getFirstName());
-        employeeInfo.add(getBirthdateAsString());
-        employeeInfo.add(getAddress());
-        employeeInfo.add(String.valueOf(getPhoneNumber()));
-        employeeInfo.add(String.valueOf(getSssNumber()));
-        employeeInfo.add(String.valueOf(getPhilHealthNumber()));
-        employeeInfo.add(String.valueOf(getTin()));
-        employeeInfo.add(String.valueOf(getPagIbigNumber()));
-        employeeInfo.add(getStatus());
-        employeeInfo.add(getPosition());
-        employeeInfo.add(getImmediateSupervisor());
-        employeeInfo.add(CurrencyUtil.formatCurrency(getBasicSalary()));
-        employeeInfo.add(CurrencyUtil.formatCurrency(getRiceSubsidy()));
-        employeeInfo.add(CurrencyUtil.formatCurrency(getPhoneAllowance()));
-        employeeInfo.add(CurrencyUtil.formatCurrency(getClothingAllowance()));
-        employeeInfo.add(CurrencyUtil.formatCurrency(getGrossSemimonthlyRate()));
-        employeeInfo.add(CurrencyUtil.formatCurrency(getHourlyRate()));
-
-        return employeeInfo;
-    }
 }

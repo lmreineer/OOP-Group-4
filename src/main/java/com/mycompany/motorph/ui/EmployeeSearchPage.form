@@ -7,29 +7,6 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
-      <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="btnUpdateInformation">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Update Information"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateInformationActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="btnComputePayroll">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Compute Payroll"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnComputePayrollActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="btnUpdateCredentials">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Update Credentials"/>
-          </Properties>
-        </MenuItem>
-      </SubComponents>
     </Container>
   </NonVisualComponents>
   <Properties>

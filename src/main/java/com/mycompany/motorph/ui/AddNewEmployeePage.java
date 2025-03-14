@@ -5,9 +5,18 @@
 package com.mycompany.motorph.ui;
 
 import com.mycompany.motorph.model.Employee;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import com.mycompany.motorph.security.PasswordManager;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  * A class that displays the specific employee's pay information based on the
@@ -15,12 +24,18 @@ import javax.swing.JOptionPane;
  *
  * @author Lance
  */
-class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformationManager {
+class AddNewEmployeePage extends javax.swing.JFrame implements EmployeeInformationManager {
 
     // Constants for button coloring changes
     private static final java.awt.Color LIGHT_BLUE = new java.awt.Color(203, 203, 239);
     private static final java.awt.Color WHITE = new java.awt.Color(255, 255, 255);
     private static final java.awt.Color RED = new java.awt.Color(191, 47, 47);
+
+    private static final String EMPLOYEE_FILE_PATH = "src/main/resources/data/employee_information.csv";
+    private static final String CREDENTIALS_FILE_PATH = "src/main/resources/data/login_credentials.csv";
+    private static final String HASHED_CREDENTIALS_FILE_PATH = "src/main/resources/data/login_credentials_hashed.csv";
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("^U0(\\d+)$");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
     /**
      * Creates new EmployeeInformationFrame.
@@ -28,48 +43,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
      * @param employeeInformation List of strings that contains initial employee
      * information.
      */
-    public ViewProfileFrame(Employee employeeInformation) {
+    public AddNewEmployeePage() {
         initComponents();
-        setupFrame(employeeInformation);
-    }
-
-    /**
-     * Sets up the frame with initial components and layout.
-     *
-     * @param employeeDetails List of strings that contains initial employee
-     * information.
-     */
-    private void setupFrame(Employee employeeDetails) {
-        setLayout(new BorderLayout());
-
-        // Create components
-        showInformation(employeeDetails);
-
-        // Set frame visibility
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    /**
-     * Displays employee and wage information for the selected month.
-     *
-     * @param employeeDetails List of strings that contains employee
-     * information.
-     * @param selectedMonth Selected month in "MM" format.
-     */
-    public void showInformation(Employee employeeDetails) {
-        populateEmployeeInformation(employeeDetails);
-
-        // Set the intended size
-        scrollPaneMain.setPreferredSize(new Dimension(603, 627));
-        scrollPaneMain.setVisible(true);
-        add(scrollPaneMain, BorderLayout.CENTER);
-
-        pack();
-        setLocationRelativeTo(null);
-        revalidate();
-        repaint();
     }
 
     /**
@@ -97,8 +72,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblSssNumber = new javax.swing.JLabel();
         txtPhilHealthNumber = new javax.swing.JTextField();
         lblPhilHealthNumber = new javax.swing.JLabel();
-        txtTinNumber = new javax.swing.JTextField();
-        lblTinNumber = new javax.swing.JLabel();
+        txtTin = new javax.swing.JTextField();
+        lblTin = new javax.swing.JLabel();
         txtStatus = new javax.swing.JTextField();
         lblStatus = new javax.swing.JLabel();
         txtPagIbigNumber = new javax.swing.JTextField();
@@ -124,8 +99,13 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblBottomSeparator = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
-        lblEmployeeNumber = new javax.swing.JLabel();
-        txtEmployeeNumber = new javax.swing.JTextField();
+        txtUsername = new javax.swing.JTextField();
+        lblHourlyRate1 = new javax.swing.JLabel();
+        lblHourlyRate2 = new javax.swing.JLabel();
+        txtDivision = new javax.swing.JTextField();
+        lblHourlyRate3 = new javax.swing.JLabel();
+        btnAddEmployee = new javax.swing.JButton();
+        txtPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Employee and Wage Information");
@@ -145,14 +125,12 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblProfileHeader.setFont(new java.awt.Font("Leelawadee", 1, 16)); // NOI18N
         lblProfileHeader.setForeground(new java.awt.Color(255, 255, 255));
         lblProfileHeader.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblProfileHeader.setText("Profile");
+        lblProfileHeader.setText("Add New Employee");
         lblProfileHeader.setOpaque(true);
 
-        txtLastName.setEditable(false);
         txtLastName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtLastName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         txtLastName.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        txtLastName.setFocusable(false);
 
         lblLastName.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblLastName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -172,15 +150,11 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblBirthdate.setMinimumSize(new java.awt.Dimension(93, 25));
         lblBirthdate.setOpaque(true);
 
-        txtBirthdate.setEditable(false);
         txtBirthdate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtBirthdate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtBirthdate.setFocusable(false);
 
-        txtPhoneNumber.setEditable(false);
         txtPhoneNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPhoneNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtPhoneNumber.setFocusable(false);
 
         lblPhoneNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPhoneNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -191,10 +165,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblPhoneNumber.setMinimumSize(new java.awt.Dimension(93, 25));
         lblPhoneNumber.setOpaque(true);
 
-        txtAddress.setEditable(false);
         txtAddress.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtAddress.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtAddress.setFocusable(false);
 
         lblAddress.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblAddress.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -205,10 +177,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblAddress.setMinimumSize(new java.awt.Dimension(93, 25));
         lblAddress.setOpaque(true);
 
-        txtSssNumber.setEditable(false);
         txtSssNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtSssNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtSssNumber.setFocusable(false);
 
         lblSssNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblSssNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -219,10 +189,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblSssNumber.setMinimumSize(new java.awt.Dimension(93, 25));
         lblSssNumber.setOpaque(true);
 
-        txtPhilHealthNumber.setEditable(false);
         txtPhilHealthNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPhilHealthNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtPhilHealthNumber.setFocusable(false);
 
         lblPhilHealthNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPhilHealthNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -233,24 +201,20 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblPhilHealthNumber.setMinimumSize(new java.awt.Dimension(93, 25));
         lblPhilHealthNumber.setOpaque(true);
 
-        txtTinNumber.setEditable(false);
-        txtTinNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtTinNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtTinNumber.setFocusable(false);
+        txtTin.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTin.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
 
-        lblTinNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblTinNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTinNumber.setText("TIN:");
-        lblTinNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblTinNumber.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblTinNumber.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblTinNumber.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblTinNumber.setOpaque(true);
+        lblTin.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
+        lblTin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTin.setText("TIN:");
+        lblTin.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
+        lblTin.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblTin.setMaximumSize(new java.awt.Dimension(93, 25));
+        lblTin.setMinimumSize(new java.awt.Dimension(93, 25));
+        lblTin.setOpaque(true);
 
-        txtStatus.setEditable(false);
         txtStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtStatus.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtStatus.setFocusable(false);
 
         lblStatus.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -261,10 +225,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblStatus.setMinimumSize(new java.awt.Dimension(93, 25));
         lblStatus.setOpaque(true);
 
-        txtPagIbigNumber.setEditable(false);
         txtPagIbigNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPagIbigNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtPagIbigNumber.setFocusable(false);
 
         lblPagIbigNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPagIbigNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -275,10 +237,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblPagIbigNumber.setMinimumSize(new java.awt.Dimension(93, 25));
         lblPagIbigNumber.setOpaque(true);
 
-        txtPosition.setEditable(false);
         txtPosition.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPosition.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtPosition.setFocusable(false);
 
         lblPosition.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPosition.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -289,10 +249,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblPosition.setMinimumSize(new java.awt.Dimension(93, 25));
         lblPosition.setOpaque(true);
 
-        txtBasicSalary.setEditable(false);
         txtBasicSalary.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtBasicSalary.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtBasicSalary.setFocusable(false);
 
         lblBasicSalary.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblBasicSalary.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -303,10 +261,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblBasicSalary.setMinimumSize(new java.awt.Dimension(93, 25));
         lblBasicSalary.setOpaque(true);
 
-        txtPhoneAllowance.setEditable(false);
         txtPhoneAllowance.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtPhoneAllowance.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtPhoneAllowance.setFocusable(false);
 
         lblPhoneAllowance.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblPhoneAllowance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -317,10 +273,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblPhoneAllowance.setMinimumSize(new java.awt.Dimension(93, 25));
         lblPhoneAllowance.setOpaque(true);
 
-        txtGrossSemimonthlyRate.setEditable(false);
         txtGrossSemimonthlyRate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtGrossSemimonthlyRate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtGrossSemimonthlyRate.setFocusable(false);
 
         lblGrossSemimonthlyRate.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblGrossSemimonthlyRate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -331,10 +285,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblGrossSemimonthlyRate.setMinimumSize(new java.awt.Dimension(93, 25));
         lblGrossSemimonthlyRate.setOpaque(true);
 
-        txtImmediateSupervisor.setEditable(false);
         txtImmediateSupervisor.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtImmediateSupervisor.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtImmediateSupervisor.setFocusable(false);
 
         lblImmediateSupervisor.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblImmediateSupervisor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -345,10 +297,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblImmediateSupervisor.setMinimumSize(new java.awt.Dimension(93, 25));
         lblImmediateSupervisor.setOpaque(true);
 
-        txtRiceSubsidy.setEditable(false);
         txtRiceSubsidy.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtRiceSubsidy.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtRiceSubsidy.setFocusable(false);
 
         lblRiceSubsidy.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblRiceSubsidy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -359,10 +309,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblRiceSubsidy.setMinimumSize(new java.awt.Dimension(93, 25));
         lblRiceSubsidy.setOpaque(true);
 
-        txtClothingAllowance.setEditable(false);
         txtClothingAllowance.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtClothingAllowance.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtClothingAllowance.setFocusable(false);
 
         lblClothingAllowance.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblClothingAllowance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -373,10 +321,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblClothingAllowance.setMinimumSize(new java.awt.Dimension(93, 25));
         lblClothingAllowance.setOpaque(true);
 
-        txtHourlyRate.setEditable(false);
         txtHourlyRate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtHourlyRate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtHourlyRate.setFocusable(false);
 
         lblHourlyRate.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
         lblHourlyRate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -396,10 +342,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblFirstName.setMinimumSize(new java.awt.Dimension(93, 25));
         lblFirstName.setOpaque(true);
 
-        txtFirstName.setEditable(false);
         txtFirstName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtFirstName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtFirstName.setFocusable(false);
 
         lblBottomSeparator.setBackground(new java.awt.Color(51, 51, 51));
         lblBottomSeparator.setFont(new java.awt.Font("Leelawadee", 1, 16)); // NOI18N
@@ -445,20 +389,60 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
             }
         });
 
-        lblEmployeeNumber.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
-        lblEmployeeNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblEmployeeNumber.setText("Employee #");
-        lblEmployeeNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        lblEmployeeNumber.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblEmployeeNumber.setMaximumSize(new java.awt.Dimension(93, 25));
-        lblEmployeeNumber.setMinimumSize(new java.awt.Dimension(93, 25));
-        lblEmployeeNumber.setOpaque(true);
+        txtUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
 
-        txtEmployeeNumber.setEditable(false);
-        txtEmployeeNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtEmployeeNumber.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
-        txtEmployeeNumber.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        txtEmployeeNumber.setFocusable(false);
+        lblHourlyRate1.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
+        lblHourlyRate1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblHourlyRate1.setText("Username:");
+        lblHourlyRate1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
+        lblHourlyRate1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblHourlyRate1.setMaximumSize(new java.awt.Dimension(93, 25));
+        lblHourlyRate1.setMinimumSize(new java.awt.Dimension(93, 25));
+        lblHourlyRate1.setOpaque(true);
+
+        lblHourlyRate2.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
+        lblHourlyRate2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblHourlyRate2.setText("Password:");
+        lblHourlyRate2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
+        lblHourlyRate2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblHourlyRate2.setMaximumSize(new java.awt.Dimension(93, 25));
+        lblHourlyRate2.setMinimumSize(new java.awt.Dimension(93, 25));
+        lblHourlyRate2.setOpaque(true);
+
+        txtDivision.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtDivision.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
+
+        lblHourlyRate3.setFont(new java.awt.Font("Leelawadee UI", 1, 12)); // NOI18N
+        lblHourlyRate3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblHourlyRate3.setText("Division:");
+        lblHourlyRate3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
+        lblHourlyRate3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblHourlyRate3.setMaximumSize(new java.awt.Dimension(93, 25));
+        lblHourlyRate3.setMinimumSize(new java.awt.Dimension(93, 25));
+        lblHourlyRate3.setOpaque(true);
+
+        btnAddEmployee.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
+        btnAddEmployee.setText("Add New Employee");
+        btnAddEmployee.setToolTipText("");
+        btnAddEmployee.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnAddEmployee.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAddEmployee.setFocusable(false);
+        btnAddEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAddEmployeeMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAddEmployeeMouseExited(evt);
+            }
+        });
+        btnAddEmployee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddEmployeeActionPerformed(evt);
+            }
+        });
+
+        txtPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -470,89 +454,102 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
                 .addGap(129, 129, 129)
                 .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(129, 129, 129))
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblEmployeeNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtEmployeeNumber))
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtLastName))
+                        .addContainerGap()
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtLastName))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtFirstName))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblBirthdate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtBirthdate))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtAddress))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPhoneNumber))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblSssNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtSssNumber))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblPhilHealthNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPhilHealthNumber))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblTin, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTin))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblPagIbigNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPagIbigNumber))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtStatus))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPosition))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblImmediateSupervisor, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtImmediateSupervisor))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblBasicSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtBasicSalary))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblRiceSubsidy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtRiceSubsidy))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblPhoneAllowance, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPhoneAllowance))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblClothingAllowance, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtClothingAllowance))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblGrossSemimonthlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGrossSemimonthlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblHourlyRate1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblHourlyRate2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPassword))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblHourlyRate3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDivision, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFirstName))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblBirthdate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBirthdate))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAddress))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPhoneNumber))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblSssNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSssNumber))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblPhilHealthNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPhilHealthNumber))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblTinNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTinNumber))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblPagIbigNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPagIbigNumber))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtStatus))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPosition))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblImmediateSupervisor, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtImmediateSupervisor))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblBasicSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBasicSalary))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblRiceSubsidy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRiceSubsidy))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblPhoneAllowance, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPhoneAllowance))
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblClothingAllowance, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtClothingAllowance))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblGrossSemimonthlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtGrossSemimonthlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6))
+                        .addGap(188, 188, 188)
+                        .addComponent(btnAddEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -562,10 +559,6 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
                 .addGap(13, 13, 13)
                 .addComponent(lblProfileHeader)
                 .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblEmployeeNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEmployeeNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -595,8 +588,8 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
                     .addComponent(txtPhilHealthNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTinNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTinNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTin, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTin, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPagIbigNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -637,6 +630,22 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblHourlyRate1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblHourlyRate2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblHourlyRate3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDivision, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addComponent(btnAddEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addComponent(lblBottomSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
@@ -660,6 +669,7 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -710,47 +720,89 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         btnExit.setBackground(RED);
     }//GEN-LAST:event_btnExitMouseEntered
 
-    /**
-     * Updates the employee information text fields for the chosen employee.
-     *
-     * @param employeeInfo The information of the employee
-     */
-    private void updateEmployeeInformationFields(Employee employeeInfo) {
-        txtEmployeeNumber.setText(String.valueOf(employeeInfo.getEmployeeNumber()));
-        txtLastName.setText(employeeInfo.getLastName());
-        txtFirstName.setText(employeeInfo.getFirstName());
-        txtBirthdate.setText(employeeInfo.getBirthdate().toString()); // Convert Date to String
-        txtAddress.setText(employeeInfo.getAddress());
-        txtPhoneNumber.setText(employeeInfo.getPhoneNumber());
-        txtSssNumber.setText(employeeInfo.getSssNumber());
-        txtPhilHealthNumber.setText(employeeInfo.getPhilHealthNumber());
-        txtTinNumber.setText(employeeInfo.getTin());
-        txtPagIbigNumber.setText(employeeInfo.getPagIbigNumber());
-        txtStatus.setText(employeeInfo.getStatus());
-        txtPosition.setText(employeeInfo.getPosition());
-        txtImmediateSupervisor.setText(employeeInfo.getImmediateSupervisor());
-        txtBasicSalary.setText(String.valueOf(employeeInfo.getBasicSalary()));
-        txtRiceSubsidy.setText(String.valueOf(employeeInfo.getRiceSubsidy()));
-        txtPhoneAllowance.setText(String.valueOf(employeeInfo.getPhoneAllowance()));
-        txtClothingAllowance.setText(String.valueOf(employeeInfo.getClothingAllowance()));
-        txtGrossSemimonthlyRate.setText(String.valueOf(employeeInfo.getGrossSemimonthlyRate()));
-        txtHourlyRate.setText(String.valueOf(employeeInfo.getHourlyRate()));
+    private void btnAddEmployeeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddEmployeeMouseEntered
+        btnAddEmployee.setBackground(LIGHT_BLUE);
+    }//GEN-LAST:event_btnAddEmployeeMouseEntered
+
+    private void btnAddEmployeeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddEmployeeMouseExited
+        btnAddEmployee.setBackground(WHITE);
+    }//GEN-LAST:event_btnAddEmployeeMouseExited
+
+    private void btnAddEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddEmployeeActionPerformed
+        addEmployee(evt);
+    }//GEN-LAST:event_btnAddEmployeeActionPerformed
+
+    private void addEmployee(ActionEvent evt) {
+        try {
+            if (!validateInputs()) {
+                return;
+            }
+
+            int employeeNumber = Integer.parseInt(txtUsername.getText().substring(2));
+            String birthdateStr = txtBirthdate.getText().trim();
+            String password = new String(txtPassword.getPassword());
+
+            List<String> employeeData = List.of(
+                    String.valueOf(employeeNumber), txtLastName.getText(), txtFirstName.getText(), birthdateStr, txtAddress.getText(),
+                    txtPhoneNumber.getText(), txtSssNumber.getText(), txtPhilHealthNumber.getText(), txtTin.getText(), txtPagIbigNumber.getText(),
+                    txtStatus.getText(), txtPosition.getText(), txtImmediateSupervisor.getText(), txtBasicSalary.getText(), txtRiceSubsidy.getText(),
+                    txtPhoneAllowance.getText(), txtClothingAllowance.getText(), txtGrossSemimonthlyRate.getText(), txtHourlyRate.getText()
+            );
+
+            saveEmployeeData(employeeData, txtUsername.getText(), password, txtDivision.getText());
+
+            JOptionPane.showMessageDialog(this, "Employee added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error adding employee: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    /**
-     * Populates employee information fields based on the provided employee
-     * number.
-     *
-     * @param employeeNumberString The employee number as a string.
-     */
-    private void populateEmployeeInformation(Employee employee) {
-        try {
-            // Populate text fields with employee information
-            updateEmployeeInformationFields(employee);
-        } catch (Exception e) {
-            // Show error dialog with the exception message
-            showErrorDialog(e.getMessage());
+    private boolean validateInputs() {
+        if (!USERNAME_PATTERN.matcher(txtUsername.getText().trim()).matches()) {
+            showError("Invalid username format! Must be 'U0' followed by numbers.");
+            return false;
         }
+        if (!isValidDate(txtBirthdate.getText().trim())) {
+            showError("Invalid birthdate format! Use MM/dd/yyyy.");
+            return false;
+        }
+        return parseDoubleField(txtBasicSalary, "Basic Salary") >= 0
+                && parseDoubleField(txtRiceSubsidy, "Rice Subsidy") >= 0
+                && parseDoubleField(txtPhoneAllowance, "Phone Allowance") >= 0
+                && parseDoubleField(txtClothingAllowance, "Clothing Allowance") >= 0
+                && parseDoubleField(txtGrossSemimonthlyRate, "Gross Semimonthly Rate") >= 0
+                && parseDoubleField(txtHourlyRate, "Hourly Rate") >= 0;
+    }
+
+    private boolean isValidDate(String date) {
+        try {
+            DATE_FORMAT.setLenient(false);
+            DATE_FORMAT.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    private double parseDoubleField(JTextField field, String fieldName) {
+        try {
+            return Double.parseDouble(field.getText().trim());
+        } catch (NumberFormatException e) {
+            showError(fieldName + " must be a valid number.");
+            return -1;
+        }
+    }
+
+    private void saveEmployeeData(List<String> employeeData, String username, String password, String division) throws IOException {
+        String employeeCSV = String.join("\",\"", employeeData);
+        Files.write(Paths.get(EMPLOYEE_FILE_PATH), ("\"" + employeeCSV + "\"\n").getBytes(), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+        Files.write(Paths.get(CREDENTIALS_FILE_PATH), String.format("%s,%s,%s\n", username, password, division).getBytes(), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+        Files.write(Paths.get(HASHED_CREDENTIALS_FILE_PATH), String.format("%s,%s,%s\n", username, PasswordManager.hashPassword(password), division).getBytes(), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+    }
+
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -765,6 +817,7 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddEmployee;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnExit;
     private javax.swing.JLabel lblAddress;
@@ -772,10 +825,12 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
     private javax.swing.JLabel lblBirthdate;
     private javax.swing.JLabel lblBottomSeparator;
     private javax.swing.JLabel lblClothingAllowance;
-    private javax.swing.JLabel lblEmployeeNumber;
     private javax.swing.JLabel lblFirstName;
     private javax.swing.JLabel lblGrossSemimonthlyRate;
     private javax.swing.JLabel lblHourlyRate;
+    private javax.swing.JLabel lblHourlyRate1;
+    private javax.swing.JLabel lblHourlyRate2;
+    private javax.swing.JLabel lblHourlyRate3;
     private javax.swing.JLabel lblImmediateSupervisor;
     private javax.swing.JLabel lblLastName;
     private javax.swing.JLabel lblMotorPhHeader;
@@ -788,20 +843,21 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
     private javax.swing.JLabel lblRiceSubsidy;
     private javax.swing.JLabel lblSssNumber;
     private javax.swing.JLabel lblStatus;
-    private javax.swing.JLabel lblTinNumber;
+    private javax.swing.JLabel lblTin;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JScrollPane scrollPaneMain;
     protected javax.swing.JTextField txtAddress;
     protected javax.swing.JTextField txtBasicSalary;
     protected javax.swing.JTextField txtBirthdate;
     protected javax.swing.JTextField txtClothingAllowance;
-    public javax.swing.JTextField txtEmployeeNumber;
+    protected javax.swing.JTextField txtDivision;
     protected javax.swing.JTextField txtFirstName;
     protected javax.swing.JTextField txtGrossSemimonthlyRate;
     protected javax.swing.JTextField txtHourlyRate;
     protected javax.swing.JTextField txtImmediateSupervisor;
     protected javax.swing.JTextField txtLastName;
     protected javax.swing.JTextField txtPagIbigNumber;
+    private javax.swing.JPasswordField txtPassword;
     protected javax.swing.JTextField txtPhilHealthNumber;
     protected javax.swing.JTextField txtPhoneAllowance;
     protected javax.swing.JTextField txtPhoneNumber;
@@ -809,6 +865,7 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
     protected javax.swing.JTextField txtRiceSubsidy;
     protected javax.swing.JTextField txtSssNumber;
     protected javax.swing.JTextField txtStatus;
-    protected javax.swing.JTextField txtTinNumber;
+    protected javax.swing.JTextField txtTin;
+    protected javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

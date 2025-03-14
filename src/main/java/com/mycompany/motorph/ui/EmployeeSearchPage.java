@@ -9,10 +9,14 @@ import com.mycompany.motorph.model.Employee;
 import com.opencsv.exceptions.CsvValidationException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,13 +37,24 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     private boolean toggleOnButtonClicked = false;
     private int clickCount = 0;
 
+    private JPopupMenu popupMenu;
+
     /**
      * Creates new EmployeeSearchPage.
      */
-    public EmployeeSearchPage() {
+    public EmployeeSearchPage(JMenuItem... menuItems) {
         initComponents();
         populateEmployeeTable();
         setupTableMouseListener();
+
+        // Dynamically create the popup menu
+        popupMenu = new JPopupMenu();
+        for (JMenuItem item : menuItems) {
+            popupMenu.add(item);
+        }
+
+        // Set popup menu on the table
+        tblBasicEmployeeInformation.setComponentPopupMenu(popupMenu);
     }
 
     /**
@@ -52,9 +67,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     private void initComponents() {
 
         pmnAdminFunctions = new javax.swing.JPopupMenu();
-        btnUpdateInformation = new javax.swing.JMenuItem();
-        btnComputePayroll = new javax.swing.JMenuItem();
-        btnUpdateCredentials = new javax.swing.JMenuItem();
         scrollPaneMain = new javax.swing.JScrollPane();
         pnlMain = new javax.swing.JPanel();
         lblMotorPhHeader = new javax.swing.JLabel();
@@ -67,25 +79,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         tglOn = new javax.swing.JToggleButton();
         tglOff = new javax.swing.JToggleButton();
         lblEmployeeSelectionToggle = new javax.swing.JLabel();
-
-        btnUpdateInformation.setText("Update Information");
-        btnUpdateInformation.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateInformationActionPerformed(evt);
-            }
-        });
-        pmnAdminFunctions.add(btnUpdateInformation);
-
-        btnComputePayroll.setText("Compute Payroll");
-        btnComputePayroll.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnComputePayrollActionPerformed(evt);
-            }
-        });
-        pmnAdminFunctions.add(btnComputePayroll);
-
-        btnUpdateCredentials.setText("Update Credentials");
-        pmnAdminFunctions.add(btnUpdateCredentials);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Employee Search");
@@ -314,12 +307,20 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             @Override
             public void mouseClicked(MouseEvent e) {
                 int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
-                // If a row is selected and toggle button is on
-                if (rowIndex != -1 && toggleOnButtonClicked) {
-                    showPopupMenu(e);
+                if (rowIndex != -1 && toggleOnButtonClicked) { // Only show menu if toggle is ON
+                    popupMenu.show(tblBasicEmployeeInformation, e.getX(), e.getY());
                 }
             }
         });
+    }
+
+    public void setPopupMenuItems(JMenuItem... menuItems) {
+        popupMenu = new JPopupMenu();
+        for (JMenuItem item : menuItems) {
+            popupMenu.add(item);
+        }
+
+        tblBasicEmployeeInformation.setComponentPopupMenu(popupMenu);
     }
 
     /**
@@ -420,18 +421,18 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
      * Handles the action event of updating employee information when a row is
      * selected.
      */
-    private void btnUpdateInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInformationActionPerformed
+    public void mniUpdateInformationActionPerformed(java.awt.event.ActionEvent evt) {
         int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
         // If a row is selected and toggle button is on
         if (rowIndex != -1 && toggleOnButtonClicked) {
             showEmployeeInformation(rowIndex);
         }
-    }//GEN-LAST:event_btnUpdateInformationActionPerformed
+    }
 
     /**
      * Handles the action event of computing payroll for a selected employee.
      */
-    private void btnComputePayrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputePayrollActionPerformed
+    public void mniComputePayrollActionPerformed(java.awt.event.ActionEvent evt) {
         int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
 
         if (rowIndex != -1) {
@@ -444,7 +445,53 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
             // Show an error message if no row is selected
             JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnComputePayrollActionPerformed
+    }
+
+    public void mniUpdateCredentialsActionPerformed(java.awt.event.ActionEvent evt) {
+        int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+
+        if (rowIndex != -1) {
+            int employeeNumber = (int) tblBasicEmployeeInformation.getValueAt(rowIndex, 0);
+            String currentUsername = findUsernameByEmployeeNumber(employeeNumber);
+
+            if (currentUsername == null) {
+                JOptionPane.showMessageDialog(this, "Username not found for the selected employee.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            UpdateCredentialsPage updateCredentialsPage = new UpdateCredentialsPage(employeeNumber, currentUsername, "Employee"); // Pass correct username
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Finds the username associated with the given employee number from
+     * login_credentials.csv.
+     */
+    private String findUsernameByEmployeeNumber(int employeeNumber) {
+        String filePath = "src/main/resources/data/login_credentials.csv"; // Adjust if needed
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            br.readLine(); // Skip header
+
+            while ((line = br.readLine()) != null) {
+                String[] credentials = line.split(",");
+                if (credentials.length >= 3) {
+                    String username = credentials[0].trim();
+                    String extractedNumber = username.replaceAll("\\D", ""); // Remove non-digits from username
+
+                    if (!extractedNumber.isEmpty() && Integer.parseInt(extractedNumber) == employeeNumber) {
+                        return username;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading login_credentials.csv: " + e.getMessage());
+        }
+        return null; // Return null if no match is found
+    }
 
     /**
      * Refreshes the employee table by clearing and repopulating it.
@@ -601,10 +648,7 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JMenuItem btnComputePayroll;
     private javax.swing.JButton btnExit;
-    private javax.swing.JMenuItem btnUpdateCredentials;
-    private javax.swing.JMenuItem btnUpdateInformation;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBottomSeparator;
     private javax.swing.JLabel lblEmployeeSearchHeader;

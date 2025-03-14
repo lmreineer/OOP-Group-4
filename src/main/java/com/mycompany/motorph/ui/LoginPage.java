@@ -288,36 +288,43 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
      */
     private void openUserDashboard(String division, String username) {
         try {
-            int employeeNumber = -1;
             Employee employee = null;
+            int employeeNumber = extractEmployeeNumber(username, division);
 
-            if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
-                try {
-                    employeeNumber = Integer.parseInt(username.substring(1)); // Extract numeric part
-                    EmployeeInformation employeeInformation = new EmployeeInformation();
-                    employee = employeeInformation.showEmployeeInformation(employeeNumber);
-                } catch (NumberFormatException e) {
-                    System.err.println("ERROR: Invalid employee number format for username: " + username);
-                }
+            if (employeeNumber != -1) {
+                EmployeeInformation employeeInformation = new EmployeeInformation();
+                employee = employeeInformation.showEmployeeInformation(employeeNumber);
             }
 
             if (division.equalsIgnoreCase("Admin")) {
-                new AdminMotorPHMainMenu().setVisible(true);
+                new MainMenu(-1, "Admin").setVisible(true);
+                return;
+            } else if (division.equalsIgnoreCase("IT")) {
+                new MainMenu(-1, "IT").setVisible(true);
                 return;
             }
 
-            if (division.equalsIgnoreCase("Employee") || division.equalsIgnoreCase("IT")) {
-                if (employee == null) {
-                    JOptionPane.showMessageDialog(null, "Employee not found.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                new EmployeeMotorPHMainMenu(employeeNumber).setVisible(true);
+            if (employee == null) {
+                JOptionPane.showMessageDialog(null, "Employee not found.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            new MainMenu(employeeNumber, division).setVisible(true);
+
         } catch (IOException | CsvValidationException | ParseException ex) {
             Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private int extractEmployeeNumber(String username, String division) {
+        if (division.equalsIgnoreCase("Employee")) {
+            try {
+                return Integer.parseInt(username.substring(1)); // Extract numeric part
+            } catch (NumberFormatException e) {
+                System.err.println("ERROR: Invalid employee number format for username: " + username);
+            }
+        }
+        return -1; // Return -1 if not applicable
     }
 
     /**
