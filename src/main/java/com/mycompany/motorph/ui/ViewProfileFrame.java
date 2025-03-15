@@ -10,8 +10,7 @@ import java.awt.Dimension;
 import javax.swing.JOptionPane;
 
 /**
- * A class that displays the specific employee's pay information based on the
- * selected month, and his/her full information and allows updating of them.
+ * ViewProfileFrame displays an employee's profile and salary details.
  *
  * @author Lance
  */
@@ -23,53 +22,13 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
     private static final java.awt.Color RED = new java.awt.Color(191, 47, 47);
 
     /**
-     * Creates new EmployeeInformationFrame.
+     * Creates a new ViewProfileFrame for an employee.
      *
-     * @param employeeInformation List of strings that contains initial employee
-     * information.
+     * @param employeeInformation The employee details to display.
      */
     public ViewProfileFrame(Employee employeeInformation) {
         initComponents();
         setupFrame(employeeInformation);
-    }
-
-    /**
-     * Sets up the frame with initial components and layout.
-     *
-     * @param employeeDetails List of strings that contains initial employee
-     * information.
-     */
-    private void setupFrame(Employee employeeDetails) {
-        setLayout(new BorderLayout());
-
-        // Create components
-        showInformation(employeeDetails);
-
-        // Set frame visibility
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    /**
-     * Displays employee and wage information for the selected month.
-     *
-     * @param employeeDetails List of strings that contains employee
-     * information.
-     * @param selectedMonth Selected month in "MM" format.
-     */
-    public void showInformation(Employee employeeDetails) {
-        populateEmployeeInformation(employeeDetails);
-
-        // Set the intended size
-        scrollPaneMain.setPreferredSize(new Dimension(603, 627));
-        scrollPaneMain.setVisible(true);
-        add(scrollPaneMain, BorderLayout.CENTER);
-
-        pack();
-        setLocationRelativeTo(null);
-        revalidate();
-        repaint();
     }
 
     /**
@@ -711,44 +670,61 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
     }//GEN-LAST:event_btnExitMouseEntered
 
     /**
-     * Updates the employee information text fields for the chosen employee.
+     * Sets up the frame with initial components and layout.
      *
-     * @param employeeInfo The information of the employee
+     * @param employeeDetails The employee details to be displayed.
      */
-    private void updateEmployeeInformationFields(Employee employeeInfo) {
-        txtEmployeeNumber.setText(String.valueOf(employeeInfo.getEmployeeNumber()));
-        txtLastName.setText(employeeInfo.getLastName());
-        txtFirstName.setText(employeeInfo.getFirstName());
-        txtBirthdate.setText(employeeInfo.getBirthdate().toString()); // Convert Date to String
-        txtAddress.setText(employeeInfo.getAddress());
-        txtPhoneNumber.setText(employeeInfo.getPhoneNumber());
-        txtSssNumber.setText(employeeInfo.getSssNumber());
-        txtPhilHealthNumber.setText(employeeInfo.getPhilHealthNumber());
-        txtTinNumber.setText(employeeInfo.getTin());
-        txtPagIbigNumber.setText(employeeInfo.getPagIbigNumber());
-        txtStatus.setText(employeeInfo.getStatus());
-        txtPosition.setText(employeeInfo.getPosition());
-        txtImmediateSupervisor.setText(employeeInfo.getImmediateSupervisor());
-        txtBasicSalary.setText(String.valueOf(employeeInfo.getBasicSalary()));
-        txtRiceSubsidy.setText(String.valueOf(employeeInfo.getRiceSubsidy()));
-        txtPhoneAllowance.setText(String.valueOf(employeeInfo.getPhoneAllowance()));
-        txtClothingAllowance.setText(String.valueOf(employeeInfo.getClothingAllowance()));
-        txtGrossSemimonthlyRate.setText(String.valueOf(employeeInfo.getGrossSemimonthlyRate()));
-        txtHourlyRate.setText(String.valueOf(employeeInfo.getHourlyRate()));
+    private void setupFrame(Employee employeeDetails) {
+        setLayout(new BorderLayout());
+        showInformation(employeeDetails);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**
-     * Populates employee information fields based on the provided employee
-     * number.
+     * Displays employee profile and salary information.
      *
-     * @param employeeNumberString The employee number as a string.
+     * @param employeeDetails The employee details to be displayed.
      */
-    private void populateEmployeeInformation(Employee employee) {
+    public void showInformation(Employee employeeDetails) {
+        populateEmployeeInformation(employeeDetails);
+        scrollPaneMain.setPreferredSize(new Dimension(603, 627));
+        scrollPaneMain.setVisible(true);
+        add(scrollPaneMain, BorderLayout.CENTER);
+        pack();
+        setLocationRelativeTo(null);
+        revalidate();
+        repaint();
+    }
+
+    /**
+     * Populates the employee details into text fields.
+     *
+     * @param employeeInfo The employee details to be displayed.
+     */
+    private void populateEmployeeInformation(Employee employeeInfo) {
         try {
-            // Populate text fields with employee information
-            updateEmployeeInformationFields(employee);
+            txtEmployeeNumber.setText(String.valueOf(employeeInfo.getEmployeeNumber()));
+            txtLastName.setText(employeeInfo.getLastName());
+            txtFirstName.setText(employeeInfo.getFirstName());
+            txtBirthdate.setText(employeeInfo.getBirthdate().toString());
+            txtAddress.setText(employeeInfo.getAddress());
+            txtPhoneNumber.setText(employeeInfo.getPhoneNumber());
+            txtSssNumber.setText(employeeInfo.getSssNumber());
+            txtPhilHealthNumber.setText(employeeInfo.getPhilHealthNumber());
+            txtTinNumber.setText(employeeInfo.getTin());
+            txtPagIbigNumber.setText(employeeInfo.getPagIbigNumber());
+            txtStatus.setText(employeeInfo.getStatus());
+            txtPosition.setText(employeeInfo.getPosition());
+            txtImmediateSupervisor.setText(employeeInfo.getImmediateSupervisor());
+            txtBasicSalary.setText(String.valueOf(employeeInfo.getBasicSalary()));
+            txtRiceSubsidy.setText(String.valueOf(employeeInfo.getRiceSubsidy()));
+            txtPhoneAllowance.setText(String.valueOf(employeeInfo.getPhoneAllowance()));
+            txtClothingAllowance.setText(String.valueOf(employeeInfo.getClothingAllowance()));
+            txtGrossSemimonthlyRate.setText(String.valueOf(employeeInfo.getGrossSemimonthlyRate()));
+            txtHourlyRate.setText(String.valueOf(employeeInfo.getHourlyRate()));
         } catch (Exception e) {
-            // Show error dialog with the exception message
             showErrorDialog(e.getMessage());
         }
     }

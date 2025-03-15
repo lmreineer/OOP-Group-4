@@ -16,72 +16,69 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * A class that reads employee data from the data file.
+ * Handles reading and writing employee data.
  *
  * @author Lance
  */
 public class EmployeeDataReader {
 
-    private final SimpleDateFormat BIRTHDATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
-
-    // Expected total number of data per column from the data
+    private static final Logger LOGGER = Logger.getLogger(EmployeeDataReader.class.getName());
+    private static final SimpleDateFormat BIRTHDATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
     private static final int EMPLOYEE_EXPECTED_COL_LENGTH = 19;
 
     /**
-     * Reads employee data from the data file and returns a list of employees.
+     * Reads employee data from the CSV file.
      *
-     * @param filePath The path to the employee_information data file
-     * @return The list of employee data read from the file
-     * @throws IOException If an I/O error occurs while reading the file
-     * @throws CsvValidationException If data from a row is invalid
-     * @throws ParseException If parsing error occurs
+     * @param filePath The path to the employee data file
+     * @return The list of Employee objects
+     * @throws EmployeeDataException If data is invalid or missing
      */
-    public List<Employee> readEmployees(String filePath) throws IOException, CsvValidationException, ParseException {
+    public List<Employee> readEmployees(String filePath) throws EmployeeDataException {
         List<Employee> employees = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
             String[] data;
-            reader.readNext(); // Skip header
+            // Skip header
+            reader.readNext();
 
             while ((data = reader.readNext()) != null) {
                 if (data.length != EMPLOYEE_EXPECTED_COL_LENGTH) {
-                    System.err.println("Skipping invalid row (expected " + EMPLOYEE_EXPECTED_COL_LENGTH + " columns, found " + data.length + "): " + String.join(",", data));
-                    continue; // Skip this row and move to the next
+                    LOGGER.log(Level.WARNING, "Skipping invalid row: Expected {0} columns, found {1}", new Object[]{EMPLOYEE_EXPECTED_COL_LENGTH, data.length});
+                    continue;
                 }
-
                 employees.add(createEmployeeFromData(data));
             }
+        } catch (IOException | CsvValidationException | ParseException e) {
+            LOGGER.log(Level.SEVERE, "Error reading employee data: {0}", e.getMessage());
+            throw new EmployeeDataException("Failed to read employee data.", e);
         }
 
         return employees;
     }
 
     /**
-     * Writes employee data to the specified file path.
+     * Writes employee data securely to the CSV file.
      *
-     * @param filePath The path to the employee data CSV file
-     * @param employees The list of Employee objects to write to the file
-     * @throws IOException If an I/O error occurs while writing to the file
+     * @param filePath The path to the employee data file
+     * @param employees The list of Employee objects to write
+     * @throws EmployeeDataException If an I/O error occurs
      */
-    public void writeEmployees(String filePath, List<Employee> employees) throws IOException {
+    public void writeEmployees(String filePath, List<Employee> employees) throws EmployeeDataException {
         try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
-            // Write the header row
             writer.writeNext(getHeader());
-            // Loop through each employee
             for (Employee employee : employees) {
-                // Write data for each employee
                 writer.writeNext(getEmployeeData(employee));
             }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error writing employee data: {0}", e.getMessage());
+            throw new EmployeeDataException("Failed to write employee data.", e);
         }
     }
 
-    /**
-     * Retrieves the header for the CSV file.
-     *
-     * @return An array containing the header fields
-     */
     private String[] getHeader() {
         return new String[]{"Employee #", "Last Name", "First Name", "Birthday", "Address", "Phone Number",
             "SSS #", "Philhealth #", "TIN #", "Pag-ibig #", "Status", "Position", "Immediate Supervisor",
@@ -89,12 +86,6 @@ public class EmployeeDataReader {
             "Gross Semi-monthly Rate", "Hourly Rate"};
     }
 
-    /**
-     * Retrieves the data for a specific employee in CSV format.
-     *
-     * @param employee The employee object to retrieve data from
-     * @return An array containing the employee's data
-     */
     private String[] getEmployeeData(Employee employee) {
         return new String[]{
             String.valueOf(employee.getEmployeeNumber()),
@@ -119,66 +110,43 @@ public class EmployeeDataReader {
         };
     }
 
-    /**
-     * Creates an Employee object from an array of employee data.
-     *
-     * @param employeeData The array containing employee data
-     * @return The employee object created with the data
-     * @throws ParseException If a parsing error occurs
-     */
-    private Employee createEmployeeFromData(String[] employeeData) throws ParseException {
-        Employee employee = new Employee(Integer.parseInt(employeeData[0]),
-                employeeData[1],
-                employeeData[2],
-                BIRTHDATE_FORMAT.parse(employeeData[3].trim()),
-                employeeData[4],
-                employeeData[5],
-                employeeData[10],
-                employeeData[11],
-                Integer.parseInt(employeeData[0]),
-                employeeData[6],
-                employeeData[7],
-                employeeData[8],
-                employeeData[9],
-                employeeData[11],
-                employeeData[12],
-                parseDouble(employeeData[13]),
-                parseDouble(employeeData[14]),
-                parseDouble(employeeData[15]),
-                parseDouble(employeeData[16]),
-                parseDouble(employeeData[17]),
-                parseDouble(employeeData[18]));
+    private Employee createEmployeeFromData(String[] data) throws ParseException {
+        return new Employee(
+                Integer.parseInt(data[0]),
+                data[1],
+                data[2],
+                BIRTHDATE_FORMAT.parse(data[3].trim()),
+                data[4],
+                data[5],
+                data[10],
+                data[11],
+                Integer.parseInt(data[0]),
+                data[6],
+                data[7],
+                data[8],
+                data[9],
+                data[11],
+                data[12],
+                parseDouble(data[13]),
+                parseDouble(data[14]),
+                parseDouble(data[15]),
+                parseDouble(data[16]),
+                parseDouble(data[17]),
+                parseDouble(data[18])
+        );
+    }
 
-        employee.setEmployeeNumber(Integer.parseInt(employeeData[0]));
-        employee.setLastName(employeeData[1]);
-        employee.setFirstName(employeeData[2]);
-        employee.setBirthdate(BIRTHDATE_FORMAT.parse(employeeData[3]));
-        employee.setAddress(employeeData[4]);
-        employee.setPhoneNumber(employeeData[5]);
-        employee.setSssNumber(employeeData[6]);
-        employee.setPhilHealthNumber(employeeData[7]);
-        employee.setTin(employeeData[8]);
-        employee.setPagIbigNumber(employeeData[9]);
-        employee.setStatus(employeeData[10]);
-        employee.setPosition(employeeData[11]);
-        employee.setImmediateSupervisor(employeeData[12]);
-        employee.setBasicSalary(parseDouble(employeeData[13]));
-        employee.setRiceSubsidy(parseDouble(employeeData[14]));
-        employee.setPhoneAllowance(parseDouble(employeeData[15]));
-        employee.setClothingAllowance(parseDouble(employeeData[16]));
-        employee.setGrossSemimonthlyRate(parseDouble(employeeData[17]));
-        employee.setHourlyRate(parseDouble(employeeData[18]));
-
-        return employee;
+    private double parseDouble(String value) {
+        return Double.parseDouble(value.replace(",", ""));
     }
 
     /**
-     * Removes commas from a String value then parses it to double.
-     *
-     * @param value The value to be parsed
-     * @return The parsed double value
+     * Custom exception for handling employee data errors.
      */
-    private double parseDouble(String value) {
-        return Double.parseDouble(value.replaceAll(",", ""));
+    public static class EmployeeDataException extends Exception {
+
+        public EmployeeDataException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }

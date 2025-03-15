@@ -5,7 +5,9 @@
 package com.mycompany.motorph.ui;
 
 import com.mycompany.motorph.employee.EmployeeInformation;
+import com.mycompany.motorph.manager.RBACManager;
 import com.mycompany.motorph.model.Employee;
+import com.mycompany.motorph.repository.EmployeeDataReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,24 +38,23 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
 
     private boolean toggleOnButtonClicked = false;
     private int clickCount = 0;
-
     private JPopupMenu popupMenu;
 
     /**
-     * Creates new EmployeeSearchPage.
+     * Constructs an EmployeeSearchPage UI with a given list of menu items.
+     *
+     * @param menuItems The menu items to be added to the popup menu.
      */
-    public EmployeeSearchPage(JMenuItem... menuItems) {
+    public EmployeeSearchPage(JMenuItem... menuItems) throws EmployeeDataReader.EmployeeDataException {
         initComponents();
         populateEmployeeTable();
         setupTableMouseListener();
 
-        // Dynamically create the popup menu
+        // Initialize popup menu with given menu items
         popupMenu = new JPopupMenu();
         for (JMenuItem item : menuItems) {
             popupMenu.add(item);
         }
-
-        // Set popup menu on the table
         tblBasicEmployeeInformation.setComponentPopupMenu(popupMenu);
     }
 
@@ -300,30 +301,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Adds a mouse listener to handle table row clicks.
-     */
-    private void setupTableMouseListener() {
-        tblBasicEmployeeInformation.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
-                if (rowIndex != -1 && toggleOnButtonClicked) { // Only show menu if toggle is ON
-                    popupMenu.show(tblBasicEmployeeInformation, e.getX(), e.getY());
-                }
-            }
-        });
-    }
-
-    public void setPopupMenuItems(JMenuItem... menuItems) {
-        popupMenu = new JPopupMenu();
-        for (JMenuItem item : menuItems) {
-            popupMenu.add(item);
-        }
-
-        tblBasicEmployeeInformation.setComponentPopupMenu(popupMenu);
-    }
-
-    /**
      * Handles the action event of the back button to close the current page.
      */
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -421,7 +398,7 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
      * Handles the action event of updating employee information when a row is
      * selected.
      */
-    public void mniUpdateInformationActionPerformed(java.awt.event.ActionEvent evt) {
+    public void mniUpdateInformationActionPerformed(java.awt.event.ActionEvent evt) throws EmployeeDataReader.EmployeeDataException, EmployeeInformation.EmployeeNotFoundException, RBACManager.InvalidRoleException {
         int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
         // If a row is selected and toggle button is on
         if (rowIndex != -1 && toggleOnButtonClicked) {
@@ -436,7 +413,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
 
         if (rowIndex != -1) {
-            // Assuming the first column (index 0) contains the employee number
             int employeeNumber = (int) tblBasicEmployeeInformation.getValueAt(rowIndex, 0);
 
             // Open Payroll Computation Frame with the correct employee number
@@ -447,6 +423,9 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         }
     }
 
+    /**
+     * Handles the action event of updating credentials for a selected employee.
+     */
     public void mniUpdateCredentialsActionPerformed(java.awt.event.ActionEvent evt) {
         int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
 
@@ -459,9 +438,60 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
                 return;
             }
 
-            UpdateCredentialsPage updateCredentialsPage = new UpdateCredentialsPage(employeeNumber, currentUsername, "Employee"); // Pass correct username
+            new UpdateCredentialsPage(employeeNumber, currentUsername, "Employee").setVisible(true); // Pass correct username
         } else {
             JOptionPane.showMessageDialog(this, "Please select an employee row first.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Sets up a mouse listener for table row selection events. Shows the popup
+     * menu when an employee row is clicked.
+     */
+    private void setupTableMouseListener() {
+        tblBasicEmployeeInformation.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int rowIndex = tblBasicEmployeeInformation.getSelectedRow();
+                if (rowIndex != -1 && toggleOnButtonClicked) {
+                    popupMenu.show(tblBasicEmployeeInformation, e.getX(), e.getY());
+                }
+            }
+        });
+    }
+
+    public void setPopupMenuItems(JMenuItem... menuItems) {
+        popupMenu = new JPopupMenu();
+        for (JMenuItem item : menuItems) {
+            popupMenu.add(item);
+        }
+
+        tblBasicEmployeeInformation.setComponentPopupMenu(popupMenu);
+    }
+
+    /**
+     * Populates the employee table with data retrieved from
+     * EmployeeInformation.
+     */
+    private void populateEmployeeTable() throws EmployeeDataReader.EmployeeDataException, EmployeeDataReader.EmployeeDataException {
+        try {
+            EmployeeInformation employeeInformation = new EmployeeInformation();
+            List<Employee> employees = employeeInformation.getAllEmployees();
+            DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
+
+            for (Employee employee : employees) {
+                model.addRow(new Object[]{
+                    employee.getEmployeeNumber(),
+                    employee.getLastName(),
+                    employee.getFirstName(),
+                    employee.getSssNumber(),
+                    employee.getPhilHealthNumber(),
+                    employee.getTin(),
+                    employee.getPagIbigNumber()
+                });
+            }
+        } catch (IOException | ParseException | CsvValidationException e) {
+            showErrorDialog(e.getMessage());
         }
     }
 
@@ -496,7 +526,7 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     /**
      * Refreshes the employee table by clearing and repopulating it.
      */
-    public void refreshEmployeeTable() {
+    public void refreshEmployeeTable() throws EmployeeDataReader.EmployeeDataException {
         DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
         // Clear existing rows
         model.setRowCount(0);
@@ -538,39 +568,11 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }
 
     /**
-     * Populates the employee table with data retrieved from
-     * EmployeeInformation.
-     */
-    void populateEmployeeTable() {
-        try {
-            // Get employee data
-            EmployeeInformation employeeInformation = new EmployeeInformation();
-            List<Employee> employees = employeeInformation.getAllEmployees();
-
-            // Populate table with employee data
-            DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
-            for (Employee employee : employees) {
-                model.addRow(new Object[]{
-                    employee.getEmployeeNumber(),
-                    employee.getLastName(),
-                    employee.getFirstName(),
-                    employee.getSssNumber(),
-                    employee.getPhilHealthNumber(),
-                    employee.getTin(),
-                    employee.getPagIbigNumber()
-                });
-            }
-        } catch (IOException | ParseException | CsvValidationException e) {
-            showErrorDialog(e.getMessage());
-        }
-    }
-
-    /**
      * Displays employee information in a new frame.
      *
      * @param rowIndex The index of the selected row in the table
      */
-    private void showEmployeeInformation(int rowIndex) {
+    private void showEmployeeInformation(int rowIndex) throws EmployeeDataReader.EmployeeDataException, EmployeeInformation.EmployeeNotFoundException, RBACManager.InvalidRoleException {
         try {
             DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
             int employeeNumber = (int) model.getValueAt(rowIndex, 0);
@@ -586,14 +588,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }
 
     /**
-     * Displays a popup menu for admin functions at the mouse location.
-     */
-    private void showPopupMenu(MouseEvent e) {
-        // If you already have a popup menu, just show it at the mouse location
-        pmnAdminFunctions.show(tblBasicEmployeeInformation, e.getX(), e.getY());
-    }
-
-    /**
      * Displays an error dialog with the provided error message.
      *
      * @param errorMessage The error message to display in the dialog.
@@ -602,48 +596,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     public void showErrorDialog(String errorMessage) {
         // Show a dialog with the error message
         JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For information see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EmployeeSearchPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EmployeeSearchPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EmployeeSearchPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EmployeeSearchPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EmployeeSearchPage().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

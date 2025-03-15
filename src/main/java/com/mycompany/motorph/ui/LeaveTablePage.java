@@ -9,35 +9,41 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
+ * This class provides a GUI for managing employee leave requests.
  *
  * @author JustAMob
  */
 public class LeaveTablePage extends javax.swing.JFrame {
 
-    DefaultTableModel dm;
+    private DefaultTableModel dm;
 
     /**
-     * Creates new form AdminUI
+     * Creates a new LeaveTablePage.
      *
-     * @throws java.io.IOException
+     * @throws IOException If an error occurs while loading leave requests.
      */
     public LeaveTablePage() throws IOException {
         initComponents();
         populateLeaveRequestTable();
-
     }
 
+    /**
+     * Populates the leave request table with data retrieved from LeaveRequest.
+     */
     private void populateLeaveRequestTable() {
         DefaultTableModel model = LeaveRequest.getLeaveRequestTableModel();
         jTableLeaveRequest.setModel(model);
 
     }
 
+    /**
+     * Approves or declines a leave request based on user selection.
+     *
+     * @param approveOrDecline The status to update ("Approved" or "Declined").
+     */
     private void approveOrDecline(String approveOrDecline) {
         int selectedRow = jTableLeaveRequest.getSelectedRow();
 
@@ -68,6 +74,10 @@ public class LeaveTablePage extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Refreshes the leave request table by clearing existing rows and reloading
+     * data.
+     */
     public void refreshTable() {
         DefaultTableModel model = (DefaultTableModel) jTableLeaveRequest.getModel();
         model.setRowCount(0); // Clear table before adding new data
@@ -499,48 +509,6 @@ public class LeaveTablePage extends javax.swing.JFrame {
 
         //       filter(selectedItem);
     }//GEN-LAST:event_jComboBoxLeaveRequestItemStateChanged
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LeaveTablePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LeaveTablePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LeaveTablePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LeaveTablePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new LeaveTablePage().setVisible(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(LeaveTablePage.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonApproveLeave;

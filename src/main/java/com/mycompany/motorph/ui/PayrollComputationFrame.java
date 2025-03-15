@@ -4,15 +4,16 @@
  */
 package com.mycompany.motorph.ui;
 
+import com.mycompany.motorph.employee.EmployeeInformation;
 import com.mycompany.motorph.manager.SalaryComputationManager;
+import com.mycompany.motorph.repository.EmployeeDataReader;
+import com.opencsv.exceptions.CsvValidationException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /**
- * Main Menu for the MotorPH application.
- * <p>
- * Provides navigation to employee search and leave management.
+ * PayrollComputationFrame provides a GUI for computing payroll.
  *
  * @author Lance
  */
@@ -25,7 +26,10 @@ class PayrollComputationFrame extends javax.swing.JFrame {
     private int employeeNumber;
 
     /**
-     * Creates new form MotorPHMainMenu
+     * Creates a PayrollComputationFrame for a given employee.
+     *
+     * @param employeeNumber The ID of the employee for whom payroll is being
+     * computed.
      */
     public PayrollComputationFrame(int employeeNumber) {
         initComponents();
@@ -455,37 +459,67 @@ class PayrollComputationFrame extends javax.swing.JFrame {
         computeSalary();
     }//GEN-LAST:event_btnComputeActionPerformed
 
+    /**
+     * Handles mouse hover event on the compute button by changing its
+     * background color.
+     */
     private void btnComputeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComputeMouseEntered
         btnCompute.setBackground(LIGHT_BLUE);
     }//GEN-LAST:event_btnComputeMouseEntered
 
+    /**
+     * Handles mouse exit event on the compute button by resetting its
+     * background color.
+     */
     private void btnComputeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComputeMouseExited
         btnCompute.setBackground(WHITE);
     }//GEN-LAST:event_btnComputeMouseExited
 
+    /**
+     * Handles the action event of the back button to close the current page.
+     */
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // Close the current page
         dispose();
     }//GEN-LAST:event_btnBackActionPerformed
 
+    /**
+     * Handles mouse hover event on the back button by changing its background
+     * color.
+     */
     private void btnBackMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseEntered
         // TODO add your handling code here:
         btnBack.setBackground(LIGHT_BLUE);
     }//GEN-LAST:event_btnBackMouseEntered
 
+    /**
+     * Handles mouse exit event on the back button by resetting its background
+     * color.
+     */
     private void btnBackMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseExited
         btnBack.setBackground(WHITE);
     }//GEN-LAST:event_btnBackMouseExited
 
+    /**
+     * Handles the action event of the exit button to exit the application.
+     */
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         // Exit the application
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
 
+    /**
+     * Handles mouse hover event on the exit button by changing its background
+     * color.
+     */
     private void btnExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseEntered
         btnExit.setBackground(LIGHT_BLUE);
     }//GEN-LAST:event_btnExitMouseEntered
 
+    /**
+     * Handles mouse exit event on the exit button by resetting its background
+     * color.
+     */
     private void btnExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseExited
         btnExit.setBackground(WHITE);
     }//GEN-LAST:event_btnExitMouseExited
@@ -516,7 +550,7 @@ class PayrollComputationFrame extends javax.swing.JFrame {
             pnlMain.revalidate();
             pnlMain.repaint();
 
-        } catch (Exception ex) {
+        } catch (EmployeeInformation.EmployeeNotFoundException | SalaryComputationManager.SalaryComputationException | EmployeeDataReader.EmployeeDataException | CsvValidationException ex) {
             // Show error message if computation fails
             JOptionPane.showMessageDialog(this, "Error computing salary: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

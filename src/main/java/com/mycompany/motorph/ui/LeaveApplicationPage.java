@@ -7,7 +7,6 @@ package com.mycompany.motorph.ui;
 import com.mycompany.motorph.repository.LeaveDataManager;
 import static com.mycompany.motorph.model.DateRange.createDateRange;
 import com.mycompany.motorph.model.Leave;
-import com.opencsv.exceptions.CsvValidationException;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
@@ -15,31 +14,31 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- * A class that represents the leave application page of the MotorPH
- * application.
- * <p>
- * It allows users to input their employee number, the type of leave, the start
- * and end dates of the leave, and the reason for the leave.
+ * LeaveApplicationPage provides a user interface for employees to apply for
+ * leave.
  *
  * @author Lance
  */
 class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInformationManager {
 
-    // Constants for button coloring changes
+    // Constants for button color changes
     private static final java.awt.Color LIGHT_BLUE = new java.awt.Color(203, 203, 239);
     private static final java.awt.Color WHITE = new java.awt.Color(255, 255, 255);
     private static final java.awt.Color RED = new java.awt.Color(191, 47, 47);
 
     /**
-     * Constructor for LeaveApplicationPage.
+     * Constructs a LeaveApplicationPage for the given employee ID.
+     *
+     * @param employeeId The ID of the employee applying for leave.
      */
     public LeaveApplicationPage(int employeeId) {
         initComponents();
         txtEmployeeNumber.setText(String.valueOf(employeeId));
-        // Setup date choosers with configurations
         setupDateChoosers();
     }
 
@@ -317,26 +316,6 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Sets up date choosers to use MM/dd format and disables year input.
-     */
-    private void setupDateChoosers() {
-        configureDateChooser(jdcStartDate);
-        configureDateChooser(jdcEndDate);
-    }
-
-    /**
-     * Makes a JDateChooser non-editable and have a white background.
-     *
-     * @param dateChooser The JDateChooser to be configured.
-     */
-    private void configureDateChooser(JDateChooser dateChooser) {
-        // Make date field non-editable
-        ((JTextFieldDateEditor) dateChooser.getDateEditor()).setEditable(false);
-        // Set background color to white
-        ((JTextFieldDateEditor) dateChooser.getDateEditor()).getUiComponent().setBackground(Color.WHITE);
-    }
-
-    /**
      * Handles the action event of the back button to close the current page.
      */
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -404,98 +383,98 @@ class LeaveApplicationPage extends javax.swing.JFrame implements EmployeeInforma
      * Handles the action event of the apply button to apply for leave.
      */
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
-        applyLeave();
-
         try {
+            applyLeave();
+
             LeaveTablePage leaveTablePage = new LeaveTablePage();
             leaveTablePage.refreshTable();  // Refresh data
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Error refreshing leave table: " + ex.getMessage());
+        } catch (LeaveDataManager.LeaveDataException | IOException ex) {
+            Logger.getLogger(LeaveApplicationPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnApplyActionPerformed
 
     /**
-     * Displays an error dialog with the provided error message.
-     *
-     * @param errorMessage The message to be displayed in the error dialog.
+     * Sets up date choosers to use MM/dd format and disables direct text
+     * editing.
      */
-    @Override
-    public void showErrorDialog(String errorMessage) {
-        // Show a dialog with the error message
-        JOptionPane.showMessageDialog(pnlMain, "Error submitting leave application: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    private void setupDateChoosers() {
+        configureDateChooser(jdcStartDate);
+        configureDateChooser(jdcEndDate);
     }
 
     /**
-     * Applies for leave by getting information from input fields.
+     * Configures a JDateChooser to be non-editable and have a white background.
+     *
+     * @param dateChooser The JDateChooser to be configured.
      */
-    private void applyLeave() {
+    private void configureDateChooser(JDateChooser dateChooser) {
+        ((JTextFieldDateEditor) dateChooser.getDateEditor()).setEditable(false);
+        ((JTextFieldDateEditor) dateChooser.getDateEditor()).getUiComponent().setBackground(Color.WHITE);
+    }
+
+    /**
+     * Submits a leave application based on user inputs.
+     */
+    private void applyLeave() throws LeaveDataManager.LeaveDataException, LeaveDataManager.LeaveDataException, LeaveDataManager.LeaveDataException {
         try {
             int employeeNumber = Integer.parseInt(txtEmployeeNumber.getText());
-            // If employee number is 0 or greater than 34
             if (employeeNumber == 0 || employeeNumber > 34) {
                 showErrorDialog("Employee is not found.");
                 return;
             }
 
             String leaveType = (String) cmbLeaveType.getSelectedItem();
-
-            // Get start date
             Date startDate = jdcStartDate.getDate();
-            if (startDate == null) {
-                showErrorDialog("Please select a start date.");
-                return;
-            }
-            String startDateStr = formatDate(startDate);
-
-            // Get end date
             Date endDate = jdcEndDate.getDate();
-            if (endDate == null) {
-                showErrorDialog("Please select an end date.");
+            if (startDate == null || endDate == null) {
+                showErrorDialog("Please select valid start and end dates.");
                 return;
             }
-            String endDateStr = formatDate(endDate);
 
-            String reason = txaReasonForLeave.getText();
-            if (reason.trim().isEmpty()) {
+            String startDateStr = formatDate(startDate);
+            String endDateStr = formatDate(endDate);
+            String reason = txaReasonForLeave.getText().trim();
+            if (reason.isEmpty()) {
                 showErrorDialog("Please input a reason for leave.");
                 return;
             }
 
-            // Create a Leave object
             Leave leave = new Leave(employeeNumber, leaveType, startDateStr, endDateStr, reason);
-
-            // Create a DateRange object based on the start and end dates
             createDateRange(startDateStr, endDateStr);
 
-            // Save leave application
             LeaveDataManager leaveDataManager = new LeaveDataManager();
             leaveDataManager.saveLeaveApplication(leave);
-
-            // Show success message
             showInformationDialog();
-        } catch (ParseException | IOException | CsvValidationException | IllegalArgumentException e) {
-            // Show error dialog with the exception message
+        } catch (ParseException | IllegalArgumentException e) {
             showErrorDialog(e.getMessage());
         }
     }
 
     /**
-     * Formats date from JDateChooser to MM/dd format.
+     * Formats a given date into MM/dd format.
      *
-     * @param date The date to be formatted
-     * @return The formatted date string
+     * @param date The date to format.
+     * @return The formatted date string.
      */
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
-        // Format date to MM/dd format
         return sdf.format(date);
     }
 
     /**
-     * Displays an information dialog with the provided message.
+     * Displays an error dialog with the provided error message.
+     *
+     * @param errorMessage The error message to display.
+     */
+    @Override
+    public void showErrorDialog(String errorMessage) {
+        JOptionPane.showMessageDialog(pnlMain, "Error submitting leave application: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Displays an information dialog to confirm successful leave application.
      */
     private void showInformationDialog() {
-        // Show a dialog with the information message
         JOptionPane.showMessageDialog(pnlMain, "Leave application submitted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 

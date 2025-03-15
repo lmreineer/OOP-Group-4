@@ -7,6 +7,7 @@ package com.mycompany.motorph.ui;
 import com.mycompany.motorph.manager.RBACManager;
 import com.mycompany.motorph.employee.EmployeeInformation;
 import com.mycompany.motorph.model.Employee;
+import com.mycompany.motorph.repository.EmployeeDataReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -31,7 +34,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author User
+ * @author Lance
  */
 class AdminViewProfileFrame extends ViewProfileFrame {
 
@@ -44,32 +47,32 @@ class AdminViewProfileFrame extends ViewProfileFrame {
     private EmployeeSearchPage employeeSearchPage;
     private String role;
 
-    public AdminViewProfileFrame(Employee employeeInformation, String role, EmployeeSearchPage employeeSearchPage) {
+    public AdminViewProfileFrame(Employee employeeInformation, String role, EmployeeSearchPage employeeSearchPage) throws RBACManager.InvalidRoleException {
         super(employeeInformation);
         this.role = role;
         this.employeeSearchPage = employeeSearchPage;
         addAdminControls();
     }
 
-    private void addAdminControls() {
+    private void addAdminControls() throws RBACManager.InvalidRoleException {
         btnDeleteInfo = new JButton("Delete Information");
         btnUpdateInfo = new JButton("Update Information");
-
         btnDeleteInfo.setBackground(new Color(199, 73, 73));
         btnUpdateInfo.setBackground(new Color(73, 199, 73));
-
         btnDeleteInfo.setFont(new Font("Leelawadee UI", Font.PLAIN, 12));
         btnUpdateInfo.setFont(new Font("Leelawadee UI", Font.PLAIN, 12));
-
         btnDeleteInfo.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnUpdateInfo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
         btnDeleteInfo.setEnabled(RBACManager.hasPermission(role, "DELETE"));
         btnUpdateInfo.setEnabled(RBACManager.hasPermission(role, "UPDATE"));
-
-        btnDeleteInfo.addActionListener(this::btnDeleteInfoActionPerformed);
+        btnDeleteInfo.addActionListener(evt -> {
+            try {
+                this.btnDeleteInfoActionPerformed(evt);
+            } catch (EmployeeDataReader.EmployeeDataException ex) {
+                Logger.getLogger(AdminViewProfileFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         btnUpdateInfo.addActionListener(this::btnUpdateInfoActionPerformed);
-
         JPanel panel = new JPanel();
         panel.add(btnDeleteInfo);
         panel.add(btnUpdateInfo);
@@ -80,14 +83,18 @@ class AdminViewProfileFrame extends ViewProfileFrame {
         deleteButtonClicked = false;
         btnUpdateInfo.setText("Save");
         btnUpdateInfo.setBackground(Color.WHITE);
-
         btnUpdateInfo.removeActionListener(btnUpdateInfo.getActionListeners()[0]);
-        btnUpdateInfo.addActionListener(e -> updateEmployeeInformation());
-
+        btnUpdateInfo.addActionListener(e -> {
+            try {
+                updateEmployeeInformation();
+            } catch (EmployeeInformation.UnauthorizedAccessException | EmployeeInformation.EmployeeNotFoundException | EmployeeDataReader.EmployeeDataException | RBACManager.InvalidRoleException ex) {
+                Logger.getLogger(AdminViewProfileFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         setFieldsEditable(true);
     }
 
-    private void btnDeleteInfoActionPerformed(ActionEvent evt) {
+    private void btnDeleteInfoActionPerformed(ActionEvent evt) throws EmployeeDataReader.EmployeeDataException {
         int confirmation = JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to delete this employee's record?", "Confirm Deletion",
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -135,11 +142,11 @@ class AdminViewProfileFrame extends ViewProfileFrame {
         }
     }
 
-    private void updateEmployeeInformation() {
+    private void updateEmployeeInformation() throws EmployeeInformation.UnauthorizedAccessException, EmployeeInformation.EmployeeNotFoundException, EmployeeDataReader.EmployeeDataException, RBACManager.InvalidRoleException {
         try {
             int employeeNumber = Integer.parseInt(txtEmployeeNumber.getText());
             List<String> updatedEmployeeInfo = gatherEmployeeInformationFromFields();
-            new EmployeeInformation().updateEmployeeInformationInCsv(employeeNumber, updatedEmployeeInfo);
+            new EmployeeInformation().updateEmployeeInformationInCsv("ADMIN", employeeNumber, updatedEmployeeInfo);
 
             setFieldsEditable(false);
             btnUpdateInfo.setText("Update Info");

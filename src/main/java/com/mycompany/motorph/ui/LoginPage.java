@@ -6,6 +6,9 @@ package com.mycompany.motorph.ui;
 
 import com.mycompany.motorph.employee.EmployeeInformation;
 import com.mycompany.motorph.model.Employee;
+import com.mycompany.motorph.repository.EmployeeDataReader;
+import com.mycompany.motorph.security.Authentication;
+import com.mycompany.motorph.security.CredentialStorage;
 import com.mycompany.motorph.security.SecurityManager;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
@@ -15,7 +18,11 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- * A class that provides the login functionality in the application.
+ * LoginPage provides a GUI for authenticating users in the system.
+ *
+ * Users enter their username, password, and select a user type. If
+ * authentication is successful, they are redirected to the appropriate
+ * dashboard.
  *
  * @author Lance
  */
@@ -26,7 +33,7 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
     private static final java.awt.Color WHITE = new java.awt.Color(255, 255, 255);
 
     /**
-     * Creates new form LoginPage
+     * Creates new form LoginPage UI.
      */
     public LoginPage() {
         initComponents();
@@ -216,19 +223,19 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
     }//GEN-LAST:event_chkShowPasswordActionPerformed
 
     /**
-     * Handles the action event for the login button. Tries to authenticate the
-     * user with the provided credentials.
+     * Handles the action event for the login button. Attempts to authenticate
+     * the user with the entered credentials.
      */
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
             performLogin();
-        } catch (Exception ex) {
+        } catch (EmployeeInformation.EmployeeNotFoundException | EmployeeDataReader.EmployeeDataException | Authentication.AuthenticationException | CredentialStorage.CredentialStorageException | IOException ex) {
             showErrorDialog(ex.getMessage());
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
-     * Handles mouse exit event on the login button by changing its background
+     * Handles mouse enter event on the login button by changing its background
      * color.
      */
     private void btnLoginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseEntered
@@ -236,7 +243,7 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
     }//GEN-LAST:event_btnLoginMouseEntered
 
     /**
-     * Handles mouse hover event on the login button by resetting its background
+     * Handles mouse exit event on the login button by resetting its background
      * color.
      */
     private void btnLoginMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseExited
@@ -244,49 +251,37 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
     }//GEN-LAST:event_btnLoginMouseExited
 
     /**
-     * Displays an error dialog with the provided error message.
+     * Attempts to authenticate the user and redirect to the appropriate
+     * dashboard.
      *
-     * @param errorMessage The error message to display in the dialog.
+     * @throws IOException If an error occurs while retrieving employee
+     * information.
      */
-    @Override
-    public void showErrorDialog(String errorMessage) {
-        // Show a dialog with the error message
-        JOptionPane.showMessageDialog(pnlMain, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    /**
-     * Logs in the user and validates the enter username, password, and user
-     * type and redirects to the appropriate dashboard upon successful login
-     */
-    private void performLogin() throws IOException {
+    private void performLogin() throws IOException, Authentication.AuthenticationException, EmployeeDataReader.EmployeeDataException, EmployeeInformation.EmployeeNotFoundException, CredentialStorage.CredentialStorageException {
         String enteredUsername = txtUsername.getText().trim();
         String enteredPassword = new String(txtPassword.getPassword()).trim();
         String selectedDivision = cmbUserType.getSelectedItem().toString();
 
-        // Create SecurityManager instance for authentication
+        // Authenticate user using SecurityManager
         SecurityManager securityManager = new SecurityManager();
         boolean loginSuccessful = securityManager.login(enteredUsername, enteredPassword, selectedDivision);
 
         if (loginSuccessful) {
             JOptionPane.showMessageDialog(this, "Login successful as " + selectedDivision + "!");
-
-            // Open the dashboard
             openUserDashboard(selectedDivision, enteredUsername);
-
-            // Close the login window
-            this.dispose();
+            this.dispose(); // Close login page
         } else {
             JOptionPane.showMessageDialog(this, "Invalid credentials.", "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
-     * Opens the user dashboard based on the division or user type.
+     * Opens the user dashboard based on the selected user type.
      *
      * @param division The user type (Employee, IT, Admin).
      * @param username The username of the logged-in user.
      */
-    private void openUserDashboard(String division, String username) {
+    private void openUserDashboard(String division, String username) throws EmployeeDataReader.EmployeeDataException, EmployeeInformation.EmployeeNotFoundException {
         try {
             Employee employee = null;
             int employeeNumber = extractEmployeeNumber(username, division);
@@ -316,15 +311,33 @@ public class LoginPage extends javax.swing.JFrame implements EmployeeInformation
         }
     }
 
+    /**
+     * Extracts the employee number from the username if the user is an
+     * Employee.
+     *
+     * @param username The entered username.
+     * @param division The selected user type.
+     * @return The extracted employee number or -1 if not applicable.
+     */
     private int extractEmployeeNumber(String username, String division) {
         if (division.equalsIgnoreCase("Employee")) {
             try {
-                return Integer.parseInt(username.substring(1)); // Extract numeric part
+                return Integer.parseInt(username.replace("U0", "")); // Remove 'U0' properly
             } catch (NumberFormatException e) {
                 System.err.println("ERROR: Invalid employee number format for username: " + username);
             }
         }
-        return -1; // Return -1 if not applicable
+        return -1;
+    }
+
+    /**
+     * Displays an error dialog with the provided error message.
+     *
+     * @param errorMessage The error message to display.
+     */
+    @Override
+    public void showErrorDialog(String errorMessage) {
+        JOptionPane.showMessageDialog(pnlMain, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**

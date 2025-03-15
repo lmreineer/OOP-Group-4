@@ -6,7 +6,7 @@ package com.mycompany.motorph.model;
 
 /**
  *
- * @author User
+ * @author Lance
  */
 public abstract class User {
 

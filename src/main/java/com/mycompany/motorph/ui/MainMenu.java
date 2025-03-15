@@ -5,25 +5,29 @@
 package com.mycompany.motorph.ui;
 
 import com.mycompany.motorph.employee.EmployeeInformation;
+import com.mycompany.motorph.manager.RBACManager;
 import com.mycompany.motorph.model.Employee;
+import com.mycompany.motorph.repository.EmployeeDataReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
-import javax.swing.JOptionPane;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 /**
- * Main Menu for the MotorPH application.
- * <p>
- * Provides navigation to employee search and leave management.
+ * MainMenu provides navigation to different features.
+ *
+ * This menu grants access to different functionalities based on user roles
+ * (Admin, IT, Employee). Employees can view profiles and apply for leave, while
+ * Admins and IT staff have extended controls.
  *
  * @author Lance
  */
@@ -38,7 +42,10 @@ class MainMenu extends javax.swing.JFrame {
     private String userRole;
 
     /**
-     * Creates new form MotorPHMainMenu
+     * Constructs a MainMenu with the specified employee number and user role.
+     *
+     * @param employeeNumber The logged-in employee's ID.
+     * @param userRole The role of the user.
      */
     public MainMenu(int employeeNumber, String userRole) {
         this.employeeNumber = employeeNumber;
@@ -313,33 +320,22 @@ class MainMenu extends javax.swing.JFrame {
      * Opens the employee profile view page.
      */
     private void btnViewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewProfileActionPerformed
-        EmployeeInformation employeeInformation = new EmployeeInformation();
-
         try {
+            EmployeeInformation employeeInformation = new EmployeeInformation();
+
             // Load all employees first
             List<Employee> employees = employeeInformation.getAllEmployees();
             Employee employee = employeeInformation.findEmployeeByNumber(employees, employeeNumber);
 
-            if (employee != null) {
-                // Open the Employee Information Frame with the Employee object
-                new EmployeeViewProfileFrame(employee).setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Employee not found. Please check the Employee Number.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (IOException | CsvValidationException | ParseException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Error retrieving employee information: " + ex.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            // Open the Employee Information Frame with the Employee object
+            new EmployeeViewProfileFrame(employee).setVisible(true);
+        } catch (IOException | CsvValidationException | ParseException | EmployeeDataReader.EmployeeDataException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnViewProfileActionPerformed
 
     /**
-     * Handles the action event of the manage leave button to open the manage
-     * leave page.
+     * Opens the leave application page.
      */
     private void btnApplyForLeaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyForLeaveActionPerformed
         // Open ManageLeaveMenu
@@ -347,7 +343,7 @@ class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApplyForLeaveActionPerformed
 
     /**
-     * Handles mouse hover event on the search employee button by changing its
+     * Handles mouse hover event on the view profile button by changing its
      * background color.
      */
     private void btnViewProfileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewProfileMouseEntered
@@ -355,7 +351,7 @@ class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnViewProfileMouseEntered
 
     /**
-     * Handles mouse exit event on the search employee button by resetting its
+     * Handles mouse exit event on the view profile button by resetting its
      * background color.
      */
     private void btnViewProfileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewProfileMouseExited
@@ -363,7 +359,7 @@ class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnViewProfileMouseExited
 
     /**
-     * Handles mouse hover event on the manage leave button by changing its
+     * Handles mouse hover event on the apply for leave button by changing its
      * background color.
      */
     private void btnApplyForLeaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnApplyForLeaveMouseEntered
@@ -371,7 +367,7 @@ class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApplyForLeaveMouseEntered
 
     /**
-     * Handles mouse exit event on the manage leave button by resetting its
+     * Handles mouse exit event on the apply for leave button by resetting its
      * background color.
      */
     private void btnApplyForLeaveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnApplyForLeaveMouseExited
@@ -449,55 +445,95 @@ class MainMenu extends javax.swing.JFrame {
         btnComputePayroll.setBackground(WHITE);
     }//GEN-LAST:event_btnComputePayrollMouseExited
 
+    /**
+     * Handles mouse hover event on the search an employee button by changing
+     * its background color.
+     */
     private void btnSearchAnEmployeeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchAnEmployeeMouseEntered
         btnSearchAnEmployee.setBackground(LIGHT_BLUE);
     }//GEN-LAST:event_btnSearchAnEmployeeMouseEntered
 
+    /**
+     * Handles mouse exit event on the search an employee button by resetting
+     * its background color.
+     */
     private void btnSearchAnEmployeeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchAnEmployeeMouseExited
         btnSearchAnEmployee.setBackground(WHITE);
     }//GEN-LAST:event_btnSearchAnEmployeeMouseExited
 
+    /**
+     * Handles mouse hover event on the add new employee button by changing its
+     * background color.
+     */
     private void btnAddNewEmployeeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddNewEmployeeMouseEntered
         btnAddNewEmployee.setBackground(LIGHT_BLUE);
     }//GEN-LAST:event_btnAddNewEmployeeMouseEntered
 
+    /**
+     * Handles mouse exit event on the "Compute" button by resetting its
+     * background color.
+     */
     private void btnAddNewEmployeeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddNewEmployeeMouseExited
         btnAddNewEmployee.setBackground(WHITE);
     }//GEN-LAST:event_btnAddNewEmployeeMouseExited
 
+    /**
+     * Handles mouse hover event on the manage leave requests button by changing
+     * its background color.
+     */
     private void btnManageLeaveRequestsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManageLeaveRequestsMouseEntered
-        // TODO add your handling code here:
+        btnManageLeaveRequests.setBackground(LIGHT_BLUE);
     }//GEN-LAST:event_btnManageLeaveRequestsMouseEntered
 
+    /**
+     * Handles mouse hover event on the manage leave button by resetting its
+     * background color.
+     */
     private void btnManageLeaveRequestsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManageLeaveRequestsMouseExited
-        // TODO add your handling code here:
+        btnManageLeaveRequests.setBackground(WHITE);
     }//GEN-LAST:event_btnManageLeaveRequestsMouseExited
 
+    /**
+     * Opens the employee search page with role-based functionalities.
+     */
     private void btnSearchAnEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchAnEmployeeActionPerformed
-        // TODO add your handling code here:
-        EmployeeSearchPage searchPage = new EmployeeSearchPage();
+        try {
+            // TODO add your handling code here:
+            EmployeeSearchPage searchPage = new EmployeeSearchPage();
 
-        if ("Admin".equals(userRole)) {
+            if ("Admin".equals(userRole)) {
 
-            JMenuItem mniUpdateInformation = new JMenuItem("Update Information");
-            mniUpdateInformation.addActionListener(e -> searchPage.mniUpdateInformationActionPerformed(new java.awt.event.ActionEvent(this, ActionEvent.ACTION_PERFORMED, null)));
+                JMenuItem mniUpdateInformation = new JMenuItem("Update Information");
+                mniUpdateInformation.addActionListener(e -> {
+                    try {
+                        searchPage.mniUpdateInformationActionPerformed(new java.awt.event.ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+                    } catch (EmployeeDataReader.EmployeeDataException | EmployeeInformation.EmployeeNotFoundException | RBACManager.InvalidRoleException ex) {
+                        Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
 
-            JMenuItem mniComputePayroll = new JMenuItem("Compute Payroll");
-            mniComputePayroll.addActionListener(e -> searchPage.mniComputePayrollActionPerformed(new java.awt.event.ActionEvent(this, ActionEvent.ACTION_PERFORMED, null)));
+                JMenuItem mniComputePayroll = new JMenuItem("Compute Payroll");
+                mniComputePayroll.addActionListener(e -> searchPage.mniComputePayrollActionPerformed(new java.awt.event.ActionEvent(this, ActionEvent.ACTION_PERFORMED, null)));
 
-            // Pass the menu items into the EmployeeSearchPage
-            searchPage.setPopupMenuItems(mniUpdateInformation, mniComputePayroll);
-        } else if ("IT".equals(userRole)) {
+                // Pass the menu items into the EmployeeSearchPage
+                searchPage.setPopupMenuItems(mniUpdateInformation, mniComputePayroll);
+            } else if ("IT".equals(userRole)) {
 
-            JMenuItem mniUpdateCredentials = new JMenuItem("Update Credentials");
-            mniUpdateCredentials.addActionListener(e -> searchPage.mniUpdateCredentialsActionPerformed(new java.awt.event.ActionEvent(this, ActionEvent.ACTION_PERFORMED, null)));
+                JMenuItem mniUpdateCredentials = new JMenuItem("Update Credentials");
+                mniUpdateCredentials.addActionListener(e -> searchPage.mniUpdateCredentialsActionPerformed(new java.awt.event.ActionEvent(this, ActionEvent.ACTION_PERFORMED, null)));
 
-            // Pass the menu items into the EmployeeSearchPage
-            searchPage.setPopupMenuItems(mniUpdateCredentials);
+                // Pass the menu items into the EmployeeSearchPage
+                searchPage.setPopupMenuItems(mniUpdateCredentials);
+            }
+            searchPage.setVisible(true);
+        } catch (EmployeeDataReader.EmployeeDataException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        searchPage.setVisible(true);
     }//GEN-LAST:event_btnSearchAnEmployeeActionPerformed
 
+    /**
+     * Opens the leave management page.
+     */
     private void btnManageLeaveRequestsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageLeaveRequestsActionPerformed
         try {
             // Open ManageLeaveMenu
@@ -507,24 +543,36 @@ class MainMenu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnManageLeaveRequestsActionPerformed
 
+    /**
+     * Opens the add new employee page.
+     */
     private void btnAddNewEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewEmployeeActionPerformed
         new AddNewEmployeePage().setVisible(true);
     }//GEN-LAST:event_btnAddNewEmployeeActionPerformed
 
+    /**
+     * Configures the menu visibility based on the user's role.
+     */
     private void configureMenu() {
         // Define which buttons should be visible for each role
         Set<JButton> visibleButtons = new HashSet<>();
 
-        if (userRole.equals("Admin")) {
-            visibleButtons.add(btnSearchAnEmployee);
-            visibleButtons.add(btnManageLeaveRequests);
-        } else if (userRole.equals("IT")) {
-            visibleButtons.add(btnSearchAnEmployee);
-            visibleButtons.add(btnAddNewEmployee);
-        } else if (userRole.equals("Employee")) {
-            visibleButtons.add(btnViewProfile);
-            visibleButtons.add(btnComputePayroll);
-            visibleButtons.add(btnApplyForLeave);
+        switch (userRole) {
+            case "Admin" -> {
+                visibleButtons.add(btnSearchAnEmployee);
+                visibleButtons.add(btnManageLeaveRequests);
+            }
+            case "IT" -> {
+                visibleButtons.add(btnSearchAnEmployee);
+                visibleButtons.add(btnAddNewEmployee);
+            }
+            case "Employee" -> {
+                visibleButtons.add(btnViewProfile);
+                visibleButtons.add(btnComputePayroll);
+                visibleButtons.add(btnApplyForLeave);
+            }
+            default -> {
+            }
         }
 
         // Always keep Logout and Exit buttons visible
@@ -538,9 +586,12 @@ class MainMenu extends javax.swing.JFrame {
             }
         }
 
-        pnlMain.revalidate(); // Refresh layout
+        // Refresh layout
+        pnlMain.revalidate();
         pnlMain.repaint();
-        pack(); // Resize frame
+
+        // Resize frame
+        pack();
     }
 
     /**

@@ -8,10 +8,16 @@ import com.mycompany.motorph.model.Employee;
 
 /**
  *
- * @author User
+ * @author Lance
  */
 public class EmployeeViewProfileFrame extends ViewProfileFrame {
 
+    /**
+     * Constructs an EmployeeViewProfileFrame for the given employee.
+     *
+     * @param employeeInformation The employee details to display in the profile
+     * frame.
+     */
     public EmployeeViewProfileFrame(Employee employeeInformation) {
         super(employeeInformation);
     }

@@ -4,21 +4,20 @@
  */
 package com.mycompany.motorph.model;
 
-import com.mycompany.motorph.util.CurrencyUtil;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Represents an employee.
- * <p>
+ *
  * Contains employee information and methods to access. This class also provides
  * methods for formatting and displaying employee information.
  *
  * @author Lance
  */
 public class Employee extends User {
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
     private int employeeNumber;
     private Date birthdate;
@@ -211,13 +210,7 @@ public class Employee extends User {
         this.hourlyRate = hourlyRate;
     }
 
-    /**
-     * Gets the birthdate of the employee formatted as a string.
-     *
-     * @return The birthdate as a string in "MM/dd/yyyy" format
-     */
     public String getBirthdateAsString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        return dateFormat.format(getBirthdate());
+        return DATE_FORMAT.format(getBirthdate());
     }
 }
