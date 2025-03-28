@@ -550,18 +550,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         }
     }
 
-    /**
-     * Displays a confirmation dialog before logging out and returning to the
-     * login page.
-     */
-    private void logout() {
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            dispose();
-            new LoginPage().setVisible(true);
-        }
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JScrollPane jScrollPane1;

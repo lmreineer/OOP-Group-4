@@ -726,20 +726,52 @@ class AddNewEmployeePage extends javax.swing.JFrame implements EmployeeInformati
      * @return true if inputs are valid, false otherwise.
      */
     private boolean validateInputs() {
-        if (!USERNAME_PATTERN.matcher(txtUsername.getText().trim()).matches()) {
-            showErrorDialog("Invalid username format! Must be 'U0' followed by numbers.");
+        if (!isValidStringField(txtLastName, "Last Name")
+                || !isValidStringField(txtFirstName, "First Name")
+                || !isValidStringField(txtAddress, "Address")
+                || !isValidStringField(txtPhoneNumber, "Phone Number")
+                || !isValidStringField(txtStatus, "Status")
+                || !isValidStringField(txtDivision, "Division")
+                || !isValidStringField(txtSssNumber, "SSS Number")
+                || !isValidStringField(txtPhilHealthNumber, "PhilHealth Number")
+                || !isValidStringField(txtTin, "TIN")
+                || !isValidStringField(txtPagIbigNumber, "Pag-IBIG Number")
+                || !isValidStringField(txtPosition, "Position")
+                || !isValidStringField(txtImmediateSupervisor, "Immediate Supervisor")
+                || !isValidStringField(txtUsername, "Username")
+                || txtPassword.getPassword().length == 0) {
+            showErrorDialog("All fields must be filled properly and cannot be numeric.");
             return false;
         }
+
         if (!isValidDate(txtBirthdate.getText().trim())) {
             showErrorDialog("Invalid birthdate format! Use MM/dd/yyyy.");
             return false;
         }
-        return validateDoubleField(txtBasicSalary, "Basic Salary")
-                && validateDoubleField(txtRiceSubsidy, "Rice Subsidy")
-                && validateDoubleField(txtPhoneAllowance, "Phone Allowance")
-                && validateDoubleField(txtClothingAllowance, "Clothing Allowance")
-                && validateDoubleField(txtGrossSemimonthlyRate, "Gross Semi-Monthly Rate")
-                && validateDoubleField(txtHourlyRate, "Hourly Rate");
+
+        if (!validateDoubleField(txtBasicSalary, "Basic Salary")
+                || !validateDoubleField(txtRiceSubsidy, "Rice Subsidy")
+                || !validateDoubleField(txtPhoneAllowance, "Phone Allowance")
+                || !validateDoubleField(txtClothingAllowance, "Clothing Allowance")
+                || !validateDoubleField(txtGrossSemimonthlyRate, "Gross Semi-Monthly Rate")
+                || !validateDoubleField(txtHourlyRate, "Hourly Rate")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isValidStringField(JTextField field, String fieldName) {
+        String value = field.getText().trim();
+        if (value.isEmpty()) {
+            showErrorDialog(fieldName + " cannot be empty.");
+            return false;
+        }
+        if (value.matches("\\d+")) {
+            showErrorDialog(fieldName + " cannot be numeric.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -794,18 +826,6 @@ class AddNewEmployeePage extends javax.swing.JFrame implements EmployeeInformati
 
         // Store plaintext credentials in login_credentials.csv (for reference only)
         Files.write(Paths.get(CREDENTIALS_PLAIN_FILE_PATH), String.format("%s,%s,%s\n", username, password, division).getBytes(), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
-    }
-
-    /**
-     * Displays a confirmation dialog before logging out and returning to the
-     * login page.
-     */
-    private void logout() {
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            dispose();
-            new LoginPage().setVisible(true);
-        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

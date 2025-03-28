@@ -33,7 +33,7 @@ public class Employee extends User {
     private double clothingAllowance;
     private double grossSemimonthlyRate;
     private double hourlyRate;
-
+    
     public Employee(int userID, String firstName, String lastName, Date birthdate, String address,
             String phoneNumber, String status, String division, int employeeNumber,
             String sssNumber, String philHealthNumber, String tin, String pagIbigNumber,

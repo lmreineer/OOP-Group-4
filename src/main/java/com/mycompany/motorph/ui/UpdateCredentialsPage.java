@@ -176,10 +176,6 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
             .addComponent(lblBottomSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblUpdateCredentialsHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(282, 282, 282))
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
@@ -201,6 +197,10 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
                         .addGap(135, 135, 135)
                         .addComponent(btnUpdateCredentials, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(17, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(184, 184, 184))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,18 +375,6 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Error updating credentials: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    /**
-     * Displays a confirmation dialog before logging out and returning to the
-     * login page.
-     */
-    private void logout() {
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            dispose();
-            new LoginPage().setVisible(true);
         }
     }
 
