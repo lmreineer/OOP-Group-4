@@ -63,7 +63,6 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
         lblMotorPhHeader = new javax.swing.JLabel();
         lblUpdateCredentialsHeader = new javax.swing.JLabel();
         lblBottomSeparator = new javax.swing.JLabel();
-        btnExit = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         lblSelectedUser = new javax.swing.JLabel();
         lblNewUsername = new javax.swing.JLabel();
@@ -99,25 +98,6 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
         lblBottomSeparator.setForeground(new java.awt.Color(255, 255, 255));
         lblBottomSeparator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBottomSeparator.setOpaque(true);
-
-        btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnExit.setText("Exit");
-        btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnExit.setFocusable(false);
-        btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnExitMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnExitMouseExited(evt);
-            }
-        });
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
 
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("Back");
@@ -197,11 +177,9 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
             .addComponent(lblUpdateCredentialsHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(129, 129, 129)
-                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(129, 129, 129))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(282, 282, 282))
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
@@ -222,7 +200,7 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addGap(135, 135, 135)
                         .addComponent(btnUpdateCredentials, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,9 +226,7 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
                 .addGap(15, 15, 15)
                 .addComponent(lblBottomSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
 
@@ -296,30 +272,6 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
     }//GEN-LAST:event_btnBackMouseEntered
 
     /**
-     * Handles the action event of the exit button to exit the application.
-     */
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // Exit the application
-        System.exit(0);
-    }//GEN-LAST:event_btnExitActionPerformed
-
-    /**
-     * Handles mouse exit event on the exit button by resetting its background
-     * color.
-     */
-    private void btnExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseExited
-        btnExit.setBackground(WHITE);
-    }//GEN-LAST:event_btnExitMouseExited
-
-    /**
-     * Handles mouse hover event on the exit button by changing its background
-     * color.
-     */
-    private void btnExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseEntered
-        btnExit.setBackground(RED);
-    }//GEN-LAST:event_btnExitMouseEntered
-
-    /**
      * Handles mouse exit event on the update credentials button by resetting
      * its background color.
      */
@@ -345,6 +297,16 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
             Logger.getLogger(UpdateCredentialsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnUpdateCredentialsActionPerformed
+
+    /**
+     * Displays an error dialog with the provided error message.
+     *
+     * @param errorMessage The error message to display in the dialog.
+     */
+    @Override
+    public void showErrorDialog(String errorMessage) {
+        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
     /**
      * Updates the user's credentials by modifying username and password
@@ -417,18 +379,19 @@ class UpdateCredentialsPage extends javax.swing.JFrame implements EmployeeInform
     }
 
     /**
-     * Displays an error dialog with the provided error message.
-     *
-     * @param errorMessage The error message to display in the dialog.
+     * Displays a confirmation dialog before logging out and returning to the
+     * login page.
      */
-    @Override
-    public void showErrorDialog(String errorMessage) {
-        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    private void logout() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+            new LoginPage().setVisible(true);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnUpdateCredentials;
     private javax.swing.JLabel lblBottomSeparator;
     private javax.swing.JLabel lblMotorPhHeader;

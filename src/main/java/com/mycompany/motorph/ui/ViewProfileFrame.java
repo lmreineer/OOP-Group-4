@@ -81,7 +81,6 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblFirstName = new javax.swing.JLabel();
         txtFirstName = new javax.swing.JTextField();
         lblBottomSeparator = new javax.swing.JLabel();
-        btnExit = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         lblEmployeeNumber = new javax.swing.JLabel();
         txtEmployeeNumber = new javax.swing.JTextField();
@@ -366,25 +365,6 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         lblBottomSeparator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBottomSeparator.setOpaque(true);
 
-        btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnExit.setText("Exit");
-        btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnExit.setFocusable(false);
-        btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnExitMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnExitMouseExited(evt);
-            }
-        });
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("Back");
         btnBack.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -426,12 +406,6 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
             .addComponent(lblBottomSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblProfileHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblMotorPhHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(129, 129, 129)
-                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(129, 129, 129))
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -511,7 +485,11 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
                         .addComponent(lblHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtHourlyRate, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(232, 232, 232))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -599,9 +577,7 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
                 .addGap(15, 15, 15)
                 .addComponent(lblBottomSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
 
@@ -646,40 +622,14 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
     }//GEN-LAST:event_btnBackMouseEntered
 
     /**
-     * Handles the action event of the exit button to exit the application.
-     */
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // Exit the application
-        System.exit(0);
-    }//GEN-LAST:event_btnExitActionPerformed
-
-    /**
-     * Handles mouse exit event on the exit button by resetting its background
-     * color.
-     */
-    private void btnExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseExited
-        btnExit.setBackground(WHITE);
-    }//GEN-LAST:event_btnExitMouseExited
-
-    /**
-     * Handles mouse hover event on the exit button by changing its background
-     * color.
-     */
-    private void btnExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseEntered
-        btnExit.setBackground(RED);
-    }//GEN-LAST:event_btnExitMouseEntered
-
-    /**
-     * Sets up the frame with initial components and layout.
+     * Displays an error dialog with the provided error message.
      *
-     * @param employeeDetails The employee details to be displayed.
+     * @param errorMessage The error message to display in the dialog.
      */
-    private void setupFrame(Employee employeeDetails) {
-        setLayout(new BorderLayout());
-        showInformation(employeeDetails);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+    @Override
+    public void showErrorDialog(String errorMessage) {
+        // Show a dialog with the error message
+        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -696,6 +646,19 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
         setLocationRelativeTo(null);
         revalidate();
         repaint();
+    }
+
+    /**
+     * Sets up the frame with initial components and layout.
+     *
+     * @param employeeDetails The employee details to be displayed.
+     */
+    private void setupFrame(Employee employeeDetails) {
+        setLayout(new BorderLayout());
+        showInformation(employeeDetails);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**
@@ -728,21 +691,9 @@ class ViewProfileFrame extends javax.swing.JFrame implements EmployeeInformation
             showErrorDialog(e.getMessage());
         }
     }
-
-    /**
-     * Displays an error dialog with the provided error message.
-     *
-     * @param errorMessage The error message to display in the dialog.
-     */
-    @Override
-    public void showErrorDialog(String errorMessage) {
-        // Show a dialog with the error message
-        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnExit;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblBasicSalary;
     private javax.swing.JLabel lblBirthdate;

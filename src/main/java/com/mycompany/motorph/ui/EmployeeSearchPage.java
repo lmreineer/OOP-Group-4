@@ -73,7 +73,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         lblMotorPhHeader = new javax.swing.JLabel();
         lblEmployeeSearchHeader = new javax.swing.JLabel();
         lblBottomSeparator = new javax.swing.JLabel();
-        btnExit = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBasicEmployeeInformation = new javax.swing.JTable();
@@ -107,25 +106,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         lblBottomSeparator.setForeground(new java.awt.Color(255, 255, 255));
         lblBottomSeparator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblBottomSeparator.setOpaque(true);
-
-        btnExit.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
-        btnExit.setText("Exit");
-        btnExit.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnExit.setFocusable(false);
-        btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnExitMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnExitMouseExited(evt);
-            }
-        });
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
 
         btnBack.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         btnBack.setText("Back");
@@ -249,13 +229,11 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
                         .addComponent(tglOn, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(tglOff, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 297, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(231, 231, 231)
-                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 247, Short.MAX_VALUE)
-                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(231, 231, 231))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(380, 380, 380))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,10 +253,8 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
                 .addGap(15, 15, 15)
                 .addComponent(lblBottomSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15))
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         scrollPaneMain.setViewportView(pnlMain);
@@ -325,30 +301,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }//GEN-LAST:event_btnBackMouseExited
 
     /**
-     * Handles the action event of the exit button to exit the application.
-     */
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // Exit the application
-        System.exit(0);
-    }//GEN-LAST:event_btnExitActionPerformed
-
-    /**
-     * Handles mouse hover event on the exit button by changing its background
-     * color.
-     */
-    private void btnExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseEntered
-        btnExit.setBackground(RED);
-    }//GEN-LAST:event_btnExitMouseEntered
-
-    /**
-     * Handles mouse exit event on the exit button by resetting its background
-     * color.
-     */
-    private void btnExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseExited
-        btnExit.setBackground(WHITE);
-    }//GEN-LAST:event_btnExitMouseExited
-
-    /**
      * Handles the action event of the "Toggle On" button to handle its clicks.
      */
     private void tglOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tglOnActionPerformed
@@ -393,6 +345,17 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     private void tglOffMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tglOffMouseExited
         tglOff.setBackground(WHITE);
     }//GEN-LAST:event_tglOffMouseExited
+
+    /**
+     * Displays an error dialog with the provided error message.
+     *
+     * @param errorMessage The error message to display in the dialog.
+     */
+    @Override
+    public void showErrorDialog(String errorMessage) {
+        // Show a dialog with the error message
+        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
     /**
      * Handles the action event of updating employee information when a row is
@@ -444,6 +407,27 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
         }
     }
 
+    public void setPopupMenuItems(JMenuItem... menuItems) {
+        popupMenu = new JPopupMenu();
+        for (JMenuItem item : menuItems) {
+            popupMenu.add(item);
+        }
+
+        tblBasicEmployeeInformation.setComponentPopupMenu(popupMenu);
+    }
+
+    /**
+     * Refreshes the employee table by clearing and repopulating it.
+     */
+    public void refreshEmployeeTable() throws EmployeeDataReader.EmployeeDataException {
+        DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
+        // Clear existing rows
+        model.setRowCount(0);
+
+        // Reload data from CSV
+        populateEmployeeTable();
+    }
+
     /**
      * Sets up a mouse listener for table row selection events. Shows the popup
      * menu when an employee row is clicked.
@@ -458,15 +442,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
                 }
             }
         });
-    }
-
-    public void setPopupMenuItems(JMenuItem... menuItems) {
-        popupMenu = new JPopupMenu();
-        for (JMenuItem item : menuItems) {
-            popupMenu.add(item);
-        }
-
-        tblBasicEmployeeInformation.setComponentPopupMenu(popupMenu);
     }
 
     /**
@@ -524,18 +499,6 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }
 
     /**
-     * Refreshes the employee table by clearing and repopulating it.
-     */
-    public void refreshEmployeeTable() throws EmployeeDataReader.EmployeeDataException {
-        DefaultTableModel model = (DefaultTableModel) tblBasicEmployeeInformation.getModel();
-        // Clear existing rows
-        model.setRowCount(0);
-
-        // Reload data from CSV
-        populateEmployeeTable();
-    }
-
-    /**
      * Handles the action event of the toggle on button to enable selection of
      * employee and show its information.
      */
@@ -588,19 +551,19 @@ class EmployeeSearchPage extends javax.swing.JFrame implements EmployeeInformati
     }
 
     /**
-     * Displays an error dialog with the provided error message.
-     *
-     * @param errorMessage The error message to display in the dialog.
+     * Displays a confirmation dialog before logging out and returning to the
+     * login page.
      */
-    @Override
-    public void showErrorDialog(String errorMessage) {
-        // Show a dialog with the error message
-        JOptionPane.showMessageDialog(pnlMain, "Error updating employee information: " + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    private void logout() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+            new LoginPage().setVisible(true);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnExit;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBottomSeparator;
     private javax.swing.JLabel lblEmployeeSearchHeader;
